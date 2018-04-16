@@ -4,11 +4,31 @@ let config = {
     rootpath:''
 };
 
+const multer = require('koa-multer');//加载koa-multer模块
+//文件上传
+//配置
+let storage = multer.diskStorage({
+    //文件保存路径
+    destination: function (req, file, cb) {
+        cb(null, '/public/uploads/')
+    },
+    //修改文件名称
+    filename: function (req, file, cb) {
+        var fileFormat = (file.originalname).split(".");
+        cb(null,Date.now() + "." + fileFormat[fileFormat.length - 1]);
+    }
+})
+//加载配置
+let upload = multer({ storage: storage });
 // add url-route in /controllers:
 
 function addMapping(router, mapping) {
     for (var url in mapping) {
-        if (url.startsWith('GET ')) {
+        if (url.startsWith('POST /api/uploadImg')) {
+            var path = config.rootpath + url.substring(5);
+            router.post(path, upload.single('imgFile'), mapping[url]);
+            console.log(`register URL mapping: POST ${path}`);
+        }else if (url.startsWith('GET ')) {
             var path = config.rootpath + url.substring(4);
             router.get(path, mapping[url]);
             console.log(`register URL mapping: GET ${path}`);
