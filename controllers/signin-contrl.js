@@ -80,7 +80,7 @@ module.exports = {
     
         // 根据openid查找用户是否已经注册
         let userdoc = null, userId;
-        let userdoc = await DataInterface.getAccountByOpenId(sessionData.openid);
+        userdoc = await DataInterface.getAccountByOpenId(sessionData.openid);
         userId = userdoc._id;
         if (_.isEmpty(userId)) {
           // 注册

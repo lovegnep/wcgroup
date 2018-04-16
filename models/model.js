@@ -3,6 +3,8 @@
  */
 const mongoose = require('mongoose');
 const Logger = require('../utils/logger');
+const Config = require('../config');
+const ObjectId  = mongoose.Schema.ObjectId;
 
 mongoose.connect(Config.db, function(err){
     if(err){

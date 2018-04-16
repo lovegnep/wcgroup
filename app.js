@@ -1,8 +1,5 @@
-const myLog4js = require("./middleware/my-log4js");
+const Logger = require("./utils/logger");
 const uuid = require('node-uuid');
-const sysLogger = myLog4js.getLogger('system');
-sysLogger.addContext('logid', uuid.v4().replace(/-/g,""));
-console.log = sysLogger.info.bind(sysLogger);
 
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
@@ -12,6 +9,7 @@ const compress = require('koa-compress');
 const rest = require('./middleware/rest');
 const app = new Koa();
 const session = require("koa-session2");
+const Config = require('./config');
 
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
@@ -19,13 +17,10 @@ console.log(`isProduction = [${isProduction}]`);
 
 // log request URL:
 app.use(async (ctx, next) => {
-    var logger = myLog4js.getLogger('zshop');
-    var logid = uuid.v4().replace(/-/g, "");
-    logger.addContext('logid', logid);
-    console.log = logger.info.bind(logger);
-    ctx.logger = logger;
+    console.log = Logger.info.bind(logger);
+    ctx.logger = Logger;
 
-    logger.info(`Process ${ctx.request.method} ${ctx.request.url}...`);
+    Logger.info(`Process ${ctx.request.method} ${ctx.request.url}...`);
     var
         start = new Date().getTime(),
         execTime;
@@ -70,5 +65,5 @@ app.use(rest.restify());
 // add controller:
 app.use(controller());
 
-app.listen(3000);
+app.listen(Config.port);
 console.log('app started at port 3000...');

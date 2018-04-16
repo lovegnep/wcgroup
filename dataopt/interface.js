@@ -502,7 +502,6 @@ function _insert2Item(c_id, i_id, root, cb){
 }
 
 exports = {
-    newAccount: newAccount,
     getAccountByOpenId:getAccountByOpenId,
     getAccountById:getAccountById,
     modifyPasswd: modifyPasswd,
@@ -513,7 +512,6 @@ exports = {
 
     newShare: newShare,
     getShare: getShare,
-    getAccount: getAccount,
 
     getRoot:getRoot,
     newRoot:newRoot,
