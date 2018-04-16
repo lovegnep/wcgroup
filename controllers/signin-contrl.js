@@ -7,13 +7,22 @@ const DataInterface = require('../dataopt/interface');
 const Logger = require('../utils/logger');
 
 module.exports = {
+    'GET /api/getallqrlist': async (ctx, next) => {
+        let limit = 20;
+        let skip = ctx.query.skip;
+        let sorttype = ctx.query.sorttype;
+        let options = { skip: skip, limit: limit, sort: sorttype};
+        let query = {};
+        let qrlist = await DataInterface.getAllQRList(query,options);
+        ctx.rest({data:qrlist, status:1});
+    },
     'GET /api/getqrlist': async (ctx, next) => {
         if(!ctx.session.user){
             return ctx.rest({status:0,message:'Please login first.'});
         }
         let user_id = ctx.session.user._id;
         let qrlist = await DataInterface.getQRList(user_id);
-        ctx.rest({qrlist, status:1});
+        ctx.rest({data:qrlist, status:1});
     },
     'POST /api/uploadImg': async (ctx,next) => {
         if(!ctx.session.user){

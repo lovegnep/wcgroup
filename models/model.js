@@ -42,7 +42,10 @@ let qrmodel = new mongoose.Schema({
     masterwx:String,
     groupavatar:String,
     groupQR:String,
-    masterQR:String
+    masterQR:String,
+    createTime:{type: Date, default: Date.now},
+    updateTime:{type: Date, default: Date.now},
+    viewCount:{type:Number, default:0}
 });
 let Qrmodel = mongoose.model('Qrmodel', qrmodel);
 
