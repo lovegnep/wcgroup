@@ -4,13 +4,13 @@ let config = {
     rootpath:''
 };
 
-const multer = require('koa-multer');//加载koa-multer模块
+const multer = require('koa-router-multer');//加载koa-multer模块
 //文件上传
 //配置
 let storage = multer.diskStorage({
     //文件保存路径
     destination: function (req, file, cb) {
-        cb(null, '/public/uploads/')
+        cb(null, 'public/uploads/')
     },
     //修改文件名称
     filename: function (req, file, cb) {
