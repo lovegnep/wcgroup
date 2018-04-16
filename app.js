@@ -65,4 +65,4 @@ app.use(rest.restify());
 app.use(controller());
 
 app.listen(Config.port);
-console.log('app started at port 3000...');
+console.log('app started at port ', Config.port);

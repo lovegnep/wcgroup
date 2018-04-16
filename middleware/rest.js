@@ -7,8 +7,8 @@ module.exports = {
         this.message = message || '';
     },
     restify: (pathPrefix) => {
-        var loginPathPrefix = pathPrefix || '/zshop/userapi/';
-        pathPrefix = pathPrefix || '/zshop/api/';
+        var loginPathPrefix = pathPrefix || '/userapi/';
+        pathPrefix = pathPrefix || '/api/';
 
         return async (ctx, next) => {
             var isRest = false;

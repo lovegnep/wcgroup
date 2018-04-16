@@ -1,6 +1,8 @@
 
 const fs = require('fs');
-const config = require('./config');
+let config = {
+    rootpath:''
+};
 
 // add url-route in /controllers:
 

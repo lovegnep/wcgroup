@@ -3,8 +3,8 @@ const _ = require('lodash');
 
 module.exports = {
     'GET /api/province': async (ctx, next) => {
-        let index = ctx.request.body.index;
-        let first = ctx.request.body.first;
+        let index = parseInt(ctx.query.index);
+        let first = ctx.query.first;
         let res = [];
         if(index === 1){
             res = Province.get1();
@@ -13,6 +13,8 @@ module.exports = {
                 return ctx.rest({data:[], status:0});
             }
             res = Province.get2(first);
+        }else{
+            return ctx.rest({data:[], status:0});
         }
         ctx.rest({data:res, status:1});
     },
