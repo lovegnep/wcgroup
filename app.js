@@ -7,7 +7,7 @@ console.log = sysLogger.info.bind(sysLogger);
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./middleware/controller');
-const templating = require('./middleware/templating');
+
 const compress = require('koa-compress');
 const rest = require('./middleware/rest');
 const app = new Koa();
@@ -63,12 +63,6 @@ app.use(session({
 
 // parse request body:
 app.use(bodyParser());
-
-// add nunjucks as view:
-app.use(templating('views', {
-    noCache: !isProduction,
-    watch: !isProduction
-}));
 
 // bind .rest() for ctx:
 app.use(rest.restify());
