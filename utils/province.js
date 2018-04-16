@@ -5377,7 +5377,7 @@ function get2(first){
     return res;
 }
 
-expors = {
+exports = {
     get1:get1,
     get2:get2,
 };

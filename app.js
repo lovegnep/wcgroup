@@ -17,7 +17,7 @@ console.log(`isProduction = [${isProduction}]`);
 
 // log request URL:
 app.use(async (ctx, next) => {
-    console.log = Logger.info.bind(logger);
+    console.log = Logger.info.bind(Logger);
     ctx.logger = Logger;
 
     Logger.info(`Process ${ctx.request.method} ${ctx.request.url}...`);
@@ -32,7 +32,6 @@ app.use(async (ctx, next) => {
         ctx.response.redirect('/static/html/404.html');
     }
 
-    ctx.response.set('logid', logid);
     execTime = new Date().getTime() - start;
     ctx.response.set('X-Response-Time', `${execTime}ms`); 
 });
