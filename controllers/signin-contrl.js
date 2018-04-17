@@ -5,8 +5,13 @@ const Utils = require('../utils/common');
 const _ = require('lodash');
 const DataInterface = require('../dataopt/interface');
 const Logger = require('../utils/logger');
+const Province = require('../utils/province');
 
 module.exports = {
+    'GET /api/getTypes': async (ctx, next) => {
+        let types = Province.getTypes();
+        ctx.rest({data:types, status:1});
+    },
     'GET /api/getallqrlist': async (ctx, next) => {
         let limit = 20;
         let skip = ctx.query.skip;

@@ -10,11 +10,12 @@ const rest = require('./middleware/rest');
 const app = new Koa();
 const session = require("koa-session2");
 const Config = require('./config');
+const Cors = require('koa-cors');
 
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`isProduction = [${isProduction}]`);
-
+app.use(cors());
 // log request URL:
 app.use(async (ctx, next) => {
     console.log = Logger.info.bind(Logger);

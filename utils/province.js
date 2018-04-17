@@ -5353,6 +5353,63 @@ const Province = [
       ]
     }
 ];
+const Types = [
+  {"name": "\u5fae\u5546", "id": 41}, 
+  {"name": "\u4e92\u7c89\u7fa4", "id": 39}, 
+  {"name": "\u62db\u4ee3\u7406\u5546", "id": 37}, 
+  {"name": "\u514d\u8d39\u8d5a\u94b1", "id": 55}, 
+  {"name": "\u521b\u4e1a\u7fa4", "id": 56}, 
+  {"name": "\u4ee3\u7406\u54c1\u724c", "id": 57}, 
+  {"name": "\u517c\u804c\u7fa4", "id": 36}, 
+  {"name": "\u516c\u4f17\u53f7\u5f00\u53d1", "id": 38}, 
+  {"name": "\u5fae\u8425\u9500", "id": 42}, 
+  {"name": "\u840c\u5ba0", "id": 13}, 
+  {"name": "\u6444\u5f71\u7fa4", "id": 12}, 
+  {"name": "\u65c5\u6e38", "id": 14}, 
+  {"name": "\u8fd0\u52a8", "id": 15}, 
+  {"name": "\u8d2d\u7269", "id": 21}, 
+  {"name": "\u6bcd\u5a74\u7fa4", "id": 24}, 
+  {"name": "\u6c7d\u8f66", "id": 25}, 
+  {"name": "\u7f8e\u98df", "id": 26}, 
+  {"name": "\u5b9d\u5988\u7fa4", "id": 58}, 
+  {"name": "\u6dd8\u5b9d\u4f18\u60e0\u5238", "id": 115}, 
+  {"name": "\u7c89\u4e1d\u4e92\u52a8", "id": 10}, 
+  {"name": "\u65f6\u5c1a\u4ea4\u53cb", "id": 11}, 
+  {"name": "\u7f8e\u5973\u6a21\u7279", "id": 16}, 
+  {"name": "\u4e92\u8d5e\u7fa4", "id": 62}, 
+  {"name": "\u9a74\u53cb\u7fa4", "id": 63}, 
+  {"name": "\u8f66\u53cb\u7fa4", "id": 64}, 
+  {"name": "\u5403\u559d\u73a9\u4e50", "id": 65}, 
+  {"name": "\u4ea4\u670b\u53cb", "id": 54}, 
+  {"name": "\u5f71\u89c6\u5a31\u4e50", "id": 18}, 
+  {"name": "\u7231\u97f3\u4e50", "id": 19}, 
+  {"name": "\u52a8\u6f2b\u5a31\u4e50", "id": 20}, 
+  {"name": "\u5403\u9e21\u624b\u6e38", "id": 22}, 
+  {"name": "\u5168\u6c11K\u6b4c\u7fa4", "id": 29}, 
+  {"name": "\u4f17\u7b79", "id": 33}, 
+  {"name": "\u624b\u6e38\u7fa4", "id": 34}, 
+  {"name": "\u7f51\u6e38\u7fa4", "id": 59}, 
+  {"name": "\u82f1\u96c4\u8054\u76df\u7fa4", "id": 35}, 
+  {"name": "\u738b\u8005\u8363\u8000\u7fa4", "id": 60}, 
+  {"name": "\u533a\u5757\u94fe", "id": 61}, 
+  {"name": "\u9ebb\u5c06\u7fa4", "id": 68}, 
+  {"name": "\u5fae\u4fe1\u6295\u7968\u7fa4", "id": 48}, 
+  {"name": "\u5bcc\u5a46\u7fa4", "id": 50}, 
+  {"name": "\u571f\u8c6a\u7fa4", "id": 66}, 
+  {"name": "\u80a1\u7968\u4ea4\u6d41\u7fa4", "id": 51}, 
+  {"name": "\u6295\u8d44\u4ea4\u6d41\u7fa4", "id": 52}, 
+  {"name": "\u7f8e\u5973\u76f4\u64ad", "id": 53}, 
+  {"name": "\u804a\u5929\u7fa4", "id": 67}, 
+  {"name": "8090", "id": 17}, 
+  {"name": "\u804c\u4e1a\u7fa4", "id": 27}, 
+  {"name": "\u4eba\u8109\u7fa4", "id": 28}, 
+  {"name": "\u7f51\u7edc\u7ea2\u4eba", "id": 30}, 
+  {"name": "\u5176\u4ed6", "id": 40}
+];
+
+function getTypes(){
+  return Types;
+}
 
 function get1(){
     let res = [];
@@ -5380,5 +5437,6 @@ function get2(first){
 exports = {
     get1:get1,
     get2:get2,
+    getTypes:getTypes,
 };
 Object.assign(module.exports, exports);
