@@ -24,14 +24,14 @@ module.exports = {
         let qrlist = await DataInterface.getQRList(user_id);
         ctx.rest({data:qrlist, status:1});
     },
-    'POST /api/uploadImg': async (ctx,next) => {
+    /*'POST /api/uploadImg': async (ctx,next) => {
         if(!ctx.session.user){
             return ctx.rest({status:0,message:'Please login first.'});
         }
         let filename = ctx.req.imgFile.filename;
         Logger.info('POST /api/uploadImg: filename:', filename);
         ctx.rest({filename: filename, status:1});
-    },
+    },*/
     'POST /api/uploadGroup': async (ctx, next) => {
         let industry = ctx.request.body.induxtry;
         let location =  ctx.request.body.location;
