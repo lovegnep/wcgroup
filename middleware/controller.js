@@ -1,4 +1,4 @@
-
+const Logger = require('../utils/logger');
 const fs = require('fs');
 let config = {
     rootpath:''
@@ -66,15 +66,10 @@ function addUploadFile(router) {
     var upload = multer({storage:storage});  
     //upload.single('file')这里面的file是上传空间的name<input type="file" name="file"/>    
     router.post('/api/uploadImg',upload.single('imgFile'),async (ctx,next) => {  
-        //ctx.response.body ="<h1>上传成功！</h1>";  
-        /*ctx.body = {   
-                filename: ctx.req.file.filename//返回文件名   
-        } */  
-        //ctx.redirect('/index');  
-        let filename = ctx.req.imgFile.filename;
-        console.log("file upload success.:",ctx.req.imgFile.filename);
-        ctx.rest({filename: filename, status:1});
-    })  
+        let filename = ctx.req.file.filename;
+        Logger.info('POST /api/uploadImg: filename:', filename);
+	ctx.rest({filename: filename, status:1});
+    });  
     console.log(`register URL mapping: POST /uploadFile`);  
 }
 function addControllers(router, dir) {
@@ -92,5 +87,6 @@ module.exports = function (dir) {
         controllers_dir = dir || '../controllers',
         router = require('koa-router')();
     addControllers(router, controllers_dir);
+    addUploadFile(router);
     return router.routes();
 };
