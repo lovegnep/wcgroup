@@ -11,11 +11,12 @@ const app = new Koa();
 const session = require("koa-session2");
 const Config = require('./config');
 const Cors = require('koa-cors');
+const  serve = require("koa-static");
 
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`isProduction = [${isProduction}]`);
-app.use(cors());
+app.use(Cors());
 // log request URL:
 app.use(async (ctx, next) => {
     console.log = Logger.info.bind(Logger);
@@ -52,8 +53,7 @@ app.use(session({
 
 // static file support:
 //if (! isProduction) {
-    let staticFiles = require('./middleware/static-files');
-    app.use(staticFiles('/static/', __dirname + '/static'));
+    app.use(serve(__dirname + '/public'));
 //}
 
 // parse request body:

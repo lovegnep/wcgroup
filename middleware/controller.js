@@ -68,7 +68,7 @@ function addUploadFile(router) {
     router.post('/api/uploadImg',upload.single('imgFile'),async (ctx,next) => {  
         let filename = ctx.req.file.filename;
         Logger.info('POST /api/uploadImg: filename:', filename);
-	ctx.rest({filename: filename, status:1});
+	ctx.rest({filename: '/uploads/'+filename, status:1});
     });  
     console.log(`register URL mapping: POST /uploadFile`);  
 }
