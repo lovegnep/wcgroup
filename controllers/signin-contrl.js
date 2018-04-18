@@ -13,6 +13,7 @@ let usermap = new Map();
 function isLogin(ctx){
     let _id = ctx.req.headers['sessionkey'];
     Logger.debug('isLogin:head:',ctx.req.headers);
+    Logger.debug('isLogin:sessionkey:',_id);
     if(!_id){
         return false;
     }
