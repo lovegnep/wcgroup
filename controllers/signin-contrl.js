@@ -169,6 +169,7 @@ module.exports = {
         }
         //ctx.session.user = newUserInfo;
         usermap.set(newUserInfo._id, newUserInfo);
+        Logger.debug('add user to map:',newUserInfo);
         return ctx.rest({userInfo: newUserInfo, sessionkey:newUserInfo._id});
     },
     
