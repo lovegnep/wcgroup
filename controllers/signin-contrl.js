@@ -8,6 +8,32 @@ const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 
+let usermap = new Map();
+
+function isLogin(ctx){
+    let _id = ctx.header['sessionkey'];
+    if(!_id){
+        return false;
+    }
+    let user = usermap.get(_id);
+    if(user){
+        return true;
+    }else{
+        return false;
+    }
+}
+function getUser(ctx){
+    let _id = ctx.header['sessionkey'];
+    if(!_id){
+        return null;
+    }
+    let user = usermap.get(_id);
+    if(user){
+        return user;
+    }else{
+        return null;
+    }
+}
 module.exports = {
     'GET /api/getTypes': async (ctx, next) => {
         let types = Province.getTypes();
@@ -56,10 +82,14 @@ module.exports = {
         let groupavatar = ctx.request.body.groupavatar;
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
-        if(!ctx.session.user){
+        if(!isLogin(ctx)){
             return ctx.rest({status:0,message:'Please login first.'});
         }
-        let uploader = ctx.session.user._id;
+        let user = getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'Please login first1.'});
+        }
+        let uploader = user._id;
         let qrdoc = await DataInterface.newQr({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx});
         ctx.rest({status:1,data:qrdoc});
     },
@@ -137,8 +167,9 @@ module.exports = {
         if (_.isEmpty(newUserInfo)) {
             return ctx.rest({status:0,message:"查询用户信息失败"});
         }
-        ctx.session.user = newUserInfo;
-        return ctx.rest({userInfo: newUserInfo });
+        //ctx.session.user = newUserInfo;
+        usermap.set(newUserInfo._id, newUserInfo);
+        return ctx.rest({userInfo: newUserInfo, sessionkey:newUserInfo._id});
     },
     
 };
