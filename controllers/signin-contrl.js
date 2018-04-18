@@ -19,8 +19,10 @@ function isLogin(ctx){
     }
     let user = usermap.get(_id);
     if(user){
+        Logger.debug("isLogin: true.",user);
         return true;
     }else{
+        Logger.debug("isLogin: false.",user);
         return false;
     }
 }
