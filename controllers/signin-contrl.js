@@ -11,7 +11,7 @@ const Uuidv1 = require('uuid/v1')
 let usermap = new Map();
 
 function isLogin(ctx){
-    let _id = ctx.header['sessionkey'];
+    let _id = ctx.req.headers['sessionkey'];
     if(!_id){
         return false;
     }
@@ -23,7 +23,7 @@ function isLogin(ctx){
     }
 }
 function getUser(ctx){
-    let _id = ctx.header['sessionkey'];
+    let _id = ctx.req.headers['sessionkey'];
     if(!_id){
         return null;
     }
