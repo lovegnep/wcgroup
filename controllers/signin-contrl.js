@@ -8,7 +8,7 @@ const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 
-let usermap = new Map();
+let usermap = require('../utils/usercache');
 
 function isLogin(ctx){
     let _id = ctx.req.headers['sessionkey'];
@@ -17,7 +17,7 @@ function isLogin(ctx){
     if(!_id){
         return false;
     }
-    let user = usermap.get(_id);
+    let user = usermap.getuser(_id);
     if(user){
         Logger.debug("isLogin: true.",user);
         return true;
@@ -31,7 +31,7 @@ function getUser(ctx){
     if(!_id){
         return null;
     }
-    let user = usermap.get(_id);
+    let user = usermap.getuser(_id);
     if(user){
         return user;
     }else{
@@ -172,7 +172,7 @@ module.exports = {
             return ctx.rest({status:0,message:"查询用户信息失败"});
         }
         //ctx.session.user = newUserInfo;
-        usermap.set(newUserInfo._id, newUserInfo);
+        usermap.newuser(newUserInfo._id, newUserInfo);
         Logger.debug('add user to map:',newUserInfo);
         return ctx.rest({userInfo: newUserInfo, sessionkey:newUserInfo._id});
     },
