@@ -6,6 +6,7 @@ const _ = require('lodash');
 const DataInterface = require('../dataopt/interface');
 const Logger = require('../utils/logger');
 const Province = require('../utils/province');
+const Uuidv1 = require('uuid/v1')
 
 module.exports = {
     'GET /api/getTypes': async (ctx, next) => {
@@ -82,31 +83,33 @@ module.exports = {
     
         let sessionData = await rp(options);
         sessionData = JSON.parse(sessionData);
+	Logger.debug('post /api/auth: sessionData:',sessionData);
         if (!sessionData.openid) {
-          return ctx.rest({status:0,message:"登录失败"});
+	  Logger.error('!sessionData.openid:', sessionData);
+          return ctx.rest({status:0,message:"请求微信服务器失败"});
         }
     
         // 验证用户信息完整性
         const crypto = require('crypto');
         const sha1 = crypto.createHash('sha1').update(fullUserInfo.rawData + sessionData.session_key).digest('hex');
+	Logger.debug('post /api/auth:sha1:',sha1, fullUserInfo);
         if (fullUserInfo.signature !== sha1) {
-            return ctx.rest({status:0,message:"登录失败"});
+            return ctx.rest({status:0,message:"前端与微信服务器用户签名信息不一致"});
         }
     
         // 解释用户数据
         const weixinUserInfo = await Utils.decryptUserInfoData(sessionData.session_key, fullUserInfo.encryptedData, fullUserInfo.iv);
-        if (think.isEmpty(weixinUserInfo)) {
-          return this.fail('登录失败');
+        if (_.isEmpty(weixinUserInfo)) {
+          return this.fail('解密用户数据失败');
         }
     
         // 根据openid查找用户是否已经注册
         let userdoc = null, userId;
         userdoc = await DataInterface.getAccountByOpenId(sessionData.openid);
-        userId = userdoc._id;
-        if (_.isEmpty(userId)) {
+        if (_.isEmpty(userdoc) || _.isEmpty(userdoc._id)) {
           // 注册
           userdoc = await DataInterface.newAccount({
-            account: '微信用户' + think.uuid(6),
+            account: '微信用户' + Uuidv1(),
             passwd: sessionData.openid,
             register_time: Date.now(),
             register_ip: clientIp,
@@ -120,19 +123,19 @@ module.exports = {
           });
           userId = userdoc._id;
         }
-    
+        userId = userdoc._id; 
         sessionData.user_id = userId;
     
         // 查询用户信息
         const newUserInfo = await DataInterface.getAccountById(userId);
-    
+   Logger.debug('post: /api/auth: userdoc:',newUserInfo); 
         // 更新登录信息
         newUserInfo.last_login_time = Date.now();
         newUserInfo.last_login_ip = clientIp;
         userdoc = await newUserInfo.save();
     
         if (_.isEmpty(newUserInfo)) {
-            return ctx.rest({status:0,message:"登录失败"});
+            return ctx.rest({status:0,message:"查询用户信息失败"});
         }
         ctx.session.user = newUserInfo;
         return ctx.rest({userInfo: newUserInfo });

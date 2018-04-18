@@ -36,6 +36,7 @@
         "mz": "2.4.0",
         "node-uuid": "^1.4.8",
         "nunjucks": "2.4.2",
-        "request-promise": "^4.2.2"
+        "request-promise": "^4.2.2",
+        "uuid": "^3.2.1"
     }
 }

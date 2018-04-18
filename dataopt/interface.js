@@ -22,7 +22,7 @@ let getAccountByOpenId = async (weixin_openid) => {
 
 //查找帐号
 let getAccountById = async (_id) => {
-    let doc = await Model.UserModel.findById(_d).exec();
+    let doc = await Model.UserModel.findById(_id).exec();
     return doc;
 }
 
@@ -48,6 +48,7 @@ let getAllQRList = async(query,option) => {
 
 
 exports = {
+    newAccount:newAccount,
     getAccountByOpenId:getAccountByOpenId,
     getAccountById:getAccountById,
 
