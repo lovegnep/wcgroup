@@ -44,7 +44,7 @@ module.exports = {
         ctx.rest({data:types, status:1});
     },
     'GET /api/getallqrlist': async (ctx, next) => {
-        let limit = 20;
+        let limit = ctx.query.limit || 20;
         let skip = ctx.query.skip;
         let sorttype = ctx.query.sorttype;
         let basedon = parseInt(ctx.query.basedon);
@@ -94,7 +94,7 @@ module.exports = {
             return ctx.rest({status:0,message:'Please login first1.'});
         }
         let uploader = user._id;
-        let qrdoc = await DataInterface.newQr({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx});
+        let qrdoc = await DataInterface.newQR({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx});
         ctx.rest({status:1,data:qrdoc});
     },
     'POST /api/auth': async (ctx, next) => {
@@ -172,9 +172,10 @@ module.exports = {
             return ctx.rest({status:0,message:"查询用户信息失败"});
         }
         //ctx.session.user = newUserInfo;
-        usermap.newuser(newUserInfo._id, newUserInfo);
-        Logger.debug('add user to map:',newUserInfo);
-        return ctx.rest({userInfo: newUserInfo, sessionkey:newUserInfo._id});
+        let tmpnewUserInfo = newUserInfo.toObject();
+        usermap.newuser(tmpnewUserInfo.weixin_openid, tmpnewUserInfo);
+        Logger.debug('add user to map:',tmpnewUserInfo);
+        return ctx.rest({userInfo: tmpnewUserInfo, sessionkey:tmpnewUserInfo.weixin_openid});
     },
     
 };

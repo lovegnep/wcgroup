@@ -6,13 +6,15 @@ const Logger = require('./logger');
 let cache = new Map();
 
 function newuser(_id, user){
-    Logger.debug('newuser:',{...cache.keys()});
-    Logger.debug('newuser:',{...cache.values()});
+    Logger.debug('newuser:',[...cache.keys()]);
+    Logger.debug('newuser:',[...cache.values()]);
     cache.set(_id,user);
+    Logger.debug('newuser:',[...cache.keys()]);
+    Logger.debug('newuser:',[...cache.values()]);
 }
 function getuser(_id){
-    Logger.debug('getuser:',{...cache.keys()});
-    Logger.debug('getuser:',{...cache.values()});
+    Logger.debug('getuser:',[...cache.keys()]);
+    Logger.debug('getuser:',[...cache.values()]);
     return cache.get(_id);
 }
 

@@ -17,7 +17,7 @@ module.exports = {
                 console.log(`Process API ${ctx.request.method} ${ctx.request.url}...`);
                 isRest = true;
                 ctx.rest = (data, httpCode) => {
-                    Logger.debug('send json:',data);
+                    Logger.debug('send json:',JSON.stringify(data));
                     ctx.response.type = 'application/json';
                     ctx.response.body = data;
                     if (httpCode) {
