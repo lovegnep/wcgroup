@@ -12,7 +12,8 @@ const session = require("koa-session2");
 const Config = require('./config');
 const Cors = require('koa-cors');
 const  serve = require("koa-static");
-
+const https = require('https');
+const enforceHttps = require('koa-sslify');
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`isProduction = [${isProduction}]`);
@@ -64,6 +65,5 @@ app.use(rest.restify());
 
 // add controller:
 app.use(controller());
-
-app.listen(Config.port);
+https.createServer(httpsoptions, app.callback()).listen(Config.port);
 console.log('app started at port ', Config.port);
