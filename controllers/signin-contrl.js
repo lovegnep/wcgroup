@@ -10,14 +10,14 @@ const Uuidv1 = require('uuid/v1')
 
 let usermap = require('../utils/usercache');
 
-function isLogin(ctx){
+let isLogin = async(ctx) => {
     let _id = ctx.req.headers['sessionkey'];
     Logger.debug('isLogin:head:',ctx.req.headers);
     Logger.debug('isLogin:sessionkey:',_id);
     if(!_id){
         return false;
     }
-    let user = usermap.getuser(_id);
+    let user = await usermap.getuser(_id);
     if(user){
         Logger.debug("isLogin: true.",user);
         return true;
@@ -26,12 +26,12 @@ function isLogin(ctx){
         return false;
     }
 }
-function getUser(ctx){
+let getUser = async(ctx) => {
     let _id = ctx.req.headers['sessionkey'];
     if(!_id){
         return null;
     }
-    let user = usermap.getuser(_id);
+    let user = await usermap.getuser(_id);
     if(user){
         return user;
     }else{
@@ -86,10 +86,10 @@ module.exports = {
         let groupavatar = ctx.request.body.groupavatar;
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
-        if(!isLogin(ctx)){
+        if(await isLogin(ctx)){
             return ctx.rest({status:0,message:'Please login first.'});
         }
-        let user = getUser(ctx);
+        let user = await getUser(ctx);
         if(!user){
             return ctx.rest({status:0,message:'Please login first1.'});
         }
@@ -173,9 +173,9 @@ module.exports = {
         }
         //ctx.session.user = newUserInfo;
         let tmpnewUserInfo = newUserInfo.toObject();
-        usermap.newuser(tmpnewUserInfo.weixin_openid, tmpnewUserInfo);
+        await usermap.newuser(tmpnewUserInfo.weixin_openid, tmpnewUserInfo);
         Logger.debug('add user to map:',tmpnewUserInfo);
         return ctx.rest({userInfo: tmpnewUserInfo, sessionkey:tmpnewUserInfo.weixin_openid});
-    },
+   },
     
 };
