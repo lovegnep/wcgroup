@@ -15,8 +15,10 @@ client.on('error',function(err){
     Logger.error('redis error:',err);
 });
 function newuserpro(_id, user) {
+    let tmpuser = JSON.stringify(user);
+
     return new Promise(function (resolve, reject) {
-        client.set(_id, user, function (err, data) {
+        client.set(_id, tmpuser, function (err, data) {
             if (err) {
                 reject(err);
             } else {
@@ -31,7 +33,12 @@ function getuserpro(_id) {
             if (err) {
                 reject(err);
             } else {
-                resolve(data);
+                if(data){
+                    resolve(JSON.parse(data));
+                }else{
+                    resolve(null);
+                }
+
             }
         })
     });
