@@ -8,7 +8,12 @@ const config = require('../config');
 
 let cache = new Map();
 let client = Redis.createClient(config.redis.port, config.redis.host);
-
+client.on('connect', function(){
+    Logger.info('redis client connect to server success.');
+});
+client.on('error',function(err){
+    Logger.error('redis error:',err);
+});
 function newuserpro(_id, user) {
     return new Promise(function (resolve, reject) {
         client.set(_id, user, function (err, data) {
