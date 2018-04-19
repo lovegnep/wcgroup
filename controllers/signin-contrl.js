@@ -86,7 +86,8 @@ module.exports = {
         let groupavatar = ctx.request.body.groupavatar;
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
-        if(await isLogin(ctx)){
+        let islogin = await isLogin(ctx);
+        if(islogin){
             return ctx.rest({status:0,message:'Please login first.'});
         }
         let user = await getUser(ctx);
