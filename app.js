@@ -1,6 +1,6 @@
 const Logger = require("./utils/logger");
 const uuid = require('node-uuid');
-
+const fs = require('fs');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./middleware/controller');
@@ -14,6 +14,11 @@ const Cors = require('koa-cors');
 const  serve = require("koa-static");
 const https = require('https');
 const enforceHttps = require('koa-sslify');
+let httpsoptions = {
+	    key: fs.readFileSync('/home/https/www.5min8.com/Nginx/2_www.5min8.com.key'),  //ssl文件路径
+	        cert: fs.readFileSync('/home/https/www.5min8.com/Nginx/1_www.5min8.com_bundle.crt')  //ssl文件路径
+};
+
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
 console.log(`isProduction = [${isProduction}]`);
