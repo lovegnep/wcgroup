@@ -32,7 +32,6 @@ function getuserpro(_id) {
     });
 }
 let newuser = async (_id, user) => {
-    let user = null;
     try {
         user = await newuserpro(_id, user);
     } catch (err) {
