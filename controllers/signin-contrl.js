@@ -87,7 +87,7 @@ module.exports = {
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
         let islogin = await isLogin(ctx);
-        if(islogin){
+        if(!islogin){
             return ctx.rest({status:0,message:'Please login first.'});
         }
         let user = await getUser(ctx);
