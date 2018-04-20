@@ -26,7 +26,8 @@ let usermodal = new mongoose.Schema({
     weixin_openid: String,
     avatar: String,
     gender: {type:Number, default:0}, // 性别 0：未知、1：男、2：女
-    nickname: String//昵称
+    nickname: String,//昵称
+    collections:[ObjectId]
 });
 
 let UserModel = mongoose.model('UserModel', usermodal);
@@ -45,10 +46,28 @@ let qrmodel = new mongoose.Schema({
     masterQR:String,
     createTime:{type: Date, default: Date.now},
     updateTime:{type: Date, default: Date.now},
-    viewCount:{type:Number, default:0}
+    viewCount:{type:Number, default:0},
+    likeCount:{type:Number, default:0},
+    downs:[ObjectId],
+    ups:[ObjectId],
 });
 let Qrmodel = mongoose.model('Qrmodel', qrmodel);
 
+//评论表
+let comment = new mongoose.Schema({
+    userid:ObjectId,
+    qrid:ObjectId,
+    targetid:ObjectId,
+    content:String,
+    imgs:[String],
+    downs:[ObjectId],
+    ups:[ObjectId],
+    delete:{type: Boolean, default: false},
+    createTime:{type: Date, default: Date.now},
+    updateTime:{type: Date, default: Date.now},
+});
+let Comment = mongoose.model('Comment', comment);
+/*
 //完全树状结构图
 let tree = new mongoose.Schema({
     name:{type:String, default:'root'},
@@ -99,14 +118,11 @@ let comment = new mongoose.Schema({
     account: String, //创建者
 });
 let Comment = mongoose.model('Comment', comment);
-
+*/
 exports = {
     UserModel: UserModel,
-    Collection: Collection,
-    Share: Share,
-    Comment: Comment,
-    Tree: Tree,
-    Item: Item,
-    Qrmodel:Qrmodel
+    Qrmodel:Qrmodel,
+
+    Comment:Comment
 };
 Object.assign(module.exports, exports);
