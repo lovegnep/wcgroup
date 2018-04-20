@@ -354,4 +354,23 @@ module.exports = {
         Logger.debug('POST /api/ccollectqr: ccollect success.');
         ctx.rest({status:1,message:'ccollect success.'});
     },
+
+    'POST /api/getqrcommentnum': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let num = await DataInterface.getQRCommentNum(qrid);
+
+        Logger.debug('POST /api/getqrcommentnum:  success.');
+        ctx.rest({status:1,message:' success.',data:num});
+    },
 };

@@ -190,6 +190,20 @@ let cAddLikeCount = async(_id) => {
     }
     return qr;
 }
+
+let getQRCommentNum = async(_id) => {
+    let comments = null;
+    try{
+        comments = await Model.Comment.find({qrid:_id}).exec();
+    }catch(err){
+        Logger.error('getQRCommentNum:err:',err);
+    }
+    if(comments){
+        return comments.length;
+    }else{
+        return 0;
+    }
+}
 exports = {
     newAccount:newAccount,
     getAccountByOpenId:getAccountByOpenId,
@@ -216,5 +230,7 @@ exports = {
     cCollectQR:cCollectQR,
     addLikeCount:addLikeCount,
     cAddLikeCount:cAddLikeCount,
+
+    getQRCommentNum:getQRCommentNum,
 };
 Object.assign(module.exports, exports);
