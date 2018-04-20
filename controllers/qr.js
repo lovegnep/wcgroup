@@ -186,7 +186,7 @@ module.exports = {
         if(commentdoc.ups && commentdoc.ups.indexOf(user._id) !== -1){
             await DataInterface.cUpComment(commentid,user._id);
         }
-        if(commentdoc.downs && commentdoc.downs.indexOf(user._id) !=== -1){
+        if(commentdoc.downs && commentdoc.downs.indexOf(user._id) !== -1){
             return ctx.rest({status:0,message:'have down the comment.'});
         }
         await DataInterface.downComment(commentid,user._id);
