@@ -55,7 +55,7 @@ let Qrmodel = mongoose.model('Qrmodel', qrmodel);
 
 //评论表
 let comment = new mongoose.Schema({
-    userid:ObjectId,
+    userid:{type:ObjectId, ref: 'UserModel'},
     qrid:ObjectId,
     targetid:ObjectId,
     content:String,

@@ -192,18 +192,25 @@ let cAddLikeCount = async(_id) => {
 }
 
 let getQRCommentNum = async(_id) => {
-    let comments = null;
+    let comments = 0;
     try{
-        comments = await Model.Comment.find({qrid:_id}).exec();
+        comments = await Model.Comment.count({qrid:_id}).exec();
     }catch(err){
         Logger.error('getQRCommentNum:err:',err);
     }
-    if(comments){
-        return comments.length;
-    }else{
-        return 0;
-    }
+    return comments;
 }
+//得到某往篇qr的评论
+let getQRComment = async(query, options) => {
+    let comments = null;
+    try{
+        comments = await Model.Comment.find(query,{},options).populate('userid','_id avatar nickname').exec();
+    }catch(err){
+        Logger.error('getQRCommentNum:err:',err);
+    }
+    return comments;
+}
+
 exports = {
     newAccount:newAccount,
     getAccountByOpenId:getAccountByOpenId,
@@ -232,5 +239,6 @@ exports = {
     cAddLikeCount:cAddLikeCount,
 
     getQRCommentNum:getQRCommentNum,
+    getQRComment:getQRComment,
 };
 Object.assign(module.exports, exports);

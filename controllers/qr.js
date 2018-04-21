@@ -373,4 +373,28 @@ module.exports = {
         Logger.debug('POST /api/getqrcommentnum:  success.');
         ctx.rest({status:1,message:' success.',data:num});
     },
+    'POST /api/getqrcomment': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let query = {};
+        query.qrid = qrid;
+        query.delete = false;
+        let sorttype = ctx.request.body.sorttype || '-createTime';
+        let skip = ctx.request.body.skip || 0;
+        let limit = ctx.request.body.limit || Config.qr.limit;
+        let comments = await DataInterface.getQRComment(query,{sorttype,skip,limit});
+
+        Logger.debug('POST /api/getqrcomment:  success.');
+        ctx.rest({status:1,message:' success.',data:comments||[]});
+    },
 };
