@@ -59,7 +59,7 @@ module.exports = {
         if(!content || content.length < 2){
             return ctx.rest({status:0,message:'content too little.'});
         }
-        let data = {qrid,content,_id:user._id};
+        let data = {qrid,content,userid:user._id};
         if(targetid && targetid.length > 2){
             data.targetid = targetid;
         }
