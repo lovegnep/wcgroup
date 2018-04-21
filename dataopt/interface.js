@@ -204,7 +204,8 @@ let getQRCommentNum = async(_id) => {
 let getQRComment = async(query, options) => {
     let comments = null;
     try{
-        comments = await Model.Comment.find(query,{},options).populate('userid','_id avatar nickname').exec();
+        //comments = await Model.Comment.find(query,{},options).populate('userid','_id avatar nickname').exec();
+        comments = await Model.Comment.find(query,{},options).populate({path:'userid',select:{_id:1,avatar:1,nickname:1}}).exec();
     }catch(err){
         Logger.error('getQRCommentNum:err:',err);
     }
