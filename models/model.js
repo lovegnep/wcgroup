@@ -67,6 +67,18 @@ let comment = new mongoose.Schema({
     updateTime:{type: Date, default: Date.now},
 });
 let Comment = mongoose.model('Comment', comment);
+
+//消息表
+let message = new mongoose.Schema({
+    sourceid:{type:ObjectId, ref: 'UserModel'},
+    targetid:{type:ObjectId, ref: 'UserModel'},
+    content:String,
+    createTime:{type: Date, default: Date.now},
+    type:{type:Number,default:1},
+    status:{type:Number,default:1},
+    delete:{type:Boolean, default:false}
+});
+let Message = mongoose.model('Message', message);
 /*
 //完全树状结构图
 let tree = new mongoose.Schema({
@@ -123,6 +135,8 @@ exports = {
     UserModel: UserModel,
     Qrmodel:Qrmodel,
 
-    Comment:Comment
+    Comment:Comment,
+
+    Message:Message
 };
 Object.assign(module.exports, exports);
