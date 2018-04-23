@@ -11,6 +11,10 @@ module.exports = {
     },
     qr:{
         limit:20
+    },
+    user_cache:{
+        userprefix: 'USER_CACHE_',//前缀
+        expire: 10*3600//过期时间10小时
     }
 }
 

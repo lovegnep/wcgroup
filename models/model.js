@@ -9,6 +9,7 @@ const ObjectId  = mongoose.Schema.ObjectId;
 mongoose.connect(Config.db, function(err){
     if(err){
         Logger.error('mongoose connect failed.');
+        process.exit(1);//进程退出
     }else{
         Logger.info('mongoose connect success.');
     }

@@ -8,17 +8,22 @@ const config = require('../config');
 
 let cache = new Map();
 let client = Redis.createClient(config.redis.port, config.redis.host);
-client.on('connect', function(){
+client.on('ready', function(){
     Logger.info('redis client connect to server success.');
 });
 client.on('error',function(err){
-    Logger.error('redis error:',err);
+    Logger.error('redis error, please check:',err);
 });
+
+function combine(_id){
+    return config.user_cache.userprefix + _id;
+}
+
 function newuserpro(_id, user) {
     let tmpuser = JSON.stringify(user);
 
     return new Promise(function (resolve, reject) {
-        client.set(_id, tmpuser, function (err, data) {
+        client.set(combine(_id), tmpuser, 'EX',  config.user_cache.expire, function (err, data) {
             if (err) {
                 reject(err);
             } else {
@@ -29,11 +34,15 @@ function newuserpro(_id, user) {
 }
 function getuserpro(_id) {
     return new Promise(function (resolve, reject) {
-        client.get(_id, function (err, data) {
+        client.get(combine(_id), function (err, data) {
             if (err) {
                 reject(err);
             } else {
                 if(data){
+                    client.expire(combine(_id),config.user_cache.expire,function(err,data){
+                        if(err){Logger.error('redis client update key expire failed:',_id);}
+                        else{Logger.debug('redis client update key expire success:',_id);}
+                    });
                     resolve(JSON.parse(data));
                 }else{
                     resolve(null);

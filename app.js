@@ -37,7 +37,7 @@ app.use(async (ctx, next) => {
 
     console.log("ctx.response.status=" + ctx.response.status);
     if (ctx.response.status == 404) {
-        ctx.response.redirect('/static/html/404.html');
+        ctx.rest({status:0,message:'unknow path'});
     }
 
     execTime = new Date().getTime() - start;
