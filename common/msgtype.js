@@ -17,9 +17,16 @@ const EErrorType = {
     EInvalidQR:10004,//上传的二维码非法
 };
 
+const ImgType = {
+    EAvatar:1,//群头像
+    EGQR:2,//群二维码
+    EUploaderQR:3,//上传者二维码
+};
+
 exports = {
     EMessageStatus:EMessageStatus,
     EMessageType:EMessageType,
     EErrorType:EErrorType,
+    ImgType:ImgType,
 };
 Object.assign(module.exports, exports);
