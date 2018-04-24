@@ -67,6 +67,7 @@ function addUploadFile(router) {
     //upload.single('file')这里面的file是上传空间的name<input type="file" name="file"/>    
     router.post('/api/uploadImg',upload.single('imgFile'),async (ctx,next) => {  
         let filename = ctx.req.file.filename;
+        Logger.info('test: ', ctx.req.body);
         Logger.info('POST /api/uploadImg: filename:', filename);
 	ctx.rest({filename: '/uploads/'+filename, status:1});
     });  

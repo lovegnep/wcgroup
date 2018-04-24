@@ -39,6 +39,31 @@ let getUser = async(ctx) => {
     }
 }
 module.exports = {
+    'GET /api/getallqrlist': async (ctx, next) => {
+        let limit = ctx.query.limit || 20;
+        let skip = ctx.query.skip;
+        let sorttype = ctx.query.sorttype;
+        let basedon = parseInt(ctx.query.basedon);
+        let baseparam = ctx.query.baseparam;
+        let options = { skip: skip, limit: limit, sort: sorttype};
+        let query = {};
+        if(basedon === 1){
+            query.location = new RegExp('^'+baseparam,'i');
+        }else if(basedon === 2){
+            query.industry = baseparam;
+        }
+        let qrlist = await DataInterface.getAllQRList(query,options);
+        ctx.rest({data:qrlist, status:1});
+    },
+    'GET /api/getqrlist': async (ctx, next) => {
+        if(!ctx.session.user){
+            return ctx.rest({status:0,message:'Please login first.'});
+        }
+        let user_id = ctx.session.user._id;
+        let qrlist = await DataInterface.getQRList(user_id);
+        ctx.rest({data:qrlist, status:1});
+    },
+
     'POST /api/newcomment': async (ctx, next) => {
         let islogin = await isLogin(ctx);
         if(!islogin){

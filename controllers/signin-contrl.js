@@ -43,61 +43,6 @@ module.exports = {
         let types = Province.getTypes();
         ctx.rest({data:types, status:1});
     },
-    'GET /api/getallqrlist': async (ctx, next) => {
-        let limit = ctx.query.limit || 20;
-        let skip = ctx.query.skip;
-        let sorttype = ctx.query.sorttype;
-        let basedon = parseInt(ctx.query.basedon);
-        let baseparam = ctx.query.baseparam;
-        let options = { skip: skip, limit: limit, sort: sorttype};
-        let query = {};
-        if(basedon === 1){
-            query.location = new RegExp('^'+baseparam,'i');
-        }else if(basedon === 2){
-            query.industry = baseparam;
-        }
-        let qrlist = await DataInterface.getAllQRList(query,options);
-        ctx.rest({data:qrlist, status:1});
-    },
-    'GET /api/getqrlist': async (ctx, next) => {
-        if(!ctx.session.user){
-            return ctx.rest({status:0,message:'Please login first.'});
-        }
-        let user_id = ctx.session.user._id;
-        let qrlist = await DataInterface.getQRList(user_id);
-        ctx.rest({data:qrlist, status:1});
-    },
-    /*'POST /api/uploadImg': async (ctx,next) => {
-        if(!ctx.session.user){
-            return ctx.rest({status:0,message:'Please login first.'});
-        }
-        let filename = ctx.req.imgFile.filename;
-        Logger.info('POST /api/uploadImg: filename:', filename);
-        ctx.rest({filename: filename, status:1});
-    },*/
-    'POST /api/uploadGroup': async (ctx, next) => {
-        let industry = ctx.request.body.induxtry;
-        let location =  ctx.request.body.location;
-        let groupname = ctx.request.body.groupname;
-        let abstract = ctx.request.body.abstract;
-        let grouptag = ctx.request.body.grouptag;
-        let masterwx = ctx.request.body.masterwx;
-
-        let groupavatar = ctx.request.body.groupavatar;
-        let groupQR = ctx.request.body.groupQR;
-        let masterQR = ctx.request.body.masterQR;
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'Please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'Please login first1.'});
-        }
-        let uploader = user._id;
-        let qrdoc = await DataInterface.newQR({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx});
-        ctx.rest({status:1,data:qrdoc});
-    },
     'POST /api/auth': async (ctx, next) => {
         const code = ctx.request.body.code;
         const fullUserInfo = ctx.request.body.userInfo;
@@ -178,5 +123,4 @@ module.exports = {
         Logger.debug('add user to map:',tmpnewUserInfo);
         return ctx.rest({userInfo: tmpnewUserInfo, sessionkey:tmpnewUserInfo.weixin_openid});
    },
-    
 };
