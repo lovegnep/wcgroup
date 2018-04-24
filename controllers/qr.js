@@ -63,7 +63,10 @@ module.exports = {
         let qrlist = await DataInterface.getQRList(user_id);
         ctx.rest({data:qrlist, status:1});
     },
-
+    'GET /api/getqr': async (ctx, next) => {
+        let qr = await DataInterface.getQR(ctx.query._id;
+        ctx.rest({data:qr, status:1});
+    },
     'POST /api/newcomment': async (ctx, next) => {
         let islogin = await isLogin(ctx);
         if(!islogin){
