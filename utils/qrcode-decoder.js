@@ -2343,7 +2343,7 @@ qrcode.decode = function(src){
             catch(e)
             {
                 console.log(e);
-                qrcode.result = "error decoding QR Code";
+                qrcode.result = null;
             }
             if(qrcode.callback!=null)
                 qrcode.callback(qrcode.result);
