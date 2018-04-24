@@ -15,10 +15,10 @@ module.exports = {
                 ctx.response.body = data;
                 if (httpCode) {
                     ctx.response.status = httpCode;
+                }else{
+                    ctx.response.status = 200;
                 }
             }
-
-
         };
     }
 };
