@@ -72,6 +72,7 @@ function addUploadFile(router) {
         let filename = ctx.req.file.filename;
         let absolutePath = path.join(__dirname,'../',ctx.req.file.path);
         Logger.debug('test: absolutePath:',absolutePath);
+        Logger.debug('test:head:',ctx.req.headers);
         let type = parseInt(ctx.req.body.type);
         Logger.info('POST /api/uploadImg: filename:', filename);
 	ctx.rest({filename: '/uploads/'+filename, status:1});
