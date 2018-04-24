@@ -1,5 +1,8 @@
 const Logger = require('../utils/logger');
 const fs = require('fs');
+const path = require('path');
+const Uuidv1 = require('uuid/v1');
+const Config = require('../config');
 let config = {
     rootpath:''
 };
@@ -56,18 +59,19 @@ function addUploadFile(router) {
     var storage = multer.diskStorage({  
         //文件保存路径  
         destination:function (req,file,cb) {  
-            cb(null,'public/uploads/')  
+            cb(null,Config.uploadimg.dir)
         },  
         filename:function (req,file,cb){  
             var fileFormat = (file.originalname).split(".");  
-            cb(null,Date.now() + "." + fileFormat[fileFormat.length - 1]);  
+            cb(null,Uuidv1() + "." + fileFormat[fileFormat.length - 1]);
         }  
     })  
     var upload = multer({storage:storage});  
     //upload.single('file')这里面的file是上传空间的name<input type="file" name="file"/>    
     router.post('/api/uploadImg',upload.single('imgFile'),async (ctx,next) => {  
         let filename = ctx.req.file.filename;
-        Logger.debug('test:',ctx.req.file);
+        let absolutePath = path.join(__dirname,'../',ctx.req.file.path);
+        Logger.debug('test: absolutePath:',absolutePath);
         let type = parseInt(ctx.req.body.type);
         Logger.info('POST /api/uploadImg: filename:', filename);
 	ctx.rest({filename: '/uploads/'+filename, status:1});
