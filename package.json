@@ -18,6 +18,7 @@
         "url": "https://github.com/halloffamezwx/zshop.git"
     },
     "dependencies": {
+        "canvas": "^2.0.0-alpha.12",
         "captchapng": "",
         "koa": "2.0.0",
         "koa-bodyparser": "3.2.0",
