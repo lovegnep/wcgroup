@@ -64,7 +64,10 @@ app.use(session({
 app.use(rest.restify());
 
 //如果是产品阶段要校验appid
-app.use(testappid);
+if(isProduction){
+    app.use(testappid);
+}
+
 
 // static file support:
 //if (! isProduction) {
