@@ -14,7 +14,7 @@ function testappid(ctx,next){
         return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
     }
     if(refer.indexOf(Config.wechat.appid) !== -1){
-        next();
+         return next();
     }
     Logger.warn('testappid: can not find refer or refer2 invalid.');
     return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
