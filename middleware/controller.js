@@ -3,6 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const Uuidv1 = require('uuid/v1');
 const Config = require('../config');
+const MsgType = require('../common/msgtype');
+const Qrdecode = require('../utils/qrdecode');
+
 let config = {
     rootpath:''
 };
@@ -74,6 +77,18 @@ function addUploadFile(router) {
         Logger.debug('test: absolutePath:',absolutePath);
         Logger.debug('test:head:',ctx.req.headers);
         let type = parseInt(ctx.req.body.type);
+        let res = null;
+        if(type === MsgType.ImgType.EGQR || type === MsgType.ImgType.EUploaderQR){//是二维码，则要判断是否是二维码
+            try{
+                res = await Qrdecode.decode(absolutePath);
+            }catch(err){
+                Logger.warn('post /api/uploadImg: invalid qr img.');
+            }
+            if(!res){
+                fs.unlinkSync(absolutePath);
+                return ctx.rest({status:MsgType.EErrorType.EInvalidQR});
+            }
+        }
         Logger.info('POST /api/uploadImg: filename:', filename);
 	ctx.rest({filename: '/uploads/'+filename, status:1});
     });  

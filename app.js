@@ -14,6 +14,9 @@ const Cors = require('koa-cors');
 const  serve = require("koa-static");
 const https = require('https');
 const enforceHttps = require('koa-sslify');
+
+let testappid = require('./utils/common').testappid;
+
 let httpsoptions = {
 	    key: fs.readFileSync('/home/https/www.5min8.com/Nginx/2_www.5min8.com.key'),  //ssl文件路径
 	        cert: fs.readFileSync('/home/https/www.5min8.com/Nginx/1_www.5min8.com_bundle.crt')  //ssl文件路径
@@ -57,6 +60,12 @@ app.use(session({
     maxAge: 30 * 60 * 1000
 }));
 
+// bind .rest() for ctx:
+app.use(rest.restify());
+
+//如果是产品阶段要校验appid
+app.use(testappid);
+
 // static file support:
 //if (! isProduction) {
     app.use(serve(__dirname + '/public'));
@@ -64,9 +73,6 @@ app.use(session({
 
 // parse request body:
 app.use(bodyParser());
-
-// bind .rest() for ctx:
-app.use(rest.restify());
 
 // add controller:
 app.use(controller());

@@ -1,6 +1,24 @@
 const crypto = require('crypto');
 const md5 = require('md5');
 const Config = require('../config');
+const Logger = require('./logger');
+const MsgType = require('../common/msgtype');
+
+//refer格式
+//https://servicewechat.com/{appid}/{version}/page-frame.html
+
+function testappid(ctx,next){
+    let refer = ctx.req.headers['referer'];
+    if(!refer || refer.length < 30){
+        Logger.warn('testappid: can not find refer or rever invalid.');
+        return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
+    }
+    if(refer.indexOf(Config.wechat.appid) !== -1){
+        next();
+    }
+    Logger.warn('testappid: can not find refer or rever invalid.');
+    return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
+}
 
 module.exports = {
     sleep: function (time) {
@@ -35,5 +53,6 @@ module.exports = {
         }
     
         return decoded;
-      }
+      },
+    testappid:testappid,
 };
