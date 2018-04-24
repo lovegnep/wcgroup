@@ -10,13 +10,13 @@ const MsgType = require('../common/msgtype');
 function testappid(ctx,next){
     let refer = ctx.req.headers['referer'];
     if(!refer || refer.length < 30){
-        Logger.warn('testappid: can not find refer or rever invalid.');
+        Logger.warn('testappid: can not find refer or refer1 invalid.');
         return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
     }
     if(refer.indexOf(Config.wechat.appid) !== -1){
         next();
     }
-    Logger.warn('testappid: can not find refer or rever invalid.');
+    Logger.warn('testappid: can not find refer or refer2 invalid.');
     return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
 }
 
