@@ -24,11 +24,22 @@ let usermodal = new mongoose.Schema({
     last_login_time: {type: Date, default: Date.now},
     last_login_ip: String,
     mobile: '',
-    weixin_openid: String,
-    avatar: String,
+    weixin_openid: String,//微信号唯一标识符
+    avatar: String,//头像
     gender: {type:Number, default:0}, // 性别 0：未知、1：男、2：女
     nickname: String,//昵称
-    collections:[ObjectId]
+    birthday:String,//生日
+    sign:String,//签名
+    weixinid:String,//微信号
+    location:String,//位置
+    collections:[ObjectId],//收藏，指向qrmodel
+
+    weibi:Number,//微币数量
+    rmb:Number,//待提现
+    vipstart:Date,//会员开始时间，如果不是，不存在此字段
+    monthstart:Date,//包月开始时间，如果不是，不存在此字段
+    son:[{type:ObjectId, ref: 'UserModel'}],//发展的下线
+    father:{type:ObjectId, ref: 'UserModel'},//上线
 });
 
 let UserModel = mongoose.model('UserModel', usermodal);
