@@ -16,6 +16,7 @@ const EErrorType = {
     ENoHandle:10003,//没有对应的请求处理函数
     EInvalidReq:10004,//非法请求，不是从appid过来的请求都是非法请求
     EInvalidQR:11000,//上传的二维码非法
+    ENoWeibi:11001,//微币不够
 };
 
 const ImgType = {

@@ -4,9 +4,11 @@ const rp = require('request-promise');
 const Utils = require('../utils/common');
 const _ = require('lodash');
 const DataInterface = require('../dataopt/interface');
+const UserInterface = require('../dataopt/user');
 const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
+const MsgType = require('../common/msgtype');
 
 let usermap = require('../utils/usercache');
 
@@ -40,17 +42,28 @@ let getUser = async(ctx) => {
 }
 module.exports = {
     'GET /api/getallqrlist': async (ctx, next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let userdoc = await DataInterface.getAccountById(user._id);
         let limit = ctx.query.limit || 20;
-        let skip = ctx.query.skip;
-        let sorttype = ctx.query.sorttype;
-        let basedon = parseInt(ctx.query.basedon);
-        let baseparam = ctx.query.baseparam;
-        let options = { skip: skip, limit: limit, sort: sorttype};
+        let skip = ctx.query.skip || 0;
+        let type = ctx.query.type || 1;
+        //let sorttype = ctx.query.sorttype;
+        //let basedon = parseInt(ctx.query.basedon);
+        //let baseparam = ctx.query.baseparam;
+        let options = { skip: skip, limit: limit};
         let query = {};
-        if(basedon === 1){
-            query.location = new RegExp('^'+baseparam,'i');
-        }else if(basedon === 2){
-            query.industry = baseparam;
+        query.type = type;
+        if(userdoc.views && userdoc.views.length > 0){
+            query._id = {
+                $nin:userdoc.views
+            }
         }
         let qrlist = await DataInterface.getAllQRList(query,options);
         ctx.rest({data:qrlist, status:1});
@@ -67,7 +80,8 @@ module.exports = {
         let qr = await DataInterface.getQR(ctx.query._id);
         ctx.rest({data:qr, status:1});
     },
-    'POST /api/newcomment': async (ctx, next) => {
+
+    'POST /api/viewqr': async (ctx, next) => {
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:0,message:'please login first.'});
@@ -75,151 +89,17 @@ module.exports = {
         let user = await getUser(ctx);
         if(!user){
             return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2){
+            return ctx.rest({status:0,message:'invalid id.'});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
-        let targetid = ctx.request.body.targetid;
-        let content = ctx.request.body.content;
-        let imgs = ctx.request.body.imgs;
-        let qrid = ctx.request.body.qrid;
-        if(!qrid || qrid === ''){
-            return ctx.rest({status:0,message:'target qr not exist.'});
+        if(userdoc.weibi < 1){
+            return ctx.rest({status:MsgType.EErrorType.ENoWeibi,message:'not enough weibi'});
         }
-        if(!content || content.length < 2){
-            return ctx.rest({status:0,message:'content too little.'});
-        }
-        let data = {qrid,content,userid:user._id};
-        if(targetid && targetid.length > 2){
-            data.targetid = targetid;
-        }
-        if(imgs && imgs.length > 0){
-            data.imgs = imgs;
-        }
-        let comment = await DataInterface.newComment(data);
-        return ctx.rest({status:1,data:comment});
-    },
-    'POST /api/deletecomment': async (ctx,next) =>{
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
-        let commentid = ctx.request.body._id;
-        if(!commentid || commentid.length < 2){
-            return ctx.rest({status:0,message:'invalid id.'});
-        }
-        let commentdoc = await DataInterface.deleteComment(commentid);
-        if(!commentdoc){
-            return ctx.rest({status:0,message:'the comment nost exist.'});
-        }
-        commentdoc.delete = true;
-        await commentdoc.save();
-        Logger.info('POST /api/deletecomment: delete comment success.',user._id,commentdoc._id);
-        ctx.rest({status:1,message:'delete success.'});
-    },
-    'POST /api/upcomment': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
-        let commentid = ctx.request.body._id;
-        if(!commentid || commentid.length < 2){
-            return ctx.rest({status:0,message:'invalid id.'});
-        }
-        let commentdoc = await DataInterface.getComment(commentid);
-        if(!commentdoc){
-            return ctx.rest({status:0,message:'the comment nost exist.'});
-        }
-        if(commentdoc.downs && commentdoc.downs.indexOf(user._id) !== -1){
-            await DataInterface.cDownComment(commentid,user._id);
-        }
-        if(commentdoc.ups && commentdoc.ups.indexOf(user._id) !== -1){
-            return ctx.rest({status:0,message:'have up the comment.'});
-        }
-        await DataInterface.upComment(commentid, user._id);
-        Logger.debug('POST /api/upcomment: up success.');
-        ctx.rest({status:1,message:'up success.'});
-    },
-    'POST /api/cupcomment': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
-        let commentid = ctx.request.body._id;
-        if(!commentid || commentid.length < 2){
-            return ctx.rest({status:0,message:'invalid id.'});
-        }
-        let commentdoc = await DataInterface.getComment(commentid);
-        if(!commentdoc){
-            return ctx.rest({status:0,message:'the comment nost exist.'});
-        }
-        if(!commentdoc.ups || commentdoc.ups.indexOf(user._id) === -1){
-            return ctx.rest({status:0,message:'havn`t up the comment.'});
-        }
-        commentdoc = await DataInterface.cUpComment(commentid,user._id);
-        Logger.debug('POST /api/cupcomment: cup success.');
-        ctx.rest({status:1,message:'cup success.'});
-    },
-    'POST /api/cdowncomment': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
-        let commentid = ctx.request.body._id;
-        if(!commentid || commentid.length < 2){
-            return ctx.rest({status:0,message:'invalid id.'});
-        }
-        let commentdoc = await DataInterface.getComment(commentid);
-        if(!commentdoc){
-            return ctx.rest({status:0,message:'the comment nost exist.'});
-        }
-        if(commentdoc.downs && commentdoc.downs.indexOf(user._id) === -1){
-            return ctx.rest({status:0,message:'havnt down the comment.'});
-        }
-        commentdoc = await DataInterface.cDownComment(commentid,user._id);
-        Logger.debug('POST /api/cdowncomment: cdown success.');
-        ctx.rest({status:1,message:'cdown success.'});
-    },
-    'POST /api/downcomment': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
-        let commentid = ctx.request.body._id;
-        if(!commentid || commentid.length < 2){
-            return ctx.rest({status:0,message:'invalid id.'});
-        }
-        let commentdoc = await DataInterface.getComment(commentid);
-        if(!commentdoc){
-            return ctx.rest({status:0,message:'the comment nost exist.'});
-        }
-        if(commentdoc.ups && commentdoc.ups.indexOf(user._id) !== -1){
-            await DataInterface.cUpComment(commentid,user._id);
-        }
-        if(commentdoc.downs && commentdoc.downs.indexOf(user._id) !== -1){
-            return ctx.rest({status:0,message:'have down the comment.'});
-        }
-        await DataInterface.downComment(commentid,user._id);
-        Logger.debug('POST /api/downcomment: down success.');
-        ctx.rest({status:1,message:'down success.'});
+        await UserInterface.updateViewsAndWeibi(qrid,user._id);
+        return ctx.rest({status:MsgType.EErrorType.EOK});
     },
 
     'POST /api/upqr': async (ctx,next) => {

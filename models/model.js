@@ -33,16 +33,25 @@ let usermodal = new mongoose.Schema({
     weixinid:String,//微信号
     location:String,//位置
     collections:[ObjectId],//收藏，指向qrmodel
-
-    weibi:Number,//微币数量
-    rmb:Number,//待提现
-    vipstart:Date,//会员开始时间，如果不是，不存在此字段
-    monthstart:Date,//包月开始时间，如果不是，不存在此字段
+    views:[ObjectId],//浏览，指向qrmodel
+    vipid:{type:ObjectId, ref: 'VipModel'},
     son:[{type:ObjectId, ref: 'UserModel'}],//发展的下线
     father:{type:ObjectId, ref: 'UserModel'},//上线
+    weibi:{type:Number, default:100},//微币数量
 });
 
 let UserModel = mongoose.model('UserModel', usermodal);
+
+let vipmodel = mongoose.Schema({
+    userid:{type:ObjectId, ref: 'UserModel'},
+    rmb:Number,//待提现
+    vipstart:Date,//会员开始时间，如果不是，不存在此字段
+    monthstart:Date,//包月开始时间，如果不是，不存在此字段
+    groupqr:Number,//
+    personqr:Number,//
+    publicqr:Number
+});
+let VipModel = mongoose.model('VipModel',vipmodel);
 
 //群二维码表,个人微信，公众号
 let qrmodel = new mongoose.Schema({
@@ -95,6 +104,8 @@ let message = new mongoose.Schema({
     delete:{type:Boolean, default:false}
 });
 let Message = mongoose.model('Message', message);
+
+
 /*
 //完全树状结构图
 let tree = new mongoose.Schema({
@@ -149,6 +160,7 @@ let Comment = mongoose.model('Comment', comment);
 */
 exports = {
     UserModel: UserModel,
+    VipModel:VipModel,
     Qrmodel:Qrmodel,
 
     Comment:Comment,
