@@ -66,7 +66,7 @@ module.exports = {
             }
         }
         let qrlist = await DataInterface.getAllQRList(query,options);
-        ctx.rest({data:qrlist, status:1});
+        ctx.rest({data:qrlist, status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqrlist': async (ctx, next) => {
         if(!ctx.session.user){
