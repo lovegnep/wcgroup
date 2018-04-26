@@ -25,10 +25,23 @@ const ImgType = {
     EUploaderQR:3,//上传者二维码
 };
 
+const QRType = {
+    EGroup:1,
+    EPerson:2,
+    EPublic:3
+}
+
+const QRSource = {
+    EUpload:1,
+    EPython:2
+}
+
 exports = {
     EMessageStatus:EMessageStatus,
     EMessageType:EMessageType,
     EErrorType:EErrorType,
     ImgType:ImgType,
+    QRType:QRType,
+    QRSource:QRSource,
 };
 Object.assign(module.exports, exports);

@@ -7,6 +7,7 @@ const DataInterface = require('../dataopt/interface');
 const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
+const MsgType = require('../common/msgtype');
 
 let usermap = require('../utils/usercache');
 
@@ -46,7 +47,8 @@ module.exports = {
         let abstract = ctx.request.body.abstract;
         let grouptag = ctx.request.body.grouptag;
         let masterwx = ctx.request.body.masterwx;
-
+        let type = ctx.request.body.type;
+        let source = MsgType.QRSource.EUpload;
         let groupavatar = ctx.request.body.groupavatar;
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
@@ -59,7 +61,7 @@ module.exports = {
             return ctx.rest({status:0,message:'Please login first1.'});
         }
         let uploader = user._id;
-        let qrdoc = await DataInterface.newQR({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx});
+        let qrdoc = await DataInterface.newQR({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source});
         ctx.rest({status:1,data:qrdoc});
     },
 };
