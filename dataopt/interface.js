@@ -42,6 +42,11 @@ let getQRList = async (uploader_id) => {
     return qrlist;
 }
 
+let getQRListofUser = async(query,options) => {
+    let qrlist = await Model.Qrmodel.find(query,{},options).exec();
+    return qrlist;
+}
+
 //
 let getAllQRList = async(query,option) => {
     let qrlist = await Model.Qrmodel.find(query,{},option).exec();
@@ -221,6 +226,7 @@ exports = {
     getQR:getQR,
     getQRList:getQRList,
     getAllQRList:getAllQRList,
+    getQRListofUser:getQRListofUser,
 
     newComment:newComment,
     getComment:getComment,

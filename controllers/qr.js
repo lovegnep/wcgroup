@@ -69,12 +69,20 @@ module.exports = {
         ctx.rest({data:qrlist, status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqrlist': async (ctx, next) => {
-        if(!ctx.session.user){
-            return ctx.rest({status:0,message:'Please login first.'});
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
         }
-        let user_id = ctx.session.user._id;
-        let qrlist = await DataInterface.getQRList(user_id);
-        ctx.rest({data:qrlist, status:1});
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let type = ctx.query.type || MsgType.QRType.EGroup;
+        let userid = user._id;
+        let limit = ctx.query.limit || 20;
+        let skip = ctx.query.skip || 0;
+        let qrlist = await DataInterface.getQRListofUser({type,userid},{skip,limit});
+        ctx.rest({data:qrlist, status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqr': async (ctx, next) => {
         let qr = await DataInterface.getQR(ctx.query._id);
