@@ -81,7 +81,7 @@ module.exports = {
         let userid = user._id;
         let limit = ctx.query.limit || 20;
         let skip = ctx.query.skip || 0;
-        let qrlist = await DataInterface.getQRListofUser({type,userid},{skip,limit});
+        let qrlist = await DataInterface.getQRListofUser({type,uploader:userid},{skip,limit});
         ctx.rest({data:qrlist, status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqr': async (ctx, next) => {
