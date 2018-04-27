@@ -19,7 +19,13 @@ let uds = mongoose.Schema({
         index: '2dsphere'
     }
 });
-let Uds = mongoose.model('Uds',uds);/*
+let Uds = mongoose.model('Uds',uds);
+let doc = new Uds({uid:'hehe'});
+doc.save(function(data){
+    let a= 0;
+})
+    /*
+
 let doc1 = new Uds({
     uid:'111',
     coords:[1,1]
@@ -35,7 +41,7 @@ let doc3 = new Uds({
     coords:[3,3]
 });
 doc3.save();*/
-let point = {
+/*let point = {
     type: "Point",
     coordinates: [1, 1]
 };
@@ -52,5 +58,5 @@ Uds.aggregate(
     function(err, results) {
         console.log('err:',err,results);
     }
-)
+)*/
 

@@ -5,8 +5,9 @@ const Model = require('../models/model');
 //注册帐号
 let newAccount = async (data) => {
     let user = new Model.UserModel({...data});
+    let vip = new Model.VipModel({userid:user._id});
+    user.vipid=vip._id;
     let doc = await user.save();
-    let vip = new Model.VipModel({userid:doc._id});
     await vip.save();
     return doc;
 }
