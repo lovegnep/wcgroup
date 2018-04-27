@@ -104,10 +104,13 @@ module.exports = {
             return ctx.rest({status:0,message:'invalid id.'});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
-        if(userdoc.weibi < 1){
+        if(userdoc.vipid.monthstart && parseInt(Date.now()/1000) - userdoc.vipid.monthstart <= 30*24*3600){//月卡用户
+            await UserInterface.updateViewsAndWeibi(qrid,user._id,true);
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else if(userdoc.weibi < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoWeibi,message:'not enough weibi'});
         }
-        await UserInterface.updateViewsAndWeibi(qrid,user._id);
+        await UserInterface.updateViewsAndWeibi(qrid,user._id,false);
         return ctx.rest({status:MsgType.EErrorType.EOK});
     },
 

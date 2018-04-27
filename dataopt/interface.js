@@ -6,6 +6,8 @@ const Model = require('../models/model');
 let newAccount = async (data) => {
     let user = new Model.UserModel({...data});
     let doc = await user.save();
+    let vip = new Model.VipModel({userid:doc._id});
+    await vip.save();
     return doc;
 }
 
@@ -22,7 +24,7 @@ let getAccountByOpenId = async (weixin_openid) => {
 
 //查找帐号
 let getAccountById = async (_id) => {
-    let doc = await Model.UserModel.findById(_id).exec();
+    let doc = await Model.UserModel.findById(_id).populate({path:'vipid',select:{monthstart:1}}).exec();
     return doc;
 }
 

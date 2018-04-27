@@ -49,7 +49,8 @@ let vipmodel = mongoose.Schema({
     monthstart:Date,//包月开始时间，如果不是，不存在此字段
     groupqr:Number,//
     personqr:Number,//
-    publicqr:Number
+    publicqr:Number,
+    lastReward:Date//上次领取会员专属的每天50个微币的时间
 });
 let VipModel = mongoose.model('VipModel',vipmodel);
 
