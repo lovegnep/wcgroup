@@ -77,7 +77,7 @@ module.exports = {
         if(!user){
             return ctx.rest({status:0,message:'unknown err'});
         }
-        let type = ctx.query.type || MsgType.QRType.EGroup;
+        let type = parseInt(ctx.query.type) || MsgType.QRType.EGroup;
         let userid = user._id;
         let limit = ctx.query.limit || 20;
         let skip = ctx.query.skip || 0;
