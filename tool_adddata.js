@@ -46,9 +46,12 @@ let dir = fs.readdirSync('./tool');
 
 let tmp = function(){
     dir.forEach(function(item){
+        let fileall = item.split('.');
+        let filename = fileall[0];
+        let prefix = '.'+fileall[1];
         let newname = Uuidv1();
-        fs.renameSync('./tool/'+item, './tool/'+newname);
-        let doc = new Qrmodel({groupQR:'https://www.5min8.com/uploads/'+newname,groupname:item,source:2,type:1});
+        fs.renameSync('./tool/'+item, './tool/'+newname+prefix);
+        let doc = new Qrmodel({groupQR:'https://www.5min8.com/uploads/'+newname+prefix,groupname:filename,source:2,type:1});
         doc.save();
     });
 }
