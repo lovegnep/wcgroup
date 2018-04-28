@@ -7,6 +7,8 @@ const DataInterface = require('../dataopt/interface');
 const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
+const MsgType = require('../common/msgtype');
+let UserInterface = require('../dataopt/user');
 
 let usermap = require('../utils/usercache');
 
@@ -123,4 +125,98 @@ module.exports = {
         Logger.debug('add user to map:',tmpnewUserInfo);
         return ctx.rest({userInfo: tmpnewUserInfo, sessionkey:tmpnewUserInfo.weixin_openid});
    },
+    'GET /api/sign': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let res = await UserInterface.sign(user._id);
+        if(res.err){
+            return ctx.rest({status:MsgType.EErrorType.EInterError});
+        }else if(res.res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK})
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.EHasSign});
+        }
+    },
+    'GET /api/getweibi': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let userdoc = await DataInterface.getAccountById(user._id);
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:userdoc.weibi});
+    },
+    'GET /api/getuserinfo': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let userdoc = await DataInterface.getAccountById(user._id);
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:userdoc});
+    },
+    'POST /api/getviews': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let userdoc = await DataInterface.getAccountById(user._id);
+        if(!userdoc.views || userdoc.views.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.EOK,data:[]});
+        }
+        let query = {};
+        let skip = ctx.request.body.skip || 0;
+        let limit = ctx.request.body.limit || 20;
+        query._id = {$in: userdoc.views};
+        let qrdoc = await UserInterface.getviews(query,{limit,skip});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
+    },
+    'POST /api/getcollections': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let userdoc = await DataInterface.getAccountById(user._id);
+        if(!userdoc.collections || userdoc.collections.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.EOK,data:[]});
+        }
+        let query = {};
+        let skip = ctx.request.body.skip || 0;
+        let limit = ctx.request.body.limit || 20;
+        query._id = {$in: userdoc.collections};
+        let qrdoc = await UserInterface.getcollections(query,{limit,skip});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
+    },
+    'GET /api/getuploadcount': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let count = await UserInterface.getUploadCount(user._id);
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:count||0});
+    },
 };

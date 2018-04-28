@@ -38,6 +38,7 @@ let usermodal = new mongoose.Schema({
     son:[{type:ObjectId, ref: 'UserModel'}],//发展的下线
     father:{type:ObjectId, ref: 'UserModel'},//上线
     weibi:{type:Number, default:100},//微币数量
+    lastsigntime:Date//上次签到时间
 });
 
 let UserModel = mongoose.model('UserModel', usermodal);

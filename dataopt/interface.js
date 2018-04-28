@@ -25,7 +25,16 @@ let getAccountByOpenId = async (weixin_openid) => {
 
 //查找帐号
 let getAccountById = async (_id) => {
-    let doc = await Model.UserModel.findById(_id).populate({path:'vipid',select:{monthstart:1}}).exec();
+    let opts = {
+        rmb:1,
+        vipstart:1,
+        monthstart:1,
+        groupqr:1,
+        personqr:1,
+        publicqr:1,
+        lastReward:1
+    }
+    let doc = await Model.UserModel.findById(_id).populate({path:'vipid',select:opts}).exec();
     return doc;
 }
 

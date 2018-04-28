@@ -20,6 +20,15 @@ function testappid(ctx,next){
     return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
 }
 
+let getDay00 = function(){
+    let today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+    return today.getTime();
+}
+
 module.exports = {
     sleep: function (time) {
         return new Promise(function (resolve, reject) {
@@ -55,4 +64,5 @@ module.exports = {
         return decoded;
       },
     testappid:testappid,
+    getDay00:getDay00,
 };
