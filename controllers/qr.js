@@ -104,6 +104,9 @@ module.exports = {
             return ctx.rest({status:0,message:'invalid id.'});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
+        if(userdoc.collections && userdoc.collections.indexOf(qrid) > -1){
+            ctx.rest({status:MsgType.EErrorType.EOK});
+        }
         if(userdoc.vipid.monthstart && parseInt(Date.now()/1000) - userdoc.vipid.monthstart <= 30*24*3600){//月卡用户
             await UserInterface.updateViewsAndWeibi(qrid,user._id,true);
             return ctx.rest({status:MsgType.EErrorType.EOK});

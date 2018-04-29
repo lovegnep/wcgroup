@@ -66,7 +66,7 @@ let qrmodel = new mongoose.Schema({
     abstract:String,
     grouptag:String,//标签
     masterwx:String,//,上传者微信，个人微信，公众号ID
-    groupavatar:String,//上传者头像，个人头像，公众号头像
+    groupavatar:String,//微信群头像，个人头像，公众号头像
     groupQR:String,//微信群二维码，个人二维码，公众号二维码
     masterQR:String,//上传者二维码
     createTime:{type: Date, default: Date.now},
