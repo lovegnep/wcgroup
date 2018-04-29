@@ -8,9 +8,22 @@ let ff = function(){
         let bb = 0;
     });
 }
-setTimeout(ff,2000);
-
-
+//setTimeout(ff,2000);
+let isShareSameGroup = async(data)=>{
+    //userid,openid
+    let now0 = Utils.getDate00();
+    //Logger.debug('isShareSameGroup:',data,now0);
+    let doc = await Model.Share.find({userid:data.userid,targetid:data.openid,createTime:{$gt:now0}});
+    if(!doc||doc.length < 1){
+        return true;
+    }
+    return false;
+}
+isShareSameGroup({userid:'5ae2f502c1603d5f6b5504f2',targetid:'tGKYN65fd4OUA13yodH9WqOPg4zfU',}).then(function(res){
+    let aa = res;
+}).catch(function(err){
+    let b = err;
+})
     /*
 
 let doc1 = new Uds({
