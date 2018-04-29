@@ -20,10 +20,10 @@ let isLogin = async(ctx) => {
     }
     let user = await usermap.getuser(_id);
     if(user){
-        Logger.debug("isLogin: true.",user);
+        //Logger.debug("isLogin: true.",user);
         return true;
     }else{
-        Logger.debug("isLogin: false.",user);
+        //Logger.debug("isLogin: false.",user);
         return false;
     }
 }
