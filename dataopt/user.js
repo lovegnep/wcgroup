@@ -70,8 +70,8 @@ let newShare = async(data) => {
 }
 let isShareSameGroup = async(data)=>{
     //userid,openid
-    let now = Utils.getDay00();
-    let doc = await Model.Share.find({userid:data.userid,targetid:data.openid,createTime:{$gt:now}});
+    let now0 = Utils.getDate00();
+    let doc = await Model.Share.find({userid:data.userid,targetid:data.openid,createTime:{$gt:now0}});
     if(!doc||doc.length < 1){
         return true;
     }

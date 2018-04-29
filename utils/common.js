@@ -20,7 +20,7 @@ function testappid(ctx,next){
     return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
 }
 
-let getDay00 = function(){
+let getDay00 = function(){//返回当天0点豪秒
     let today = new Date();
     today.setHours(0);
     today.setMinutes(0);
@@ -28,7 +28,14 @@ let getDay00 = function(){
     today.setMilliseconds(0);
     return today.getTime();
 }
-
+let getDate00 = function(){//返回当天0点DATE
+    let today = new Date();
+    today.setHours(0);
+    today.setMinutes(0);
+    today.setSeconds(0);
+    today.setMilliseconds(0);
+    return today;
+}
 function isInArray(arr, _id){
     if(!arr || arr.length < 1){
         return false;
@@ -80,4 +87,5 @@ module.exports = {
     testappid:testappid,
     getDay00:getDay00,
     isInArray:isInArray,
+    getDate00:getDate00,
 };
