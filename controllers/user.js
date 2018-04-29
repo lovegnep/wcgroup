@@ -11,6 +11,8 @@ const MsgType = require('../common/msgtype');
 let UserInterface = require('../dataopt/user');
 
 let usermap = require('../utils/usercache');
+let sessionmap = new Map();
+
 
 let isLogin = async(ctx) => {
     let _id = ctx.req.headers['sessionkey'];
@@ -44,6 +46,35 @@ module.exports = {
     'GET /api/getTypes': async (ctx, next) => {
         let types = Province.getTypes();
         ctx.rest({data:types, status:1});
+    },
+    'POST /api/decode' :async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let session_key = sessionmap.get(user._id);
+        if(!session_key || session_key.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.ENoSessionKey,message:'no session key'});
+        }
+        let encryptedData = ctx.request.body.encryptedData;
+        let iv = ctx.request.body.iv;
+        if(!encryptedData || encryptedData.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.ENoEncryptedData,message:'no encryptedData'});
+        }
+        if(!iv || iv.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.ENoIV,message:'no IV'});
+        }
+        // 解释用户数据
+        let decodedata = await Utils.decryptUserInfoData(session_key, encryptedData, iv);
+        if (_.isEmpty(decodedata)) {
+            return ctx.rest({status:MsgType.EErrorType.EDecodeFail, message:'解密用户数据失败'});
+        }
+        Logger.debug('POST /api/decode:',decodedata);
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:decodedata});
     },
     'POST /api/auth': async (ctx, next) => {
         const code = ctx.request.body.code;
@@ -82,7 +113,7 @@ module.exports = {
         // 解释用户数据
         const weixinUserInfo = await Utils.decryptUserInfoData(sessionData.session_key, fullUserInfo.encryptedData, fullUserInfo.iv);
         if (_.isEmpty(weixinUserInfo)) {
-          return this.fail('解密用户数据失败');
+          return ctx.rest({status:0, message:'解密用户数据失败'});
         }
     
         // 根据openid查找用户是否已经注册
@@ -119,6 +150,7 @@ module.exports = {
         if (_.isEmpty(newUserInfo)) {
             return ctx.rest({status:0,message:"查询用户信息失败"});
         }
+        sessionmap.set(newUserInfo._id.toString(),sessionData.session_key);
         //ctx.session.user = newUserInfo;
         let tmpnewUserInfo = newUserInfo.toObject();
         await usermap.newuser(tmpnewUserInfo.weixin_openid, tmpnewUserInfo);

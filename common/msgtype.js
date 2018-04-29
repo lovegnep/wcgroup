@@ -18,6 +18,10 @@ const EErrorType = {
     EInvalidQR:11000,//上传的二维码非法
     ENoWeibi:11001,//微币不够
     EHasSign:11002,//已经签到
+    ENoSessionKey:11003,//sessionkey不存在
+    ENoEncryptedData:11004,//sessionkey不存在
+    ENoIV:11005,//sessionkey不存在
+    EDecodeFail:11006,//解密用户数据失败
 };
 
 const ImgType = {
