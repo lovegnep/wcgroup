@@ -104,7 +104,7 @@ module.exports = {
             return ctx.rest({status:0,message:'invalid id.'});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
-        if(userdoc.views && userdoc.views.indexOf(qrid) > -1){
+        if(Utils.isInArray(userdoc.views,qrid)){
             Logger.debug('POST /api/viewqr:已经浏览过， 不收费,qrid:',qrid);
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }

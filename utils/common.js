@@ -29,6 +29,19 @@ let getDay00 = function(){
     return today.getTime();
 }
 
+function isInArray(arr, _id){
+    if(!arr || arr.length < 1){
+        return false;
+    }
+    let len = arr.length;
+    for(let i = 0; i < len; i++){
+        if(arr[i].toString() == _id){
+            return true;
+        }
+    }
+    return false;
+}
+
 module.exports = {
     sleep: function (time) {
         return new Promise(function (resolve, reject) {
@@ -65,4 +78,5 @@ module.exports = {
       },
     testappid:testappid,
     getDay00:getDay00,
+    isInArray:isInArray,
 };
