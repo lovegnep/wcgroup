@@ -87,7 +87,7 @@ module.exports = {
     },
     'GET /api/getqr': async (ctx, next) => {
         let qr = await DataInterface.getQR(ctx.query._id);
-        ctx.rest({data:qr, status:1});
+        ctx.rest({data:qr, status:MsgType.EErrorType.EOK});
     },
 
     'POST /api/viewqr': async (ctx, next) => {

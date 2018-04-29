@@ -27,7 +27,7 @@ let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
 let sign = async (_id) => {
     let today0 = Utils.getDay00();
     let query = {
-        _id:"5ae2f502c1603d5f6b5504f2",
+        _id:_id,
         $or:[
             {lastsigntime:{$exists:false}},
             {lastsigntime:{$lt:today0}}
