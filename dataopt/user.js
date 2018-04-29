@@ -73,11 +73,11 @@ let isShareSameGroup = async(data)=>{
     let now0 = Utils.getDate00();
     Logger.debug('isShareSameGroup:',data,now0);
     let doc = await Model.Share.find({userid:data.userid,targetid:data.openid,createTime:{$gt:now0}});
-    Logger.debug('isShareSameGroup:',doc);
+    //Logger.debug('isShareSameGroup:',doc);
     if(!doc||doc.length < 1){
-        return true;
+        return false
     }
-    return false;
+    return true;
 }
 let addWeiBi = async (_id, num) =>{
     let res = await Model.UserModel.update({_id:_id},{$inc:{weibi:num}});
