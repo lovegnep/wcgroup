@@ -22,6 +22,7 @@ const EErrorType = {
     ENoEncryptedData:11004,//sessionkey不存在
     ENoIV:11005,//sessionkey不存在
     EDecodeFail:11006,//解密用户数据失败
+    EHasShareTo:11007,//当天已经分享到该群组
 };
 
 const ImgType = {

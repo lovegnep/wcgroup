@@ -2,6 +2,7 @@ const Config = require('../config');
 const Logger = require('../utils/logger');
 const Model = require('../models/model');
 const Utils = require('../utils/common');
+const GmConfig = require('../common/gm');
 
 let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
     let wherestr = {_id:userid};
@@ -13,7 +14,7 @@ let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
     }else{
         updatestr =     {
             $push:{views:qrid},
-            $inc:{weibi:-1}
+            $inc:{weibi:GmConfig.weibi.view}
         };
     }
 
@@ -35,7 +36,7 @@ let sign = async (_id) => {
     };
     let upstr = {
         lastsigntime:Date.now(),
-        $inc:{weibi:50}
+        $inc:{weibi:GmConfig.weibi.sign}
     }
     let res = null;
     try{
@@ -67,6 +68,22 @@ let newShare = async(data) => {
     let sharedoc = await doc.save();
     return sharedoc;
 }
+let isShareSameGroup = async(data)=>{
+    //userid,openid
+    let now = Utils.getDay00();
+    let doc = await Model.Share.find({userid:data.userid,targetid:data.openid,createTime:{$gt:now}});
+    if(!doc||doc.length < 1){
+        return true;
+    }
+    return false;
+}
+let addWeiBi = async (_id, num) =>{
+    let res = await Model.UserModel.update({_id:_id},{$inc:{weibi:num}});
+    if(res.nModified > 0){
+        Logger.debug('add weibi success:',_id,num);
+    }
+    return res;
+}
 exports = {
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,
@@ -74,5 +91,7 @@ exports = {
     getcollections:getcollections,
     getUploadCount:getUploadCount,
     newShare:newShare,
+    isShareSameGroup:isShareSameGroup,
+    addWeiBi:addWeiBi,
 };
 Object.assign(module.exports, exports);

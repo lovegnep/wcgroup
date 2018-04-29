@@ -8,6 +8,8 @@ const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 const MsgType = require('../common/msgtype');
+const GmConfig = require('../common/gm');
+
 let UserInterface = require('../dataopt/user');
 
 let usermap = require('../utils/usercache');
@@ -76,11 +78,19 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EDecodeFail, message:'解密用户数据失败'});
         }
         Logger.debug('POST /api/decode:',decodedata);
-        let data = {userid:user._id,targetid:decodedata.openGId,createTime:decodedata.watermark.timestamp};
+        let data = {userid:user._id,targetid:decodedata.openGId,createTime:decodedata.watermark.timestamp*1000};
         if(path&&path.length > 0){
             data.path = path;
         }
+        let isSame = await UserInterface.isShareSameGroup({userid:user._id,openid:decodedata.openGId});
+        if(isSame){
+            await UserInterface.newShare(data);
+            return ctx.rest({status:MsgType.EErrorType.EHasShareTo,data:decodedata});
+        }else{
+            let resu = await UserInterface.addWeiBi(user._id,GmConfig.weibi.shareToGroup);
+        }
         await UserInterface.newShare(data);
+
         return ctx.rest({status:MsgType.EErrorType.EOK,data:decodedata});
     },
     'POST /api/auth': async (ctx, next) => {
