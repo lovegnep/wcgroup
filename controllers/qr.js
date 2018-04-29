@@ -315,6 +315,6 @@ module.exports = {
         let comments = await DataInterface.getQRComment(query,{sorttype,skip,limit});
 
         Logger.debug('POST /api/getqrcomment:  success.');
-        ctx.rest({status:1,message:' success.',data:comments||[]});
+        ctx.rest({status:MsgType.EErrorType.EOK,message:' success.',data:comments||[]});
     },
 };
