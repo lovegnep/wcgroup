@@ -83,6 +83,7 @@ module.exports = {
             data.path = path;
         }
         let isSame = await UserInterface.isShareSameGroup({userid:user._id,openid:decodedata.openGId});
+        Logger.debug('POST /api/decode:isSame:',isSame);
         if(isSame){
             await UserInterface.newShare(data);
             return ctx.rest({status:MsgType.EErrorType.EHasShareTo,data:decodedata});

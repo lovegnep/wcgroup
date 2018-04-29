@@ -73,6 +73,7 @@ let isShareSameGroup = async(data)=>{
     let now0 = Utils.getDate00();
     Logger.debug('isShareSameGroup:',data,now0);
     let doc = await Model.Share.find({userid:data.userid,targetid:data.openid,createTime:{$gt:now0}});
+    Logger.debug('isShareSameGroup:',doc);
     if(!doc||doc.length < 1){
         return true;
     }
