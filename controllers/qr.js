@@ -100,7 +100,7 @@ module.exports = {
             return ctx.rest({status:0,message:'unknown err'});
         }
         let qrid = ctx.request.body._id;
-        if(!qrid || qrid.length < 2){
+        if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
