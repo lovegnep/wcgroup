@@ -47,7 +47,7 @@ module.exports = {
         let types = Province.getTypes();
         ctx.rest({data:types, status:1});
     },
-    'POST /api/decode' :async (ctx,next) => {
+    'POST /api/decode' :async (ctx,next) => {//解密分享数据
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
@@ -62,6 +62,8 @@ module.exports = {
         }
         let encryptedData = ctx.request.body.encryptedData;
         let iv = ctx.request.body.iv;
+        let path = ctx.request.body.path;
+
         if(!encryptedData || encryptedData.length < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoEncryptedData,message:'no encryptedData'});
         }
@@ -74,6 +76,11 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EDecodeFail, message:'解密用户数据失败'});
         }
         Logger.debug('POST /api/decode:',decodedata);
+        let data = {userid:user._id,targetid:decodedata.openGId,createTime:decodedata.watermark.timestamp};
+        if(path&&path.length > 0){
+            data.path = path;
+        }
+        await UserInterface.newShare(data);
         return ctx.rest({status:MsgType.EErrorType.EOK,data:decodedata});
     },
     'POST /api/auth': async (ctx, next) => {

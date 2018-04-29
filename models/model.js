@@ -107,6 +107,14 @@ let message = new mongoose.Schema({
 });
 let Message = mongoose.model('Message', message);
 
+let shareModel = mongoose.Schema({
+    userid:{type:ObjectId, ref: 'UserModel'},
+    createTime:{type: Date, default: Date.now},
+    targetid:String,//用户分享到的群或个人对当前小程序的唯一openid
+    targetname:String,//用户分享到的群名
+    path:String,//用户分享的页面路径
+});
+let Share = mongoose.model('Share',shareModel);
 
 /*
 //完全树状结构图
@@ -167,6 +175,7 @@ exports = {
 
     Comment:Comment,
 
-    Message:Message
+    Message:Message,
+    Share:Share,
 };
 Object.assign(module.exports, exports);

@@ -59,11 +59,20 @@ let getUploadCount = async(_id) => {
     let count = await Model.Qrmodel.count({uploader:_id}).exec();
     return count;
 }
+
+let newShare = async(data) => {
+    Logger.debug('newShare:',data);
+
+    let doc = new Model.Share({...data});
+    let sharedoc = await doc.save();
+    return sharedoc;
+}
 exports = {
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,
     getviews:getviews,
     getcollections:getcollections,
     getUploadCount:getUploadCount,
+    newShare:newShare,
 };
 Object.assign(module.exports, exports);
