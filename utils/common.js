@@ -35,6 +35,7 @@ function isInArray(arr, _id){
     }
     let len = arr.length;
     for(let i = 0; i < len; i++){
+        Logger.debug('isInArray:',typeof arr[i], _id);
         if(arr[i].toString() == _id){
             return true;
         }

@@ -1,24 +1,11 @@
 const Model = require('./models/model');
 const Utils = require('./utils/common');
-let today0 = (Utils.getDay00()).getTime();
-let query = {
-    _id:"5ae2f502c1603d5f6b5504f2",
-    $or:[
-        {lastsigntime:{$exists:false}},
-        {lastsigntime:{$lt:today0}}
-    ]
-    //lastsigntime:{$exists:true}
-};
-let upstr = {
-    lastsigntime:Date.now()
-}
-console.log((Utils.getDay00()).getTime());
+
 let ff = function(){
-    Model.UserModel.update(query,upstr,null,function(err,data){
-        let hehe = 0;
-        data={ok: 1,
-            nModified: 1,
-            n: 1}
+    Model.UserModel.find({_id:"5ae2f502c1603d5f6b5504f2"},null,null,function(err,data){
+
+        let aa = data[0].views[0].toString();
+        let bb = 0;
     });
 }
 setTimeout(ff,2000);

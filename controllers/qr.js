@@ -107,6 +107,8 @@ module.exports = {
         if(Utils.isInArray(userdoc.views,qrid)){
             Logger.debug('POST /api/viewqr:已经浏览过， 不收费,qrid:',qrid);
             return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            Logger.debug('POST /api/viewqr:未浏览过， 收费,qrid:',qrid, userdoc.views);
         }
         if(userdoc.vipid.monthstart && parseInt(Date.now()/1000) - userdoc.vipid.monthstart <= 30*24*3600){//月卡用户
             await UserInterface.updateViewsAndWeibi(qrid,user._id,true);
