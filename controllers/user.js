@@ -326,7 +326,7 @@ module.exports = {
         if(tab !== 0){
             query.type = tab;
         }
-        query.userid = user._id;
+        //query.userid = user._id;
         query.groupname = new RegExp(content,'i');
         let docs = await UserInterface.search(query,{limit,skip});
         await UserInterface.newRecord({userid:user._id,record:content});
@@ -357,7 +357,7 @@ module.exports = {
         if(tab !== 0){
             query.type = tab;
         }
-        query.userid = user._id;
+        //query.userid = user._id;
         query.groupname = new RegExp(content,'i');
         let docs = await UserInterface.searchex(query,{limit,skip});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
