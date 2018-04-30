@@ -104,10 +104,12 @@ let newRecord = async (data) => {
 }
 let search = async (query,options) => {
     let docs = await Model.Record.find(query,{},options).exec();
+    Logger.debug('searchex:',query,options,docs);
     return docs;
 }
 let searchex = async (query,options) => {
     let docs = await Model.Record.find(query,'groupname',options).exec();
+    Logger.debug('searchex:',query,options,docs);
     return docs;
 }
 exports = {
