@@ -39,7 +39,7 @@ let usermodal = new mongoose.Schema({
     father:{type:ObjectId, ref: 'UserModel'},//上线
     weibi:{type:Number, default:100},//微币数量
     lastsigntime:Date,//上次签到时间
-    sharIndex:String,//如果用户第一次进来是通过分享进来的则有此字段，
+    shareIndex:String,//如果用户第一次进来是通过分享进来的则有此字段，
 });
 
 let UserModel = mongoose.model('UserModel', usermodal);
