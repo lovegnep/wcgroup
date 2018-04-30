@@ -274,9 +274,11 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EOK,data:[]});
         }
         let query = {};
+        let type = ctx.request.body.type || 1;
         let skip = ctx.request.body.skip || 0;
         let limit = ctx.request.body.limit || 20;
         query._id = {$in: userdoc.views};
+        query.type = type;
         let qrdoc = await UserInterface.getviews(query,{limit,skip});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
     },
@@ -294,9 +296,11 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EOK,data:[]});
         }
         let query = {};
+        let type = ctx.request.body.type || 1;
         let skip = ctx.request.body.skip || 0;
         let limit = ctx.request.body.limit || 20;
         query._id = {$in: userdoc.collections};
+        query.type = type;
         let qrdoc = await UserInterface.getcollections(query,{limit,skip});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
     },
