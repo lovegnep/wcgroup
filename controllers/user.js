@@ -144,7 +144,7 @@ module.exports = {
         userdoc = await DataInterface.getAccountByOpenId(sessionData.openid);
         if (_.isEmpty(userdoc) || _.isEmpty(userdoc._id)) {
           // 注册
-            if(shareIndex.length > 0){//通过分享进入
+            if(shareIndex&&shareIndex.length > 0){//通过分享进入
                 userdoc = await DataInterface.newAccount({
                     account: '微信用户' + Uuidv1(),
                     passwd: sessionData.openid,
