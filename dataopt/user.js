@@ -86,6 +86,12 @@ let addWeiBi = async (_id, num) =>{
     }
     return res;
 }
+
+let shareIn = async (index,userid)=>{
+    //用户userid通过index分享进入
+    let res = await Model.Share.update({index:index},{$addToSet:{son:userid}}).exec();
+    return res;
+}
 exports = {
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,
@@ -95,5 +101,6 @@ exports = {
     newShare:newShare,
     isShareSameGroup:isShareSameGroup,
     addWeiBi:addWeiBi,
+    shareIn:shareIn,
 };
 Object.assign(module.exports, exports);

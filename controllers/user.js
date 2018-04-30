@@ -65,7 +65,12 @@ module.exports = {
         let encryptedData = ctx.request.body.encryptedData;
         let iv = ctx.request.body.iv;
         let path = ctx.request.body.path;
-
+        let type = parseInt(ctx.request.body.type);
+        let index = ctx.request.body.index;
+        if(type === 1){//分享到个人
+            await UserInterface.newShare({userid:user._id,path:path,type:1,index:index});
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }
         if(!encryptedData || encryptedData.length < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoEncryptedData,message:'no encryptedData'});
         }
@@ -78,7 +83,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EDecodeFail, message:'解密用户数据失败'});
         }
         Logger.debug('POST /api/decode:',decodedata);
-        let data = {userid:user._id,targetid:decodedata.openGId,createTime:decodedata.watermark.timestamp*1000};
+        let data = {index:index,type:2,userid:user._id,targetid:decodedata.openGId,createTime:decodedata.watermark.timestamp*1000};
         if(path&&path.length > 0){
             data.path = path;
         }
@@ -99,7 +104,7 @@ module.exports = {
         const fullUserInfo = ctx.request.body.userInfo;
         const userInfo = fullUserInfo.userInfo;
         const clientIp = ''; // 暂时不记录 ip
-    
+        let shareIndex = ctx.request.body.shareIndex;
         // 获取openid
         const options = {
           method: 'GET',
@@ -139,19 +144,37 @@ module.exports = {
         userdoc = await DataInterface.getAccountByOpenId(sessionData.openid);
         if (_.isEmpty(userdoc) || _.isEmpty(userdoc._id)) {
           // 注册
-          userdoc = await DataInterface.newAccount({
-            account: '微信用户' + Uuidv1(),
-            passwd: sessionData.openid,
-            register_time: Date.now(),
-            register_ip: clientIp,
-            last_login_time: Date.now(),
-            last_login_ip: clientIp,
-            mobile: '',
-            weixin_openid: sessionData.openid,
-            avatar: userInfo.avatarUrl || '',
-            gender: userInfo.gender || 1, // 性别 0：未知、1：男、2：女
-            nickname: userInfo.nickName
-          });
+            if(shareIndex.length > 0){//通过分享进入
+                userdoc = await DataInterface.newAccount({
+                    account: '微信用户' + Uuidv1(),
+                    passwd: sessionData.openid,
+                    register_time: Date.now(),
+                    register_ip: clientIp,
+                    last_login_time: Date.now(),
+                    last_login_ip: clientIp,
+                    mobile: '',
+                    weixin_openid: sessionData.openid,
+                    avatar: userInfo.avatarUrl || '',
+                    gender: userInfo.gender || 1, // 性别 0：未知、1：男、2：女
+                    nickname: userInfo.nickName,
+                    shareIndex:shareIndex
+                });
+            }else{
+                userdoc = await DataInterface.newAccount({
+                    account: '微信用户' + Uuidv1(),
+                    passwd: sessionData.openid,
+                    register_time: Date.now(),
+                    register_ip: clientIp,
+                    last_login_time: Date.now(),
+                    last_login_ip: clientIp,
+                    mobile: '',
+                    weixin_openid: sessionData.openid,
+                    avatar: userInfo.avatarUrl || '',
+                    gender: userInfo.gender || 1, // 性别 0：未知、1：男、2：女
+                    nickname: userInfo.nickName
+                });
+            }
+
           userId = userdoc._id;
         }
         userId = userdoc._id; 
@@ -191,6 +214,26 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EOK})
         }else{
             return ctx.rest({status:MsgType.EErrorType.EHasSign});
+        }
+    },
+    'POST /api/sharein':async (ctx,next)=>{
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let index = ctx.request.body.index;
+        if(!index || index.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.EShareIndexInvalid});
+        }
+        let res = await UserInterface.shareIn(index,user._id);
+        if(res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.ENoShare});
         }
     },
     'GET /api/getweibi': async (ctx,next) => {

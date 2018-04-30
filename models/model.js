@@ -38,7 +38,8 @@ let usermodal = new mongoose.Schema({
     son:[{type:ObjectId, ref: 'UserModel'}],//发展的下线
     father:{type:ObjectId, ref: 'UserModel'},//上线
     weibi:{type:Number, default:100},//微币数量
-    lastsigntime:Date//上次签到时间
+    lastsigntime:Date,//上次签到时间
+    sharIndex:String,//如果用户第一次进来是通过分享进来的则有此字段，
 });
 
 let UserModel = mongoose.model('UserModel', usermodal);
@@ -108,11 +109,14 @@ let message = new mongoose.Schema({
 let Message = mongoose.model('Message', message);
 
 let shareModel = mongoose.Schema({
+    index:String,//由前端生成的本次分享唯一标识符
+    type:Number,//1分享到个人，2分享到群
     userid:{type:ObjectId, ref: 'UserModel'},
     createTime:{type: Date, default: Date.now},
     targetid:String,//用户分享到的群或个人对当前小程序的唯一openid
     targetname:String,//用户分享到的群名
     path:String,//用户分享的页面路径
+    son:[{type:ObjectId,ref:'UserModel'}]//通过此次分享进来的人
 });
 let Share = mongoose.model('Share',shareModel);
 
