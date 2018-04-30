@@ -99,7 +99,7 @@ module.exports = {
 
         return ctx.rest({status:MsgType.EErrorType.EOK,data:decodedata});
     },
-    'POST /api/auth': async (ctx, next) => {
+    'POST /api/auth': async (ctx, next) => {//登陆
         const code = ctx.request.body.code;
         const fullUserInfo = ctx.request.body.userInfo;
         const userInfo = fullUserInfo.userInfo;
