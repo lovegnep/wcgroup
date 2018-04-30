@@ -103,12 +103,12 @@ let newRecord = async (data) => {
     return sdoc;
 }
 let search = async (query,options) => {
-    let docs = await Model.Record.find(query,{},options).exec();
+    let docs = await Model.Qrmodel.find(query,{},options).exec();
     Logger.debug('searchex:',query,options,docs);
     return docs;
 }
 let searchex = async (query,options) => {
-    let docs = await Model.Record.find(query,'groupname',options).exec();
+    let docs = await Model.Qrmodel.find(query,'groupname',options).exec();
     Logger.debug('searchex:',query,options,docs);
     return docs;
 }
