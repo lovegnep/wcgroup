@@ -127,13 +127,19 @@ let record = mongoose.Schema({
 });
 let Record = mongoose.model('Record',record);
 
+let recordRank = mongoose.Schema({
+    record:String,
+    num:Number
+});
+let RecordRank = mongoose.model('RecordRank',recordRank);
+
 exports = {
     UserModel: UserModel,
     VipModel:VipModel,
     Qrmodel:Qrmodel,
     Record:Record,
     Comment:Comment,
-
+    RecordRank:RecordRank,
     Message:Message,
     Share:Share,
 };
