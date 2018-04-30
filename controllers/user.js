@@ -282,6 +282,86 @@ module.exports = {
         let qrdoc = await UserInterface.getviews(query,{limit,skip});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
     },
+    'POST /api/getsearchrecords': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+
+        let query = {};
+        let limit = ctx.request.body.limit || 20;
+        query.userid = user._id;
+        let sort = '-createTime';
+        let docs = await UserInterface.getRecord(query,{limit,sort});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
+    },
+    'POST /api/search': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+
+        //let query = {};
+        let limit = ctx.request.body.limit || 20;
+        let skip = ctx.request.body.skip || 0;
+        let content = ctx.request.body.content;
+        let tab = parseInt(ctx.request.body.tab);
+        if(!content || content.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidContent});
+        }
+        if(typeof tab === 'undefined' || (tab !== 0 && tab !== 1 &&tab !== 2 &&tab !== 3)){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidTab});
+        }
+        let query = {
+            '$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
+        };
+        if(tab !== 0){
+            query.type = tab;
+        }
+        query.userid = user._id;
+        query.groupname = new RegExp(content,'i');
+        let docs = await UserInterface.search(query,{limit,skip});
+        await UserInterface.newRecord({userid:user._id,record:content});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
+    },
+    'POST /api/groupnamesearch': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+
+        //let query = {};
+        let limit = ctx.request.body.limit || 20;
+        let skip = ctx.request.body.skip || 0;
+        let content = ctx.request.body.content;
+        let tab = parseInt(ctx.request.body.tab);
+        if(!content || content.length < 1){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidContent});
+        }
+        if(typeof tab === 'undefined' || (tab !== 0 && tab !== 1 &&tab !== 2 &&tab !== 3)){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidTab});
+        }
+        let query = {groupname: new RegExp(content,'i')};
+        if(tab !== 0){
+            query.type = tab;
+        }
+        query.userid = user._id;
+        query.groupname = new RegExp(content,'i');
+        let docs = await UserInterface.searchex(query,{limit,skip});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
+    },
     'POST /api/getcollections': async (ctx,next) => {
         let islogin = await isLogin(ctx);
         if(!islogin){

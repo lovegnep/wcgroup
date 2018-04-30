@@ -92,6 +92,24 @@ let shareIn = async (index,userid)=>{
     let res = await Model.Share.update({index:index},{$addToSet:{son:userid}}).exec();
     return res;
 }
+let getRecord = async (query,options) => {
+    let docs = await Model.Record.find(query,{},options).exec();
+    return docs;
+}
+let newRecord = async (data) => {
+    let doc = new Model.Record({...data});
+    let sdoc = await doc.save();
+    Logger.debug('new search record success:',sdoc);
+    return sdoc;
+}
+let search = async (query,options) => {
+    let docs = await Model.Record.find(query,{},options).exec();
+    return docs;
+}
+let searchex = async (query,options) => {
+    let docs = await Model.Record.find(query,'groupname',options).exec();
+    return docs;
+}
 exports = {
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,
@@ -102,5 +120,9 @@ exports = {
     isShareSameGroup:isShareSameGroup,
     addWeiBi:addWeiBi,
     shareIn:shareIn,
+    getRecord:getRecord,
+    newRecord:newRecord,
+    search:search,
+    searchex:searchex,
 };
 Object.assign(module.exports, exports);

@@ -25,6 +25,9 @@ const EErrorType = {
     EHasShareTo:11007,//当天已经分享到该群组,
     EShareIndexInvalid:11008,//shareindex不合法
     ENoShare:11009,//找不到该share
+
+    EInvalidTab:11010,//查询tab非法
+    EInvalidContent:11011,//查询内容非法
 };
 
 const ImgType = {
