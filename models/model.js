@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 const Logger = require('../utils/logger');
 const Config = require('../config');
 const ObjectId  = mongoose.Schema.ObjectId;
-
+const ObjectIdFun = mongoose.Types.ObjectId;
 mongoose.connect(Config.db, function(err){
     if(err){
         Logger.error('mongoose connect failed.');
@@ -134,6 +134,7 @@ let recordRank = mongoose.Schema({
 let RecordRank = mongoose.model('RecordRank',recordRank);
 
 exports = {
+    ObjectIdFun:ObjectIdFun,
     UserModel: UserModel,
     VipModel:VipModel,
     Qrmodel:Qrmodel,

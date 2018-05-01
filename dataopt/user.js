@@ -96,7 +96,7 @@ let getRecord = async (query,options) => {
     let docs = await Model.Record.aggregate([
         {
             $match: {
-                userid: mongoose.Types.ObjectId(query.userid)
+                userid: Model.ObjectIdFun(query.userid)
             }
         },
         {
