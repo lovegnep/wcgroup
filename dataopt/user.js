@@ -102,12 +102,15 @@ let getRecord = async (query,options) => {
         {
             $group: {
                 _id: '$record',
-                max: {
+                time: {
                     $max: '$createTime'
+                },
+                count:{
+                    $sum:1
                 }
             }
         }
-    ]).sort('-max').skip(options.skip).limit(options.limit).exec();
+    ]).sort('-time').skip(options.skip).limit(options.limit).exec();
     return docs;
 }
 let newRecord = async (data) => {

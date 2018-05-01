@@ -10,19 +10,22 @@ let ff = function () {
 Model.Record.aggregate([
     {
         $match: {
-            userid: mongoose.Types.ObjectId('5ae2f504c1603d5f6b5504f2')
+            userid: mongoose.Types.ObjectId('5ae2f502c1603d5f6b5504f2')
         }
 
     },
     {
         $group: {
             _id: '$record',
-            max: {
+            time: {
                 $max: '$createTime'
+            },
+            count:{
+                $sum:1
             }
         }
     }
-]).sort('-max').skip(3).limit(20).exec(function (err, data) {
+]).sort('-time').skip(3).limit(20).exec(function (err, data) {
     console.log(data);
 })
 /*
