@@ -138,6 +138,8 @@ let weibiLog = mongoose.Schema({
     userid:{type:ObjectId,ref:'UserModel'},
     source:Number,
     change:Number,
+    after:Number,//变化之后的数量
+    name:String,//如果是浏览的话，则为二维码标题
     createTime:{type: Date, default: Date.now}
 });
 let WeibiLog = mongoose.model('WeibiLog',weibiLog);

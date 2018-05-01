@@ -20,7 +20,7 @@ let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
     }
     let res = null;
     try{
-        res = await Model.UserModel.update(wherestr,updatestr).exec();
+        res = await Model.UserModel.findOneAndUpdate(wherestr,updatestr).exec();
     }catch(err){
         Logger.error('updateviews: err:',err);
     }
@@ -42,7 +42,7 @@ let sign = async (_id) => {
     }
     let res = null;
     try{
-        res = await Model.UserModel.update(query,upstr,{}).exec();
+        res = await Model.UserModel.findOneAndUpdate(query,upstr,{}).exec();
     }catch(err){
         Logger.error('sign: sign error:',_id);
         return {err:err,res:null};
@@ -82,8 +82,8 @@ let isShareSameGroup = async(data)=>{
     return true;
 }
 let addWeiBi = async (_id, num) =>{
-    let res = await Model.UserModel.update({_id:_id},{$inc:{weibi:num}});
-    if(res.nModified > 0){
+    let res = await Model.UserModel.findOneAndUpdate({_id:_id},{$inc:{weibi:num}});
+    if(res&&res._id){
         Logger.debug('add weibi success:',_id,num);
     }
     return res;

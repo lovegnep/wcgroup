@@ -52,7 +52,16 @@ const WeiBiSource = {
     EView:2,//看二维码
     ESign:3,//签到
     EVip:4,//会员每天领奖
-    EInit:5//新用户初始
+    EInit:5,//新用户初始
+    EPay:6,//充值
+}
+const WBChinese = {
+    '1':'分享',
+    '2':'浏览',
+    '3':'签到',
+    '4':'会员领奖',
+    '5':'初始',
+    '6':'充值',
 }
 
 exports = {
@@ -63,5 +72,6 @@ exports = {
     QRType:QRType,
     QRSource:QRSource,
     WeiBiSource:WeiBiSource,
+    WBChinese:WBChinese,
 };
 Object.assign(module.exports, exports);

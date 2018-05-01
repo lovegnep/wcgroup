@@ -118,8 +118,9 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.ENoWeibi,message:'not enough weibi'});
         }
         let res = await UserInterface.updateViewsAndWeibi(qrid,user._id,false);
-        if(res && res.nModified > 0){
-            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.EView,change:GmConfig.weibi.view});
+        if(res && res._id){
+            let qrdoc = await DataInterface.getQR(qrid);
+            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.EView,change:GmConfig.weibi.view,name:qrdoc.groupname,after:res.weibi});
             Logger.debug('viewqr : new wb log success:');
         }
         return ctx.rest({status:MsgType.EErrorType.EOK});
