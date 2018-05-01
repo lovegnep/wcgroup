@@ -137,6 +137,36 @@ let getHotRecord = async (options) =>{
     ]).sort('-count').limit(options.limit).exec();
     return docs;
 }
+let getHotQr = async (query,options) =>{
+    let docs = await Model.Qrmodel.aggregate([
+        {
+            $match: {
+                type:query.tab,
+                updateTime:{
+                    $gte : query.time
+                }
+            }
+        },
+        {
+            $project: {
+                viewCount:1,
+                groupname:1,
+                likeCount:{
+                    "$multiply": [2, "$likeCount"]
+                }
+            }
+        },
+        {
+            $project: {
+                groupname:1,
+                count: {
+                    "$add":["$viewCount","$likeCount"]
+                }
+            }
+        }
+    ]).sort('-count').limit(options.limit).exec();
+    return docs;
+}
 let newRecord = async (data) => {
     let doc = new Model.Record({...data});
     let sdoc = await doc.save();
@@ -168,5 +198,6 @@ exports = {
     search:search,
     searchex:searchex,
     getHotRecord:getHotRecord,
+    getHotQr:getHotQr,
 };
 Object.assign(module.exports, exports);

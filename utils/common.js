@@ -49,7 +49,11 @@ function isInArray(arr, _id){
     }
     return false;
 }
-
+function getDate7days(){//7天前0点的DATE
+    let myDate = getDate00();
+    myDate.setDate(myDate.getDate() - 7);
+    return myDate;
+}
 module.exports = {
     sleep: function (time) {
         return new Promise(function (resolve, reject) {
@@ -88,4 +92,5 @@ module.exports = {
     getDay00:getDay00,
     isInArray:isInArray,
     getDate00:getDate00,
+    getDate7days:getDate7days,
 };

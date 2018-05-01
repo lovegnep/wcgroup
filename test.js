@@ -7,6 +7,32 @@ let ff = function () {
         console.log('done:', num++);
     });
 }
+var myDate = new Date(); //获取今天日期
+myDate.setDate(myDate.getDate() - 7);
+console.log(myDate);
+/*
+Model.Qrmodel.aggregate([
+    {
+        $project: {
+            viewCount:1,
+            groupname:1,
+            likeCount:{
+                "$multiply": [2, "$likeCount"]
+            }
+        }
+    },
+    {
+        $project: {
+            groupname:1,
+            count: {
+                "$add":["$viewCount","$likeCount"]
+            }
+        }
+    }
+]).sort('-count').limit(10).exec(function (err, data) {
+    console.log(err,data);
+})
+/*
 Model.Record.aggregate([
     {
         $group: {
