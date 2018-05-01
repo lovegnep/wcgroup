@@ -294,9 +294,10 @@ module.exports = {
 
         let query = {};
         let limit = ctx.request.body.limit || 20;
+        let skip = ctx.request.body.skip||0;
         query.userid = user._id;
         let sort = '-createTime';
-        let docs = await UserInterface.getRecord(query,{limit,sort});
+        let docs = await UserInterface.getRecord(query,{limit,skip,sort});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
     'POST /api/search': async (ctx,next) => {

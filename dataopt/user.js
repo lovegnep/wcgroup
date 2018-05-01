@@ -93,7 +93,21 @@ let shareIn = async (index,userid)=>{
     return res;
 }
 let getRecord = async (query,options) => {
-    let docs = await Model.Record.find(query,{},options).exec();
+    let docs = await Model.Record.aggregate([
+        {
+            $match: {
+                userid: mongoose.Types.ObjectId(query.userid)
+            }
+        },
+        {
+            $group: {
+                _id: '$record',
+                max: {
+                    $max: '$createTime'
+                }
+            }
+        }
+    ]).sort('-max').skip(options.skip).limit(options.limit).exec();
     return docs;
 }
 let newRecord = async (data) => {
