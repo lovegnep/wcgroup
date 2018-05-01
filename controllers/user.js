@@ -449,7 +449,8 @@ module.exports = {
         let skip = ctx.request.body.skip || 0;
         let limit = ctx.request.body.limit || 20;
         query.userid = user._id;
-        let wbdoc = await UserInterface.getWeibiLog(query,{limit,skip});
+        let sort = '-createTime';
+        let wbdoc = await UserInterface.getWeibiLog(query,{limit,skip,sort});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:wbdoc||[]});
     },
 };
