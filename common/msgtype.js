@@ -47,6 +47,14 @@ const QRSource = {
     EPython:2
 }
 
+const WeiBiSource = {
+    EShare2Group:1,//每天第一次分享到该群
+    EView:2,//看二维码
+    ESign:3,//签到
+    EVip:4,//会员每天领奖
+    EInit:5//新用户初始
+}
+
 exports = {
     EMessageStatus:EMessageStatus,
     EMessageType:EMessageType,
@@ -54,5 +62,6 @@ exports = {
     ImgType:ImgType,
     QRType:QRType,
     QRSource:QRSource,
+    WeiBiSource:WeiBiSource,
 };
 Object.assign(module.exports, exports);

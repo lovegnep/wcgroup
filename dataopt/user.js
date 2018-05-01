@@ -3,6 +3,7 @@ const Logger = require('../utils/logger');
 const Model = require('../models/model');
 const Utils = require('../utils/common');
 const GmConfig = require('../common/gm');
+const MsgType = require('../common/msgtype');
 
 let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
     let wherestr = {_id:userid};
@@ -17,12 +18,13 @@ let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
             $inc:{weibi:GmConfig.weibi.view}
         };
     }
-
+    let res = null;
     try{
-        await Model.UserModel.update(wherestr,updatestr).exec();
+        res = await Model.UserModel.update(wherestr,updatestr).exec();
     }catch(err){
         Logger.error('updateviews: err:',err);
     }
+    return res;
 }
 
 let sign = async (_id) => {
@@ -183,6 +185,17 @@ let searchex = async (query,options) => {
     Logger.debug('searchex:',query,options,docs);
     return docs;
 }
+let newWeibiLog = async(data) => {
+    Logger.debug('newShare:',data);
+
+    let doc = new Model.WeibiLog({...data});
+    let weibidoc = await doc.save();
+    return weibidoc;
+}
+let getWeibiLog = async(query,options)=>{
+    let docs = await Model.WeibiLog.find(query,{},options).exec();
+    return docs;
+}
 exports = {
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,
@@ -199,5 +212,8 @@ exports = {
     searchex:searchex,
     getHotRecord:getHotRecord,
     getHotQr:getHotQr,
+
+    newWeibiLog:newWeibiLog,
+    getWeibiLog:getWeibiLog
 };
 Object.assign(module.exports, exports);

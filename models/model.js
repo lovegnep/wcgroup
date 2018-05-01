@@ -6,6 +6,7 @@ const Logger = require('../utils/logger');
 const Config = require('../config');
 const ObjectId  = mongoose.Schema.ObjectId;
 const ObjectIdFun = mongoose.Types.ObjectId;
+
 mongoose.connect(Config.db, function(err){
     if(err){
         Logger.error('mongoose connect failed.');
@@ -37,7 +38,7 @@ let usermodal = new mongoose.Schema({
     vipid:{type:ObjectId, ref: 'VipModel'},
     son:[{type:ObjectId, ref: 'UserModel'}],//发展的下线
     father:{type:ObjectId, ref: 'UserModel'},//上线
-    weibi:{type:Number, default:100},//微币数量
+    weibi:{type:Number, default:0},//微币数量
     lastsigntime:Date,//上次签到时间
     shareIndex:String,//如果用户第一次进来是通过分享进来的则有此字段，
 });
@@ -133,6 +134,14 @@ let recordRank = mongoose.Schema({
 });
 let RecordRank = mongoose.model('RecordRank',recordRank);
 
+let weibiLog = mongoose.Schema({
+    userid:{type:ObjectId,ref:'UserModel'},
+    source:Number,
+    change:Number,
+    createTime:{type: Date, default: Date.now}
+});
+let WeibiLog = mongoose.model('WeibiLog',weibiLog);
+
 exports = {
     ObjectIdFun:ObjectIdFun,
     UserModel: UserModel,
@@ -143,5 +152,6 @@ exports = {
     RecordRank:RecordRank,
     Message:Message,
     Share:Share,
+    WeibiLog:WeibiLog
 };
 Object.assign(module.exports, exports);

@@ -9,6 +9,7 @@ const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 const MsgType = require('../common/msgtype');
+const GmConfig = require('../common/gm');
 
 let usermap = require('../utils/usercache');
 
@@ -116,7 +117,11 @@ module.exports = {
         }else if(userdoc.weibi < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoWeibi,message:'not enough weibi'});
         }
-        await UserInterface.updateViewsAndWeibi(qrid,user._id,false);
+        let res = await UserInterface.updateViewsAndWeibi(qrid,user._id,false);
+        if(res && res.nModified > 0){
+            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.EView,change:GmConfig.weibi.view});
+            Logger.debug('viewqr : new wb log success:');
+        }
         return ctx.rest({status:MsgType.EErrorType.EOK});
     },
 

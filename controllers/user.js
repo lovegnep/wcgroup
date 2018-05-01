@@ -157,7 +157,8 @@ module.exports = {
                     avatar: userInfo.avatarUrl || '',
                     gender: userInfo.gender || 1, // 性别 0：未知、1：男、2：女
                     nickname: userInfo.nickName,
-                    shareIndex:shareIndex
+                    shareIndex:shareIndex,
+                    weibi:GmConfig.weibi.init
                 });
             }else{
                 userdoc = await DataInterface.newAccount({
@@ -171,11 +172,13 @@ module.exports = {
                     weixin_openid: sessionData.openid,
                     avatar: userInfo.avatarUrl || '',
                     gender: userInfo.gender || 1, // 性别 0：未知、1：男、2：女
-                    nickname: userInfo.nickName
+                    nickname: userInfo.nickName,
+                    weibi:GmConfig.weibi.init
                 });
             }
-
-          userId = userdoc._id;
+            userId = userdoc._id;
+            await UserInterface.newWeibiLog({userid:userId,source:MsgType.WeiBiSource.EInit,changer:GmConfig.weibi.init});
+            Logger.debug('auth : new wb log success.');
         }
         userId = userdoc._id; 
         sessionData.user_id = userId;
@@ -211,6 +214,8 @@ module.exports = {
         if(res.err){
             return ctx.rest({status:MsgType.EErrorType.EInterError});
         }else if(res.res.nModified){
+            let wblog = await UserInterface.newWeibiLog({userid:_id,source:MsgType.WeiBiSource.ESign,change:GmConfig.weibi.sign});
+            Logger.debug('sign: add wblog success.:',wblog);
             return ctx.rest({status:MsgType.EErrorType.EOK})
         }else{
             return ctx.rest({status:MsgType.EErrorType.EHasSign});
@@ -426,5 +431,21 @@ module.exports = {
         }
         let count = await UserInterface.getUploadCount(user._id);
         return ctx.rest({status:MsgType.EErrorType.EOK,data:count||0});
+    },
+    'POST /api/getweibilog': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+        let query = {};
+        let skip = ctx.request.body.skip || 0;
+        let limit = ctx.request.body.limit || 20;
+        query.userid = user._id;
+        let wbdoc = await UserInterface.getWeibiLog(query,{limit,skip});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:wbdoc||[]});
     },
 };
