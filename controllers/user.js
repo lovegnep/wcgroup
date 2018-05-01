@@ -325,7 +325,7 @@ module.exports = {
         }
 
         let limit = ctx.request.body.limit || 10;
-        let tab = ctx.request.body.tab || 1;
+        let tab = parseInt(ctx.request.body.tab) || 1;
         let time = Utils.getDate7days();
         let docs = await UserInterface.getHotQr({tab,time},{limit});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
