@@ -181,7 +181,7 @@ module.exports = {
                 });
             }
             userId = userdoc._id;
-            await UserInterface.newWeibiLog({userid:userId,source:MsgType.WeiBiSource.EInit,changer:GmConfig.weibi.init,after:userdoc.weibi});
+            await UserInterface.newWeibiLog({userid:userId,source:MsgType.WeiBiSource.EInit,change:GmConfig.weibi.init,after:userdoc.weibi});
             Logger.debug('auth : new wb log success.');
         }
         userId = userdoc._id; 
@@ -218,7 +218,7 @@ module.exports = {
         if(res.err){
             return ctx.rest({status:MsgType.EErrorType.EInterError});
         }else if(res.res && res.res._id){
-            let wblog = await UserInterface.newWeibiLog({userid:_id,source:MsgType.WeiBiSource.ESign,change:GmConfig.weibi.sign,after:res.res.weibi});
+            let wblog = await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.ESign,change:GmConfig.weibi.sign,after:res.res.weibi});
             Logger.debug('sign: add wblog success.:',wblog);
             return ctx.rest({status:MsgType.EErrorType.EOK})
         }else{
