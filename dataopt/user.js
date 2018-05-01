@@ -113,6 +113,30 @@ let getRecord = async (query,options) => {
     ]).sort('-time').skip(options.skip).limit(options.limit).exec();
     return docs;
 }
+let getHotRecord = async (options) =>{
+    let docs = await Model.Record.aggregate([
+        {
+            $group: {
+                _id: {
+                    record:'$record',
+                    userid:'$userid'
+                },
+                count:{
+                    $sum:1
+                }
+            }
+        },
+        {
+            $group: {
+                _id: '$_id.record',
+                count:{
+                    $sum:1
+                }
+            }
+        }
+    ]).sort('-count').limit(options.limit).exec();
+    return docs;
+}
 let newRecord = async (data) => {
     let doc = new Model.Record({...data});
     let sdoc = await doc.save();
@@ -143,5 +167,6 @@ exports = {
     newRecord:newRecord,
     search:search,
     searchex:searchex,
+    getHotRecord:getHotRecord,
 };
 Object.assign(module.exports, exports);

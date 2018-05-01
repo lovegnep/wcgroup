@@ -300,6 +300,20 @@ module.exports = {
         let docs = await UserInterface.getRecord(query,{limit,skip,sort});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
+    'POST /api/gethotrecords': async (ctx,next) => {
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
+        }
+
+        let limit = ctx.request.body.limit || 10;
+        let docs = await UserInterface.getHotRecord({limit});
+        return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
+    },
     'POST /api/search': async (ctx,next) => {
         let islogin = await isLogin(ctx);
         if(!islogin){

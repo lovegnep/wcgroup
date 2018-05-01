@@ -9,6 +9,30 @@ let ff = function () {
 }
 Model.Record.aggregate([
     {
+        $group: {
+            _id: {
+                record:'$record',
+                userid:'$userid'
+            },
+            count:{
+                $sum:1
+            }
+        }
+    },
+    {
+        $group: {
+            _id: '$_id.record',
+            count:{
+                $sum:1
+            }
+        }
+    }
+]).sort('-count').exec(function (err, data) {
+    console.log(err,data);
+})
+/*
+Model.Record.aggregate([
+    {
         $match: {
             userid: mongoose.Types.ObjectId('5ae2f502c1603d5f6b5504f2')
         }
