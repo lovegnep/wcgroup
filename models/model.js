@@ -76,9 +76,12 @@ let qrmodel = new mongoose.Schema({
     viewCount:{type:Number, default:0},
     likeCount:{type:Number, default:0},
     gender:Number,//1男，2女，3保密， 当类型为个人时才会有
-    birthday:String,// 生日， 当类型为个人时才会有
+    birthday:Date,// 生日， 当类型为个人时才会有
     downs:[ObjectId],//点赞的用户，里面存储用户
     ups:[ObjectId],//踩的用户，里面存储用户
+    delete:{type: Boolean, default: false},//是否删除
+    secret:{type: Boolean, default: false},//是否下架
+    f5Time:Date//刷新时间
 });
 let Qrmodel = mongoose.model('Qrmodel', qrmodel);
 

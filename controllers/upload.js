@@ -41,7 +41,7 @@ let getUser = async(ctx) => {
 }
 module.exports = {
     'POST /api/uploadGroup': async (ctx, next) => {
-        let industry = ctx.request.body.induxtry;
+        let industry = ctx.request.body.industry;
         let location =  ctx.request.body.location;
         let groupname = ctx.request.body.groupname;
         let abstract = ctx.request.body.abstract;
@@ -52,6 +52,8 @@ module.exports = {
         let groupavatar = ctx.request.body.groupavatar;
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
+        let gender = ctx.request.body.gender;
+        let birthday = ctx.request.body.birthday;
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:0,message:'Please login first.'});
@@ -61,7 +63,63 @@ module.exports = {
             return ctx.rest({status:0,message:'Please login first1.'});
         }
         let uploader = user._id;
-        let qrdoc = await DataInterface.newQR({uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source});
+        let query = {uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source};
+        if(gender){
+            query.gender = gender;
+        }
+        if(birthday){
+            query.birthday = birthday;
+        }
+        let qrdoc = await DataInterface.newQR(query);
         ctx.rest({status:1,data:qrdoc});
+    },
+    'POST /api/updateGroup': async (ctx, next) => {
+        let industry = ctx.request.body.industry;
+        let location =  ctx.request.body.location;
+        let groupname = ctx.request.body.groupname;
+        let abstract = ctx.request.body.abstract;
+        let grouptag = ctx.request.body.grouptag;
+        let masterwx = ctx.request.body.masterwx;
+        //let type = ctx.request.body.type;
+        //let source = MsgType.QRSource.EUpload;
+        let groupavatar = ctx.request.body.groupavatar;
+        let groupQR = ctx.request.body.groupQR;
+        let masterQR = ctx.request.body.masterQR;
+        let gender = ctx.request.body.gender;
+        let birthday = ctx.request.body.birthday;
+        let qrid = ctx.request.body.qrid;
+        if(!qrid || qrid.length < 2){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidQrid});
+        }
+        let oldqrdoc = await DataInterface.getQR(qrid);
+
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'Please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'Please login first1.'});
+        }
+        if(!oldqrdoc ){
+            return  ctx.rest({status:MsgType.EErrorType.ENotFindQR});
+        }
+        if(oldqrdoc.uploader.toString() !== user._id){
+            return  ctx.rest({status:MsgType.EErrorType.EQRNotUser});
+        }
+        let uploader = user._id;
+        let updatestr = {abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx};
+        if(gender){
+            updatestr.gender = gender;
+        }
+        if(birthday){
+            updatestr.birthday = birthday;
+        }
+        let res = await DataInterface.updateQR({_id:qrid},updatestr);
+        if(res.nModified){
+            return  ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return  ctx.rest({status:MsgType.EErrorType.EUpdateFail});
+        }
     },
 };

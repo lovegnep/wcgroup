@@ -90,6 +90,126 @@ module.exports = {
         let qr = await DataInterface.getQR(ctx.query._id);
         ctx.rest({data:qr, status:MsgType.EErrorType.EOK});
     },
+    'GET /api/deleteqr': async (ctx, next) => {//删除
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let qrdoc = await DataInterface.getQR(ctx.query._id);
+        if(!qrdoc){
+            return ctx.rest({status:MsgType.EErrorType.ENotFindQR});
+        }
+        if(qrdoc.uploader.toString() !== user._id){
+            return ctx.rest({status:MsgType.EErrorType.EQRNotUser});
+        }
+        if(qrdoc.delete){
+            return ctx.rest({status:MsgType.EErrorType.EQRHasDel});
+        }
+        let res = await DataInterface.deleterQR({uploader:user._id,delete:false},{delete:true});
+        if(res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.EDelQrFail});
+        }
+    },
+    'GET /api/cdeleteqr': async (ctx, next) => {//取消删除
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let qrdoc = await DataInterface.getQR(ctx.query._id);
+        if(!qrdoc){
+            return ctx.rest({status:MsgType.EErrorType.ENotFindQR});
+        }
+        if(qrdoc.uploader.toString() !== user._id){
+            return ctx.rest({status:MsgType.EErrorType.EQRNotUser});
+        }
+        if(!qrdoc.delete){
+            return ctx.rest({status:MsgType.EErrorType.EHasUnDel});
+        }
+        let res = await DataInterface.deleterQR({uploader:user._id,delete:true},{delete:false});
+        if(res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.ECDelQrFail});
+        }
+    },
+    'GET /api/qrup': async (ctx, next) => {//上架
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let qrdoc = await DataInterface.getQR(ctx.query._id);
+        if(!qrdoc){
+            return ctx.rest({status:MsgType.EErrorType.ENotFindQR});
+        }
+        if(qrdoc.uploader.toString() !== user._id){
+            return ctx.rest({status:MsgType.EErrorType.EQRNotUser});
+        }
+        if(!qrdoc.secret){
+            return ctx.rest({status:MsgType.EErrorType.EUnDown});
+        }
+        let res = await DataInterface.deleterQR({uploader:user._id,secret:true},{secret:false});
+        if(res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.EQrUpFail});
+        }
+    },
+    'GET /api/qrdown': async (ctx, next) => {//下架
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let qrdoc = await DataInterface.getQR(ctx.query._id);
+        if(!qrdoc){
+            return ctx.rest({status:MsgType.EErrorType.ENotFindQR});
+        }
+        if(qrdoc.uploader.toString() !== user._id){
+            return ctx.rest({status:MsgType.EErrorType.EQRNotUser});
+        }
+        if(qrdoc.secret){
+            return ctx.rest({status:MsgType.EErrorType.EUnUp});
+        }
+        let res = await DataInterface.deleterQR({uploader:user._id,secret:false},{secret:true});
+        if(res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.EQrDownFail});
+        }
+    },
 
     'POST /api/viewqr': async (ctx, next) => {
         let islogin = await isLogin(ctx);

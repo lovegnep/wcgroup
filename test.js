@@ -7,6 +7,14 @@ let ff = function () {
         console.log('done:', num++);
     });
 }
+Model.Qrmodel.find({},{},{limit:5,sort:'-createTime'},function(err,data){
+    if(err){
+        console.log(err);
+    }else{
+        console.log(data);
+    }
+})
+/*
 var myDate = new Date(); //获取今天日期
 myDate.setDate(myDate.getDate() - 7);
 console.log(myDate);
