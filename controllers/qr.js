@@ -90,7 +90,7 @@ module.exports = {
         let qr = await DataInterface.getQR(ctx.query._id);
         ctx.rest({data:qr, status:MsgType.EErrorType.EOK});
     },
-    'GET /api/deleteqr': async (ctx, next) => {//删除
+    'POST /api/deleteqr': async (ctx, next) => {//删除
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:0,message:'please login first.'});
@@ -120,7 +120,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EDelQrFail});
         }
     },
-    'GET /api/cdeleteqr': async (ctx, next) => {//取消删除
+    'POST /api/cdeleteqr': async (ctx, next) => {//取消删除
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:0,message:'please login first.'});
@@ -150,7 +150,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.ECDelQrFail});
         }
     },
-    'GET /api/qrup': async (ctx, next) => {//上架
+    'POST /api/qrup': async (ctx, next) => {//上架
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:0,message:'please login first.'});
@@ -180,7 +180,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EQrUpFail});
         }
     },
-    'GET /api/qrdown': async (ctx, next) => {//下架
+    'POST /api/qrdown': async (ctx, next) => {//下架
         let islogin = await isLogin(ctx);
         if(!islogin){
             return ctx.rest({status:0,message:'please login first.'});
