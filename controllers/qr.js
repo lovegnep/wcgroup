@@ -163,7 +163,7 @@ module.exports = {
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
         }
-        let qrdoc = await DataInterface.getQR(ctx.query._id);
+        let qrdoc = await DataInterface.getQR(qrid);
         if(!qrdoc){
             return ctx.rest({status:MsgType.EErrorType.ENotFindQR});
         }
