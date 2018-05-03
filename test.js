@@ -7,6 +7,30 @@ let ff = function () {
         console.log('done:', num++);
     });
 }
+
+Model.Qrmodel.find({
+    delete:false,
+    secret:false,
+    $or:[
+        {
+            f5Time:{$exists:false}
+        },
+        {
+            f5Time:{$exists:false}
+        }
+    ]
+},{},{
+    limit:20,
+    sort:'-createTime'
+},function(err,data){
+    if(err){
+        console.log(err);
+    }
+    if(data){
+        console.log(data);
+    }
+})
+/*
 Model.Qrmodel.find({},{},{limit:5,sort:'-createTime'},function(err,data){
     if(err){
         console.log(err);

@@ -59,6 +59,17 @@ function getnBefore(n){//获取n小时之前的date
     mydate.setHours(mydate.getHours () - n);
     return mydate;
 }
+function GetRandomNum(Min,Max)
+{
+    var Range = Max - Min;
+    var Rand = Math.random();
+    return(Min + Math.round(Rand * Range));
+}
+function stringToDate (fDate){
+    var fullDate = fDate.split("-");
+
+    return new Date(fullDate[0], fullDate[1]-1, fullDate[2], 0, 0, 0);
+}
 module.exports = {
     sleep: function (time) {
         return new Promise(function (resolve, reject) {
@@ -99,4 +110,6 @@ module.exports = {
     getDate00:getDate00,
     getDate7days:getDate7days,
     getnBefore:getnBefore,
+    GetRandomNum:GetRandomNum,
+    stringToDate:stringToDate,
 };
