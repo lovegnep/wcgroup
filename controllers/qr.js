@@ -84,6 +84,7 @@ module.exports = {
             options.limit -= (f5qrlist.length || 0)
         }
         let qrlist = await DataInterface.getAllQRList(query,options);
+        Logger.debug('qrlist:',f5qrlist, qrlist);
         ctx.rest({data:[...f5qrlist,...qrlist], status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqrlist': async (ctx, next) => {
