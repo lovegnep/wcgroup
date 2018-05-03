@@ -261,7 +261,7 @@ module.exports = {
         }
         let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
         if(tmpuserdoc){
-            Logger.debug('dec wb success.');
+            Logger.debug('dec wb success.',tmpuserdoc);
             await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.F5qr,change:GmConfig.weibi.f5qr,name:qrdoc.groupname,after:tmpuserdoc.weibi});
             Logger.debug('viewqr : new wb log success:');
         }
