@@ -76,7 +76,7 @@ module.exports = {
         if(userdoc.weibi < GmConfig.weibi.updateqr){
             return ctx.rest({status:MsgType.EErrorType.ENoWeibi});
         }
-        let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
+        let tmpuserdoc = await UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
         if(tmpuserdoc){
             Logger.debug('dec wb success.',tmpuserdoc);
             await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.uploadqr,change:GmConfig.weibi.updateqr,name:groupname,after:tmpuserdoc.weibi});
@@ -127,7 +127,7 @@ module.exports = {
         if(birthday){
             updatestr.birthday = birthday;
         }
-        let userdoc = DataInterface.getAccountById(user._id);
+        let userdoc = await DataInterface.getAccountById(user._id);
         if(userdoc.weibi < GmConfig.weibi.updateqr){
             return ctx.rest({status:MsgType.EErrorType.ENoWeibi});
         }
