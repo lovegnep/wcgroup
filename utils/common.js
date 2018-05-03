@@ -54,6 +54,11 @@ function getDate7days(){//7天前0点的DATE
     myDate.setDate(myDate.getDate() - 7);
     return myDate;
 }
+function getnBefore(n){//获取n小时之前的date
+    let mydate = new Date();
+    mydate.setHours(date.getHours () - n);
+    return mydate;
+}
 module.exports = {
     sleep: function (time) {
         return new Promise(function (resolve, reject) {
@@ -93,4 +98,5 @@ module.exports = {
     isInArray:isInArray,
     getDate00:getDate00,
     getDate7days:getDate7days,
+    getnBefore:getnBefore,
 };

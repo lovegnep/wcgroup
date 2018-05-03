@@ -58,16 +58,33 @@ module.exports = {
         //let sorttype = ctx.query.sorttype;
         //let basedon = parseInt(ctx.query.basedon);
         //let baseparam = ctx.query.baseparam;
-        let options = { skip: skip, limit: limit};
-        let query = {};
+        let options = { limit: limit, sort:'-createTime'};
+        let query = {delete:false,secret:false};
         query.type = type;
+        let nbfore = Utils.getnBefore(GmConfig.comconfig.f5time);
         if(userdoc.views && userdoc.views.length > 0){
             query._id = {
                 $nin:userdoc.views
             }
         }
+        query.f5Time = {
+            $gte:nbfore
+        };
+        let f5qrlist = await DataInterface.getAllQRList(query,options);
+        if(f5qrlist||f5qrlist.length === limit){
+            return ctx.rest({data:f5qrlist, status:MsgType.EErrorType.EOK});
+        }else{
+            //delete query.f5Time;
+            query.f5Time = {
+                $or:[
+                    {$exists:false},
+                    {$lt:nbfore}
+                ]
+            };
+            options.limit -= (f5qrlist.length || 0)
+        }
         let qrlist = await DataInterface.getAllQRList(query,options);
-        ctx.rest({data:qrlist, status:MsgType.EErrorType.EOK});
+        ctx.rest({data:[...f5qrlist,...qrlist], status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqrlist': async (ctx, next) => {
         let islogin = await isLogin(ctx);
