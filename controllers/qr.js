@@ -75,12 +75,16 @@ module.exports = {
             return ctx.rest({data:f5qrlist, status:MsgType.EErrorType.EOK});
         }else{
             //delete query.f5Time;
-            query.f5Time = {
+            /*query.f5Time = {
                 $or:[
                     {$exists:false},
                     {$lt:nbfore}
                 ]
-            };
+            };*/
+            query['$or'] = [
+                {f5Time:{$exists:false}},
+                {f5Time:{$lt:nbfore}}
+            ];
             options.limit -= (f5qrlist.length || 0)
         }
         let qrlist = await DataInterface.getAllQRList(query,options);
