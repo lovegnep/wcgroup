@@ -71,7 +71,7 @@ module.exports = {
             $gte:nbfore
         };
         let f5qrlist = await DataInterface.getAllQRList(query,options);
-        if(f5qrlist||f5qrlist.length === limit){
+        if(f5qrlist&&f5qrlist.length === limit){
             return ctx.rest({data:f5qrlist, status:MsgType.EErrorType.EOK});
         }else{
             //delete query.f5Time;
