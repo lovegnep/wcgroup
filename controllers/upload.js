@@ -78,8 +78,8 @@ module.exports = {
         }
         let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
         if(tmpuserdoc){
-            Logger.debug('dec wb success.');
-            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.updateqr,change:GmConfig.weibi.updateqr,name:groupname,after:tmpuserdoc.weibi});
+            Logger.debug('dec wb success.',tmpuserdoc);
+            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.uploadqr,change:GmConfig.weibi.updateqr,name:groupname,after:tmpuserdoc.weibi});
             Logger.debug('viewqr : new wb log success:');
         }
         let qrdoc = await DataInterface.newQR(query);
@@ -134,7 +134,7 @@ module.exports = {
         let res = await DataInterface.updateQR({_id:qrid},updatestr);
         let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
         if(tmpuserdoc){
-            Logger.debug('dec wb success.');
+            Logger.debug('dec wb success.',tmpuserdoc);
             await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.updateqr,change:GmConfig.weibi.updateqr,name:groupname,after:tmpuserdoc.weibi});
             Logger.debug('viewqr : new wb log success:');
         }
