@@ -232,6 +232,46 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EQrDownFail});
         }
     },
+    'POST /api/f5qr': async (ctx, next) => {//刷新
+        let islogin = await isLogin(ctx);
+        if(!islogin){
+            return ctx.rest({status:0,message:'please login first.'});
+        }
+        let user = await getUser(ctx);
+        if(!user){
+            return ctx.rest({status:0,message:'unknown err'});
+        }
+        let qrid = ctx.request.body._id;
+        if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
+            return ctx.rest({status:0,message:'invalid id.'});
+        }
+        let qrdoc = await DataInterface.getQR(qrid);
+        if(!qrdoc){
+            return ctx.rest({status:MsgType.EErrorType.ENotFindQR});
+        }
+        if(qrdoc.uploader.toString() !== user._id){
+            return ctx.rest({status:MsgType.EErrorType.EQRNotUser});
+        }
+        if(qrdoc.secret){
+            return ctx.rest({status:MsgType.EErrorType.EUnUp});
+        }
+        let userdoc = await DataInterface.getAccountById(user._id);
+        if(userdoc.weibi < GmConfig.weibi.f5qr){
+            return ctx.rest({status:MsgType.EErrorType.ENoWeibi});
+        }
+        let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
+        if(tmpuserdoc){
+            Logger.debug('dec wb success.');
+            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.F5qr,change:GmConfig.weibi.f5qr,name:qrdoc.groupname,after:tmpuserdoc.weibi});
+            Logger.debug('viewqr : new wb log success:');
+        }
+        let res = await DataInterface.updateQR({_id:qrid},{f5Time:new Date()});
+        if(res.nModified){
+            return ctx.rest({status:MsgType.EErrorType.EOK});
+        }else{
+            return ctx.rest({status:MsgType.EErrorType.EF5Fail});
+        }
+    },
 
     'POST /api/viewqr': async (ctx, next) => {
         let islogin = await isLogin(ctx);

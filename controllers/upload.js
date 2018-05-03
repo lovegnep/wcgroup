@@ -8,6 +8,8 @@ const Logger = require('../utils/logger');
 const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 const MsgType = require('../common/msgtype');
+const GmConfig = require('../common/gm');
+const UserInterface = require('../dataopt/user');
 
 let usermap = require('../utils/usercache');
 
@@ -70,6 +72,16 @@ module.exports = {
         if(birthday){
             query.birthday = birthday;
         }
+        let userdoc = DataInterface.getAccountById(user._id);
+        if(userdoc.weibi < GmConfig.weibi.updateqr){
+            return ctx.rest({status:MsgType.EErrorType.ENoWeibi});
+        }
+        let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
+        if(tmpuserdoc){
+            Logger.debug('dec wb success.');
+            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.updateqr,change:GmConfig.weibi.updateqr,name:groupname,after:tmpuserdoc.weibi});
+            Logger.debug('viewqr : new wb log success:');
+        }
         let qrdoc = await DataInterface.newQR(query);
         ctx.rest({status:1,data:qrdoc});
     },
@@ -115,7 +127,17 @@ module.exports = {
         if(birthday){
             updatestr.birthday = birthday;
         }
+        let userdoc = DataInterface.getAccountById(user._id);
+        if(userdoc.weibi < GmConfig.weibi.updateqr){
+            return ctx.rest({status:MsgType.EErrorType.ENoWeibi});
+        }
         let res = await DataInterface.updateQR({_id:qrid},updatestr);
+        let tmpuserdoc = UserInterface.addWeiBi(user._id,GmConfig.weibi.f5qr);
+        if(tmpuserdoc){
+            Logger.debug('dec wb success.');
+            await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.updateqr,change:GmConfig.weibi.updateqr,name:groupname,after:tmpuserdoc.weibi});
+            Logger.debug('viewqr : new wb log success:');
+        }
         if(res.nModified){
             return  ctx.rest({status:MsgType.EErrorType.EOK});
         }else{

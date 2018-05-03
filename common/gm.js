@@ -3,7 +3,9 @@ const weibi = {
     sign:50,
     view:-1,
     init:100,
-    vipdaily:50
+    vipdaily:50,
+    f5qr:-1,
+    updateqr:-1,
 };
 const comconfig = {
     f5time:2,

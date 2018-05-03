@@ -42,6 +42,7 @@ const EErrorType = {
 
     EInvalidQrid:11020,//qrid非法
     EUpdateFail:11021,//更新qr失败
+    EF5Fail:11021,//更新qr失败
 };
 
 const ImgType = {
@@ -68,6 +69,9 @@ const WeiBiSource = {
     EVip:4,//会员每天领奖
     EInit:5,//新用户初始
     EPay:6,//充值
+    F5qr:7,
+    uploadqr:8,
+    updateqr:9,
 }
 const WBChinese = {
     '1':'分享',
