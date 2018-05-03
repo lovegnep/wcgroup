@@ -74,7 +74,7 @@ module.exports = {
         if(f5qrlist&&f5qrlist.length === limit){
             return ctx.rest({data:f5qrlist, status:MsgType.EErrorType.EOK});
         }else{
-            //delete query.f5Time;
+            delete query.f5Time;
             /*query.f5Time = {
                 $or:[
                     {$exists:false},

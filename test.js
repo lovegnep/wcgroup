@@ -7,7 +7,8 @@ let ff = function () {
         console.log('done:', num++);
     });
 }
-
+let nbfore = Utils.getnBefore(2);
+let query =
 Model.Qrmodel.find({
     delete:false,
     secret:false,
@@ -16,7 +17,7 @@ Model.Qrmodel.find({
             f5Time:{$exists:false}
         },
         {
-            f5Time:{$exists:false}
+            f5Time:{$lt:nbfore}
         }
     ]
 },{},{
