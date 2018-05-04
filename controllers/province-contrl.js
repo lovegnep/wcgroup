@@ -1,21 +1,19 @@
 const Province = require('../utils/province');
 const _ = require('lodash');
+const MsgType = require('../common/msgtype');
+const Utils = require('../utils/common');
 
 module.exports = {
     'GET /api/province': async (ctx, next) => {
-        let index = parseInt(ctx.query.index);
-        let first = ctx.query.first;
-        let res = [];
-        if(index === 1){
-            res = Province.get1();
-        }else if(index === 2){
-            if(_.isEmpty(first)){
-                return ctx.rest({data:[], status:0});
-            }
-            res = Province.get2(first);
-        }else{
-            return ctx.rest({data:[], status:0});
+        let parent = parseInt(ctx.query.parent);
+        if(!parent || parent===''){
+            let res = Province.getLocations();
+            return ctx.rest({data:res, status:MsgType.EErrorType.EOK});
         }
-        ctx.rest({data:res, status:1});
+        if(!Utils.validLocationId(parent)){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
+        }
+        let res = Province.getLocations(parent);
+        return ctx.rest({data:res, status:MsgType.EErrorType.EOK});
     },
 };
