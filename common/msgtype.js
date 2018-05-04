@@ -43,6 +43,11 @@ const EErrorType = {
     EInvalidQrid:11020,//qrid非法
     EUpdateFail:11021,//更新qr失败
     EF5Fail:11021,//更新qr失败
+
+    EHasF5:11022,
+    EInvalidLocation:11023,
+    EInvalidGender:11024,
+    EInvalidAge:11025,
 };
 
 const ImgType = {
@@ -72,6 +77,7 @@ const WeiBiSource = {
     F5qr:7,
     uploadqr:8,
     updateqr:9,
+    EInByShare:10,
 }
 const WBChinese = {
     '1':'分享',
@@ -82,7 +88,8 @@ const WBChinese = {
     '6':'充值',
     '7':'刷新',
     '8':'发布',
-    '9':'更新'
+    '9':'更新',
+    '10':'分享进入'
 }
 
 exports = {

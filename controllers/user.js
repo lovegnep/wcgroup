@@ -109,6 +109,7 @@ module.exports = {
         const userInfo = fullUserInfo.userInfo;
         const clientIp = ''; // 暂时不记录 ip
         let shareIndex = ctx.request.body.shareIndex;
+        let fatherid = ctx.request.body.fatherid;
         // 获取openid
         const options = {
           method: 'GET',
@@ -162,8 +163,13 @@ module.exports = {
                     gender: userInfo.gender || 1, // 性别 0：未知、1：男、2：女
                     nickname: userInfo.nickName,
                     shareIndex:shareIndex,
-                    weibi:GmConfig.weibi.init
+                    weibi:GmConfig.weibi.init,
+                    father:fatherid
                 });
+                if(fatherid&&fatherid.length > 0){
+                    let addres = await UserInterface.addSon(fatherid,userdoc._id,userInfo.nickName);
+                }
+
             }else{
                 userdoc = await DataInterface.newAccount({
                     account: '微信用户' + Uuidv1(),
@@ -353,22 +359,65 @@ module.exports = {
         let limit = ctx.request.body.limit || 20;
         let skip = ctx.request.body.skip || 0;
         let content = ctx.request.body.content;
+        let sort = ctx.request.body.sort;
         let tab = parseInt(ctx.request.body.tab);
+        let location = ctx.request.body.location;
+        let industry = ctx.request.body.industry;
+        let gender = ctx.request.body.gender;
+        let age = ctx.request.body.age;
+        let query = {
+            '$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
+        };
+
+        if(location){
+            if(!(/^\d{6}$/.test(location))){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
+            }
+            if(location === '000000'){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
+            }
+            let tmp = '';
+            let sheng = location.substr(0,2);
+            let shi = location.substr(2,2);
+            let xian = location.substr(4,2);
+            if(parseInt(sheng)>0){tmp+=sheng;}
+            if(parseInt(shi)>0){tmp+=shi;}
+            if(parseInt(xian)>0){tmp+=xian;}
+            query.location = new RegExp('^'+tmp);
+        }
         if(!content || content.length < 1){
             return ctx.rest({status:MsgType.EErrorType.EInvalidContent});
         }
         if(typeof tab === 'undefined' || (tab !== 0 && tab !== 1 &&tab !== 2 &&tab !== 3)){
             return ctx.rest({status:MsgType.EErrorType.EInvalidTab});
         }
-        let query = {
-            '$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
-        };
+        if(tab === 2){
+            if(gender){
+                if(parseInt(gender) !== 1 && parseInt(gender) !== 2){
+                    return ctx.rest({status:MsgType.EErrorType.EInvalidGender});
+                }
+                query.gender = parseInt(gender);
+            }
+            if(age){
+                if(parseInt(age) !== 1 && parseInt(age) !== 2){
+                    return ctx.rest({status:MsgType.EErrorType.EInvalidAge});
+                }
+                query.age = parseInt(age);
+            }
+        }
+        if(industry&&industry.length > 0){
+            query.industry = industry;
+        }
         if(tab !== 0){
             query.type = tab;
         }
+        let options = {limit,skip};
+        if(sort&&sort.length > 0){
+            options.sort = sort;
+        }
         //query.userid = user._id;
-        query.groupname = new RegExp(content,'i');
-        let docs = await UserInterface.search(query,{limit,skip});
+        //query.groupname = new RegExp(content,'i');
+        let docs = await UserInterface.search(query,options);
         await UserInterface.newRecord({userid:user._id,record:content});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },

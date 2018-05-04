@@ -26,7 +26,29 @@ let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
     }
     return res;
 }
-
+let addSon = async(fatherid,sonid,sonname) =>{
+    let query = {
+        _id:fatherid
+    };
+    let upstr = {
+        $inc:{
+            weibi:GmConfig.weibi.inbyshare
+        },
+        $push:{
+            son:sonid
+        }
+    }
+    let res = await Model.UserModel.findOneAndUpdate(query,upstr,{new: true}).exec();
+    if(res){
+        Logger.debug('addson success.',fatherid,sonid,sonname);
+        let wblog = await newWeibiLog({userid:res._id,source:MsgType.WeiBiSource.EInByShare,change:GmConfig.weibi.inbyshare,after:res.weibi,name:sonname});
+        if(wblog){
+            Logger.debug('new wb success.');
+        }
+        return res;
+    }
+    return null;
+}
 let sign = async (_id) => {
     let today0 = Utils.getDay00();
     let query = {
@@ -197,6 +219,7 @@ let getWeibiLog = async(query,options)=>{
     return docs;
 }
 exports = {
+    addSon:addSon,
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,
     getviews:getviews,

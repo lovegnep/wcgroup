@@ -1,4 +1,5 @@
 const weibi = {
+    inbyshare:50,
     shareToGroup:50,
     sign:50,
     view:-1,

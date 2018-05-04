@@ -10,6 +10,7 @@ const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 const MsgType = require('../common/msgtype');
 const GmConfig = require('../common/gm');
+const moment = require('moment');
 
 let usermap = require('../utils/usercache');
 
@@ -254,6 +255,9 @@ module.exports = {
         }
         if(qrdoc.secret){
             return ctx.rest({status:MsgType.EErrorType.EUnUp});
+        }
+        if(moment(qrdoc.f5Time) > Utils.getnBefore(GmConfig.comconfig)){
+            return ctx.rest({status:MsgType.EErrorType.EHasF5});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
         if(userdoc.weibi < GmConfig.weibi.f5qr){

@@ -7,8 +7,28 @@ let ff = function () {
         console.log('done:', num++);
     });
 }
-let nbfore = Utils.getnBefore(2);
-let query =
+let a = '1122011';
+let b = '112201';
+console.log(/^1122((0[1-9])|([1-9][0-9]))$/.test(a))
+/*
+let nbfore = Utils.getnBefore(1);
+
+    Model.Qrmodel.find({
+        delete:false,
+        secret:false,
+        f5Time:{$gt:nbfore}
+    },{},{
+        limit:20,
+        sort:'-createTime'
+    },function(err,data){
+        if(err){
+            console.log(err);
+        }
+        if(data){
+            console.log(data);
+        }
+    })
+    /*
 Model.Qrmodel.find({
     delete:false,
     secret:false,

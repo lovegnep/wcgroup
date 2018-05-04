@@ -7,6 +7,37 @@ const MsgType = require('../common/msgtype');
 //refer格式
 //https://servicewechat.com/{appid}/{version}/page-frame.html
 
+function validGender(a){
+    if(!a || (a!==1 && a !==2 && a!==3)){
+        return false;
+    }
+    return true;
+}
+function validBirthday(a){
+
+}
+function validLocationId(id){
+    if(!id||id.length !== 6){
+        return false;
+    }
+    if(!(/\d{6}/.test(id))){
+        return false;
+    }
+    let sheng = id.substr(0,2);
+    let shi = id.substr(2,2);
+    let xian = id.substr(4,2);
+    let flag = false;
+    if(parseInt(sheng) === 0){
+        return false;
+    }
+    if(parseInt(shi) === 0){
+        flag = true;
+    }
+    if(parseInt(xian) > 0 && flag){
+        return false;
+    }
+    return true;
+}
 function testappid(ctx,next){
     let refer = ctx.req.headers['referer'];
     if(!refer || refer.length < 30){
@@ -112,4 +143,7 @@ module.exports = {
     getnBefore:getnBefore,
     GetRandomNum:GetRandomNum,
     stringToDate:stringToDate,
+    validLocationId:validLocationId,
+    validGender:validGender,
+    validBirthday:validBirthday,
 };

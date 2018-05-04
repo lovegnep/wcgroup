@@ -66,10 +66,22 @@ module.exports = {
         }
         let uploader = user._id;
         let query = {uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source};
+        if(location){
+            if(!Utils.validGender(location)){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
+            }
+            query.location = location;
+        }
         if(gender){
+            if(!Utils.validGender(gender)){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidGender});
+            }
             query.gender = gender;
         }
         if(birthday){
+            if(!Utils.validBirthday(birthday)){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidAge});
+            }
             query.birthday = birthday;
         }
         let userdoc = await DataInterface.getAccountById(user._id);
@@ -121,11 +133,23 @@ module.exports = {
         }
         let uploader = user._id;
         let updatestr = {abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx};
+        if(location){
+            if(!Utils.validGender(location)){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
+            }
+            query.location = location;
+        }
         if(gender){
-            updatestr.gender = gender;
+            if(!Utils.validGender(gender)){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidGender});
+            }
+            query.gender = gender;
         }
         if(birthday){
-            updatestr.birthday = birthday;
+            if(!Utils.validBirthday(birthday)){
+                return ctx.rest({status:MsgType.EErrorType.EInvalidAge});
+            }
+            query.birthday = birthday;
         }
         let userdoc = await DataInterface.getAccountById(user._id);
         if(userdoc.weibi < GmConfig.weibi.updateqr){
