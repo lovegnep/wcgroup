@@ -5,7 +5,7 @@ const ObjectId  = mongoose.Schema.ObjectId;
 const fs = require('fs');
 const Uuidv1 = require('uuid/v1')
 const Utils = require('./utils/common');
-
+const Province = require('./utils/province')
 let cb = null;
 let conn = false;
 mongoose.connect(Config.db, function(err){
@@ -29,7 +29,7 @@ let qrmodel = new mongoose.Schema({
     location:String,
     groupname:String,
     abstract:String,
-    grouptag:String,//标签
+    grouptag:[String],//标签
     masterwx:String,//,上传者微信，个人微信，公众号ID
     groupavatar:String,//微信群头像，个人头像，公众号头像
     groupQR:String,//微信群二维码，个人二维码，公众号二维码
@@ -67,9 +67,9 @@ let tmp = function(){
             groupname:filename,
             abstract:filename+filename,
             industry:filename,
-            location:location[rand],
+            location:Province.getRandPosition(),
             birthday:bir,
-            gender:Utils.GetRandomNum(1,2),
+            gender:Utils.GetRandomNum(1,3),
             source:2,
             type:1
         });
@@ -84,9 +84,9 @@ let tmp = function(){
             groupname:filename,
             abstract:filename+filename,
             industry:filename,
-            location:location[rand],
+            location:Province.getRandPosition(),
             birthday:bir,
-            gender:Utils.GetRandomNum(1,2),
+            gender:Utils.GetRandomNum(1,3),
             source:2,
             type:2
         });
@@ -100,9 +100,9 @@ let tmp = function(){
             groupname:filename,
             abstract:filename+filename,
             industry:filename,
-            location:location[rand],
+            location:Province.getRandPosition(),
             birthday:bir,
-            gender:Utils.GetRandomNum(1,2),
+            gender:Utils.GetRandomNum(1,3),
             source:2,
             type:3
         });

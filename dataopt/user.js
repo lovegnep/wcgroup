@@ -202,6 +202,14 @@ let search = async (query,options) => {
     Logger.debug('searchex:',query,options,docs);
     return docs;
 }
+let getQRCount = async(query)=>{
+    let res = await Model.Qrmodel.count(query).exec();
+    return res;
+}
+let getDisting = async(field,query) =>{
+    let res = await Model.Qrmodel.distinct(field,query).exec();
+    return res;
+}
 let searchex = async (query,options) => {
     let docs = await Model.Qrmodel.find(query,'groupname',options).exec();
     Logger.debug('searchex:',query,options,docs);
@@ -219,6 +227,9 @@ let getWeibiLog = async(query,options)=>{
     return docs;
 }
 exports = {
+    getQRCount:getQRCount,
+    getDisting:getDisting,
+
     addSon:addSon,
     updateViewsAndWeibi:updateViewsAndWeibi,
     sign:sign,

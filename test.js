@@ -8,9 +8,14 @@ let ff = function () {
         console.log('done:', num++);
     });
 };
-let str = '2017-09-30'
-let date = new Date(str.replace(/-/g,"/"));
-console.log(date)
+Model.Qrmodel.findById('5aea8149aaf0bf2d5c480bfa',function(err,data){
+    if(err){
+        console.log(err);
+    }else{
+        console.log(data.createTime);
+    }
+})
+console.log(Date.parse('2018-05-03T03:26:01.648Z'))
 /*
 let nbfore = Utils.getnBefore(1);
 

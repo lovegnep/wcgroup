@@ -66,6 +66,9 @@ module.exports = {
         }
         let uploader = user._id;
         let query = {uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source};
+        if(grouptag&&grouptag!==''){
+            query.grouptag = grouptag.split(',');
+        }
         if(location){
             if(!Utils.validLocationId(location)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
@@ -137,19 +140,22 @@ module.exports = {
             if(!Utils.validLocationId(location)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
             }
-            query.location = location;
+            updatestr.location = location;
+        }
+        if(grouptag&&grouptag!==''){
+            updatestr.grouptag = grouptag.split(',');
         }
         if(gender){
             if(!Utils.validGender(gender)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidGender});
             }
-            query.gender = gender;
+            updatestr.gender = gender;
         }
         if(birthday){
             if(!Utils.validBirthday(birthday)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidAge});
             }
-            query.birthday = birthday;
+            updatestr.birthday = new Date(birthday.replace(/-/g,"/"));
         }
         let userdoc = await DataInterface.getAccountById(user._id);
         if(userdoc.weibi < GmConfig.weibi.updateqr){

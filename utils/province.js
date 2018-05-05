@@ -8653,7 +8653,12 @@ const Types = [
   {"name": "\u7f51\u7edc\u7ea2\u4eba", "id": 30}, 
   {"name": "\u5176\u4ed6", "id": 40}
 ];
-
+function GetRandomNum(Min,Max)
+{
+    var Range = Max - Min;
+    var Rand = Math.random();
+    return(Min + Math.round(Rand * Range));
+}
 function getLocations(parent){
   let res = [];
     if(!parent || parent.length < 1){
@@ -8712,6 +8717,10 @@ function validLocationId(id){
   }
   return true;
 }
+function getRandPosition(){
+  let index = GetRandomNum(0,cityJson.length-1);
+  return cityJson[index].item_code;
+}
 function getTypes(){
   return Types;
 }
@@ -8746,5 +8755,6 @@ exports = {
     getLocation:getLocation,
     getLocations:getLocations,
     validLocationId:validLocationId,
+    getRandPosition:getRandPosition,
 };
 Object.assign(module.exports, exports);
