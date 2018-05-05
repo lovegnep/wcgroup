@@ -14,7 +14,7 @@ function validGender(a){
     return true;
 }
 function validBirthday(a){
-
+    let reg = /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/
 }
 function validLocationId(id){
     if(!id||id.length !== 6){

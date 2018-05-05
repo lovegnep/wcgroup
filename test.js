@@ -1,15 +1,14 @@
 const Model = require('./models/model');
 const Utils = require('./utils/common');
 const mongoose = require('mongoose');
+const moment = require('moment');
 let num = 0;
 let ff = function () {
     Model.RecordRank.update({record: "哈哈"}, {$inc: {num: 1}}, {upsert: true}, function (err, data) {
         console.log('done:', num++);
     });
 }
-let a = '1122011';
-let b = '112201';
-console.log(/^1122((0[1-9])|([1-9][0-9]))$/.test(a))
+    /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test()
 /*
 let nbfore = Utils.getnBefore(1);
 
