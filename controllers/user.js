@@ -369,29 +369,7 @@ module.exports = {
         let query = {
             '$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
         };
-        if(agestart||ageend){
-            if(agestart&&ageend){
-                if(agestart > ageend){
-                    return ctx.rest({status:MsgType.EErrorType.EStartGTEnd});
-                }
-                let datestart = new Date(Date.now()-agestart*365*24*3600*1000);
-                let dateend = new Date(Date.now()-ageend*365*24*3600*1000);
-                query.birthday = {
-                    $gt:dateend,
-                    $lt:datestart
-                }
-            }else if(agestart){
-                let datestart = new Date(Date.now()-agestart*365*24*3600*1000);
-                query.birthday = {
-                    $lt:datestart
-                }
-            }else if(ageend){
-                let dateend = new Date(Date.now()-ageend*365*24*3600*1000);
-                query.birthday = {
-                    $gt:dateend,
-                }
-            }
-        }
+
         if(location){
             if(!(/^\d{6}$/.test(location))){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
@@ -421,11 +399,28 @@ module.exports = {
                 }
                 query.gender = parseInt(gender);
             }
-            if(age){
-                if(parseInt(age) !== 1 && parseInt(age) !== 2){
-                    return ctx.rest({status:MsgType.EErrorType.EInvalidAge});
+            if(agestart||ageend){
+                if(agestart&&ageend){
+                    if(agestart > ageend){
+                        return ctx.rest({status:MsgType.EErrorType.EStartGTEnd});
+                    }
+                    let datestart = new Date(Date.now()-agestart*365*24*3600*1000);
+                    let dateend = new Date(Date.now()-ageend*365*24*3600*1000);
+                    query.birthday = {
+                        $gt:dateend,
+                        $lt:datestart
+                    }
+                }else if(agestart){
+                    let datestart = new Date(Date.now()-agestart*365*24*3600*1000);
+                    query.birthday = {
+                        $lt:datestart
+                    }
+                }else if(ageend){
+                    let dateend = new Date(Date.now()-ageend*365*24*3600*1000);
+                    query.birthday = {
+                        $gt:dateend,
+                    }
                 }
-                query.age = parseInt(age);
             }
         }
         if(industry&&industry.length > 0){
