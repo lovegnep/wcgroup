@@ -95,7 +95,7 @@ module.exports = {
             Logger.debug('viewqr : new wb log success:');
         }
         let qrdoc = await DataInterface.newQR(query);
-        ctx.rest({status:1,data:qrdoc});
+        ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc});
     },
     'POST /api/updateGroup': async (ctx, next) => {
         let industry = ctx.request.body.industry;
