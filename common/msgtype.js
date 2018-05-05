@@ -45,7 +45,7 @@ const EErrorType = {
     EF5Fail:11021,//更新qr失败
 
     EHasF5:11022,
-    EInvalidLocation:11023,
+    EInvalidLocation:11023,//位置代码不对
     EInvalidGender:11024,
     EInvalidAge:11025,
 };

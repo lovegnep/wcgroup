@@ -67,7 +67,7 @@ module.exports = {
         let uploader = user._id;
         let query = {uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source};
         if(location){
-            if(!Utils.validGender(location)){
+            if(!Utils.validLocationId(location)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
             }
             query.location = location;
@@ -134,7 +134,7 @@ module.exports = {
         let uploader = user._id;
         let updatestr = {abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx};
         if(location){
-            if(!Utils.validGender(location)){
+            if(!Utils.validLocationId(location)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
             }
             query.location = location;
