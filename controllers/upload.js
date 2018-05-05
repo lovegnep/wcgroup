@@ -82,7 +82,7 @@ module.exports = {
             if(!Utils.validBirthday(birthday)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidAge});
             }
-            query.birthday = birthday;
+            query.birthday = new Date(birthday.replace(/-/g,"/"));
         }
         let userdoc = await DataInterface.getAccountById(user._id);
         if(userdoc.weibi < GmConfig.weibi.updateqr){

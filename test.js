@@ -7,8 +7,10 @@ let ff = function () {
     Model.RecordRank.update({record: "哈哈"}, {$inc: {num: 1}}, {upsert: true}, function (err, data) {
         console.log('done:', num++);
     });
-}
-    /^\d{4}-(0[1-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/.test()
+};
+let str = '2017-09-30'
+let date = new Date(str.replace(/-/g,"/"));
+console.log(date)
 /*
 let nbfore = Utils.getnBefore(1);
 
