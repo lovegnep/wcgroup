@@ -364,11 +364,34 @@ module.exports = {
         let location = ctx.request.body.location;
         let industry = ctx.request.body.industry;
         let gender = ctx.request.body.gender;
-        let age = ctx.request.body.age;
+        let agestart = parseInt(ctx.request.body.agestart);
+        let ageend = parseInt(ctx.request.body.ageend);
         let query = {
             '$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
         };
-
+        if(agestart||ageend){
+            if(agestart&&ageend){
+                if(agestart > ageend){
+                    return ctx.rest({status:MsgType.EErrorType.EStartGTEnd});
+                }
+                let datestart = new Date(Date.now()-agestart*365*24*3600*1000);
+                let dateend = new Date(Date.now()-ageend*365*24*3600*1000);
+                query.birthday = {
+                    $gt:dateend,
+                    $lt:datestart
+                }
+            }else if(agestart){
+                let datestart = new Date(Date.now()-agestart*365*24*3600*1000);
+                query.birthday = {
+                    $lt:datestart
+                }
+            }else if(ageend){
+                let dateend = new Date(Date.now()-ageend*365*24*3600*1000);
+                query.birthday = {
+                    $gt:dateend,
+                }
+            }
+        }
         if(location){
             if(!(/^\d{6}$/.test(location))){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});

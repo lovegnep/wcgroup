@@ -67,6 +67,10 @@ module.exports = {
             data.imgs = imgs;
         }
         let comment = await DataInterface.newComment(data);
+        let res = await DataInterface.updateQR({_id:qrid},{$inc:{commentCount:1}});
+        if(res.nModified){
+            Logger.debug('POST /api/newcomment: add commentCount success.',qrid);
+        }
         return ctx.rest({status:1,data:comment});
     },
     'POST /api/deletecomment': async (ctx,next) =>{

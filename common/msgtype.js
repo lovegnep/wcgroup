@@ -48,6 +48,7 @@ const EErrorType = {
     EInvalidLocation:11023,//位置代码不对
     EInvalidGender:11024,
     EInvalidAge:11025,
+    EStartGTEnd:11026,//开始时间大于结束时间
 };
 
 const ImgType = {

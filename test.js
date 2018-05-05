@@ -3,6 +3,147 @@ const Utils = require('./utils/common');
 const mongoose = require('mongoose');
 const moment = require('moment');
 let num = 0;
+docs = Model.Qrmodel.aggregate([
+    {
+        $project:{
+            uploader:1,
+            type:1,
+            source:1,
+            industry:1,
+            location:1,
+            groupname:1,
+            abstract:1,
+            grouptag:1,
+            masterwx:1,
+            groupavatar:1,
+            groupQR:1,
+            masterQR:1,
+            createTime:1,
+            updateTime:1,
+            viewCount:1,
+            commentCount:1,
+            gender:1,
+            birthday:1,
+            likeCount:1,
+            multiplyCount:{
+                "$add":["$viewCount",{
+                    "$add":["$commentCount",{
+                        "$multiply":[2,"$likeCount"]
+                    }]
+                }]
+        }
+    }}
+
+]).sort('-multiplyCount -createTime').limit(5).exec(function(err,data){
+if(err){
+    console.log(err);
+}else{
+    console.log(data);
+}
+});
+/*
+*             multiplyCount:{
+            "$add":["$viewCount",{
+                "$add":["$commentCount",{
+                    "$multiply":[2,"$likeCount"]
+                }]
+            }]
+        }
+* */
+/*
+docs = Model.Qrmodel.aggregate([
+    {
+        $project: {
+            uploader:1,
+            type:1,
+            source:1,
+            industry:1,
+            location:1,
+            groupname:1,
+            abstract:1,
+            grouptag:1,
+            masterwx:1,
+            groupavatar:1,
+            groupQR:1,
+            masterQR:1,
+            createTime:1,
+            updateTime:1,
+            viewCount:1,
+            commentCount:1,
+            gender:1,
+            birthday:1,
+            likeCount:1,
+            multiplyCount:{
+                "$multiply":[2,"$likeCount"]
+            }
+        }
+    },
+    {
+        $project: {
+            uploader:1,
+            type:1,
+            source:1,
+            industry:1,
+            location:1,
+            groupname:1,
+            abstract:1,
+            grouptag:1,
+            masterwx:1,
+            groupavatar:1,
+            groupQR:1,
+            masterQR:1,
+            createTime:1,
+            updateTime:1,
+            viewCount:1,
+            commentCount:1,
+            gender:1,
+            birthday:1,
+            likeCount:1,
+            multiplyCount1:{
+                "$add":["$multiplyCount","$viewCount"]
+            }
+        }
+    },
+    /*{
+        $project: {
+            uploader:1,
+            type:1,
+            source:1,
+            industry:1,
+            location:1,
+            groupname:1,
+            abstract:1,
+            grouptag:1,
+            masterwx:1,
+            groupavatar:1,
+            groupQR:1,
+            masterQR:1,
+            createTime:1,
+            updateTime:1,
+            viewCount:1,
+            commentCount:1,
+            gender:1,
+            birthday:1,
+            likeCount:1,
+            multiplyCount2:{
+                "$add":["$multiplyCount1","$commentCount"]
+            }
+        }
+    }
+]).sort('-multiplyCount1 -createTime').limit(5).exec(function(err,data){
+    if(err){
+        console.log(err);
+    }else{
+        console.log(data);
+    }
+});
+/*
+let res = [];
+for(let i = 100; i< 150; i++){
+    res.push(i+1);
+}
+console.log(res);
+/*
 let ff = function () {
     Model.RecordRank.update({record: "哈哈"}, {$inc: {num: 1}}, {upsert: true}, function (err, data) {
         console.log('done:', num++);

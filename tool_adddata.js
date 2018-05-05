@@ -38,6 +38,7 @@ let qrmodel = new mongoose.Schema({
     updateTime:{type: Date, default: Date.now},
     viewCount:{type:Number, default:0},
     likeCount:{type:Number, default:0},
+    commentCount:{type:Number, default:0},
     gender:Number,//1男，2女，3保密， 当类型为个人时才会有
     birthday:Date,// 生日， 当类型为个人时才会有
     downs:[ObjectId],//点赞的用户，里面存储用户

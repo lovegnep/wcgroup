@@ -198,7 +198,46 @@ let newRecord = async (data) => {
     return sdoc;
 }
 let search = async (query,options) => {
-    let docs = await Model.Qrmodel.find(query,{},options).exec();
+    let docs = null;
+    if(options.sort&&options.sort === '-multiply'){
+        docs = await Model.Qrmodel.aggregate([
+            {
+                $match: query
+            },
+            {
+                $project:{
+                    uploader:1,
+                    type:1,
+                    source:1,
+                    industry:1,
+                    location:1,
+                    groupname:1,
+                    abstract:1,
+                    grouptag:1,
+                    masterwx:1,
+                    groupavatar:1,
+                    groupQR:1,
+                    masterQR:1,
+                    createTime:1,
+                    updateTime:1,
+                    viewCount:1,
+                    commentCount:1,
+                    gender:1,
+                    birthday:1,
+                    likeCount:1,
+                    multiplyCount:{
+                        "$add":["$viewCount",{
+                            "$add":["$commentCount",{
+                                "$multiply":[2,"$likeCount"]
+                            }]
+                        }]
+                    }
+                }}
+        ]).sort('-multiplyCount -updateTime').limit(options.limit).skip(options.skip).exec();
+    }else{
+        docs = await Model.Qrmodel.find(query,{},options).exec();
+    }
+
     Logger.debug('searchex:',query,options,docs);
     return docs;
 }
