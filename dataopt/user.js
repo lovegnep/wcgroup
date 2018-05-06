@@ -255,7 +255,7 @@ let searchex = async (query,options) => {
     return docs;
 }
 let newWeibiLog = async(data) => {
-    Logger.debug('newShare:',data);
+    Logger.debug('newwblog:',data);
 
     let doc = new Model.WeibiLog({...data});
     let weibidoc = await doc.save();
