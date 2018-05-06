@@ -2,6 +2,13 @@ const Model = require('./models/model');
 const Utils = require('./utils/common');
 const mongoose = require('mongoose');
 const moment = require('moment');
+
+
+let date1 = new Date();
+let date2 = new Date();
+date2 = date2.setHours(date2.getHours()-2);
+console.log(date1 < date2)
+/*
 let num = 0;
 docs = Model.Qrmodel.aggregate([
     {

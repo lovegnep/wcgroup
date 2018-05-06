@@ -260,7 +260,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EHasF5});
         } */
         Logger.debug('ftqr : ',qrdoc.f5Time,Utils.getnBefore(GmConfig.comconfig.f5time))
-        if(qrdoc.f5Time && qrdoc.f5Time > Utils.getnBefore(GmConfig.comconfig)){
+        if(qrdoc.f5Time && qrdoc.f5Time > Utils.getnBefore(GmConfig.comconfig.f5time)){
             return ctx.rest({status:MsgType.EErrorType.EHasF5});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
