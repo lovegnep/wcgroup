@@ -259,7 +259,7 @@ module.exports = {
         /*if(moment(qrdoc.f5Time) > Utils.getnBefore(GmConfig.comconfig)){
             return ctx.rest({status:MsgType.EErrorType.EHasF5});
         } */
-        Logger.debug('ftqr : ',qrdoc.f5Time,Utils.getnBefore(GmConfig.comconfig))
+        Logger.debug('ftqr : ',qrdoc.f5Time,Utils.getnBefore(GmConfig.comconfig.f5time))
         if(qrdoc.f5Time && qrdoc.f5Time > Utils.getnBefore(GmConfig.comconfig)){
             return ctx.rest({status:MsgType.EErrorType.EHasF5});
         }
