@@ -256,7 +256,10 @@ module.exports = {
         if(qrdoc.secret){
             return ctx.rest({status:MsgType.EErrorType.EUnUp});
         }
-        if(moment(qrdoc.f5Time) > Utils.getnBefore(GmConfig.comconfig)){
+        /*if(moment(qrdoc.f5Time) > Utils.getnBefore(GmConfig.comconfig)){
+            return ctx.rest({status:MsgType.EErrorType.EHasF5});
+        } */
+        if(qrdoc.f5Time && qrdoc.f5Time > Utils.getnBefore(GmConfig.comconfig)){
             return ctx.rest({status:MsgType.EErrorType.EHasF5});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
