@@ -74,7 +74,7 @@ let getAllQRList = async(query,option) => {
         qrlist = await Model.Qrmodel.find(query,{},option).exec();
     }catch(err){
         Logger.error('getAllQRList:query(%s),options(%s),err:',JSON.stringify(query),JSON.stringify(option),err);
-        return null;
+        return [];
     }
 
     return qrlist;

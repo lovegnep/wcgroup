@@ -2,7 +2,7 @@ const Model = require('./models/model');
 const Utils = require('./utils/common');
 const mongoose = require('mongoose');
 const moment = require('moment');
-Model.Qrmodel.find({delete:false,secret:false},{},{limit:20,sort:'-createTime'},function(err,data){
+Model.Qrmodel.find({delete:false,secret:false},{},{limit:2,sort:'-createTime'},function(err,data){
     if(err){
         console.log(err);
     }else{
