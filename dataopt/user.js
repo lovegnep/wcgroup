@@ -233,7 +233,7 @@ let search = async (query,options) => {
                         }]
                     }
                 }}
-        ]).sort('-multiplyCount -updateTime').limit(options.limit).skip(options.skip).exec();
+        ]).sort('-multiplyCount -updateTime').skip(options.skip).limit(options.limit).exec();
     }else{
         docs = await Model.Qrmodel.find(query,{},options).exec();
     }
