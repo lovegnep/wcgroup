@@ -8653,6 +8653,30 @@ const Types = [
   {"name": "\u7f51\u7edc\u7ea2\u4eba", "id": 30}, 
   {"name": "\u5176\u4ed6", "id": 40}
 ];
+const Str = 'ABCDEFGHJKMNPQRSTWXYZabcdefhijkmnprstwxyz2345678oOLl9gqVvUuI1';
+function getRandomStr(min,max){
+  let len = GetRandomNum(min,max);
+  let res = '';
+  while(len--){
+    res += Str[GetRandomNum(0,Str.length)];
+  }
+  return res;
+}
+function getRandomChinese(min,max){
+  let len = GetRandomNum(min,max);
+  let res = '';
+  while(len--){
+      res += String.fromCodePoint((Math.round(Math.random() * 20901) + 19968))
+  }
+  return res;
+}
+function getRCArr(len,min,max){
+  let res = [];
+  while(len--){
+    res.push(getRandomChinese(min,max));
+  }
+  return res;
+}
 function GetRandomNum(Min,Max)
 {
     var Range = Max - Min;
@@ -8724,7 +8748,25 @@ function getRandPosition(){
 function getTypes(){
   return Types;
 }
-
+function getIndustry(){
+  let res = [];
+  Types.forEach(function(item){
+    res.push(item.name);
+  });
+  return res;
+}
+function getRandomIndustry(){
+  let len = Types.length;
+  let index = GetRandomNum(0,len-1);
+  return Types[index].name;
+}
+function getAllPosition(){
+  let res = [];
+  cityJson.forEach(function(item){
+    res.push(item.item_code);
+  });
+  return res;
+}
 function get1(){
     let res = [];
     Province.forEach(function(item){
@@ -8756,5 +8798,12 @@ exports = {
     getLocations:getLocations,
     validLocationId:validLocationId,
     getRandPosition:getRandPosition,
+    getIndustry:getIndustry,
+    getAllPosition:getAllPosition,
+    getRandomChinese:getRandomChinese,
+    getRCArr:getRCArr,
+    GetRandomNum:GetRandomNum,
+    getRandomIndustry:getRandomIndustry,
+    getRandomStr:getRandomStr
 };
 Object.assign(module.exports, exports);

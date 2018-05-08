@@ -7,7 +7,7 @@ const Config = require('../config');
 const ObjectId  = mongoose.Schema.ObjectId;
 const ObjectIdFun = mongoose.Types.ObjectId;
 
-mongoose.connect(Config.db, function(err){
+mongoose.connect(Config.db, Config.dboptions, function(err){
     if(err){
         Logger.error('mongoose connect failed.');
         process.exit(1);//进程退出

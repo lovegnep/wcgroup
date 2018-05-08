@@ -1,7 +1,126 @@
-const Model = require('./models/model');
 const Utils = require('./utils/common');
 const mongoose = require('mongoose');
-const moment = require('moment');
+const fs = require('fs');
+const promisemap = require('./utils/promisemap')
+const Province = require('./utils/province');
+let ObjectID = mongoose.Schema.ObjectId;
+let ObjectId = mongoose.Schema.ObjectId;
+
+let masterdb = mongoose.createConnection('mongodb://47.98.136.138:20005/wcgroup',{	user : "lovegnep",
+    pass : "liuyang15",
+    auth : {authMechanism: 'MONGODB-CR'}},function(err){
+    if(err){
+        console.log(err);
+        process.exit(1);
+    }else{
+        console.log('mongodb connect success：mongodb://47.98.136.138:20005/wcgroup');
+    }
+});
+let slavedb = mongoose.createConnection('mongodb://47.105.36.1:20005/wcgroup',{	user : "lovegnep",
+    pass : "liuyang15",
+    auth : {authMechanism: 'MONGODB-CR'}},function(err){
+    if(err){
+        console.log(err);
+        process.exit(1);
+    }else{
+        console.log('mongodb connect success：mongodb://47.105.36.1:20005/wcgroup');
+    }
+});
+
+let qrmodel = new mongoose.Schema({
+    uploader:ObjectId,//上传者ID
+    type:Number,//类型，1群，2个人，3公众号
+    source:Number,//来源：1用户上传，2爬虫,3测试数据
+    industry:String,
+    location:String,
+    groupname:String,
+    abstract:String,
+    grouptag:[String],//标签
+    masterwx:String,//,上传者微信，个人微信，公众号ID
+    groupavatar:String,//微信群头像，个人头像，公众号头像
+    groupQR:String,//微信群二维码，个人二维码，公众号二维码
+    masterQR:String,//上传者二维码
+    createTime:{type: Date, default: Date.now},
+    updateTime:{type: Date, default: Date.now},
+    viewCount:{type:Number, default:0},
+    likeCount:{type:Number, default:0},
+    commentCount:{type:Number, default:0},
+    gender:Number,//1男，2女，3保密， 当类型为个人时才会有
+    birthday:Date,// 生日， 当类型为个人时才会有
+    downs:[ObjectId],//点赞的用户，里面存储用户
+    ups:[ObjectId],//踩的用户，里面存储用户
+    delete:{type: Boolean, default: false},//是否删除
+    secret:{type: Boolean, default: false},//是否下架
+    f5Time:Date//刷新时间
+});
+let Qrmodelm = masterdb.model('Qrmodel', qrmodel);
+let Qrmodels = slavedb.model('Qrmodel', qrmodel);
+let n = 6;
+let tmp = 0;
+let test = async()=>{
+    /*let groupQR = await Qrmodelo.distinct('groupQR',{source:{$ne:3}}).exec();
+    let masterQR = await Qrmodelo.distinct('masterQR',{source:{$ne:3}}).exec();
+    let groupavatar = await Qrmodelo.distinct('groupavatar',{source:{$ne:3}}).exec();
+    let masterqr = await Qrmodelo.distinct('masterQR',{source:{$ne:3}}).exec();
+    let grouptag = await Qrmodelo.distinct('grouptag',{source:{$ne:3}}).exec();
+    let abstract = await Qrmodelo.distinct('abstract',{source:{$ne:3}}).exec();
+    let groupname = await Qrmodelo.distinct('groupname',{source:{$ne:3}}).exec();
+    let location = await Qrmodelo.distinct('location',{source:{$ne:3}}).exec();
+    let industry = await Qrmodelo.distinct('industry',{source:{$ne:3}}).exec();
+    let masterwx = await Qrmodelo.distinct('masterwx',{source:{$ne:3}}).exec();
+    let userids = await UserModelo.distinct('_id').exec();*/
+    let tmparr = [];
+    let limit = 10000;
+    let asn = async(doc)=>{
+        await doc.save();
+    }
+    let dirarr = fs.readdirSync('./tool');
+    let head = 'https://www.5min8.com/uploads/';
+    for(let i = 0; i < 100000; i++){
+        let llen = Province.GetRandomNum(1,10);
+        let mydate1 = new Date();
+        mydate1.setHours(mydate1.getHours()-Utils.GetRandomNum(0,2000));
+        let mydate2 = new Date();
+        mydate2.setHours(mydate2.getHours()-Utils.GetRandomNum(0,2000));
+        let mydate3 = new Date();
+        mydate3.setHours(mydate3.getHours()-Utils.GetRandomNum(0,2000));
+        let mydate4 = new Date();
+        mydate4.setDate(mydate4.getDate()-Utils.GetRandomNum(0,10000));
+        let tmpobj = {
+            type:Utils.GetRandomNum(1,3),
+            source:3,
+            industry:Province.getRandomIndustry(),
+            location:Province.getRandPosition(),
+            groupname:Province.getRandomChinese(3,9),
+            abstract:Province.getRandomChinese(0,100),
+            grouptag:Province.getRCArr(llen,2,3),
+            masterwx:Province.getRandomStr(5,10),
+            groupavatar:head+dirarr[Province.GetRandomNum(0,dirarr.length)],
+            groupQR:head+dirarr[Province.GetRandomNum(0,dirarr.length)],
+            masterQR:head+dirarr[Province.GetRandomNum(0,dirarr.length)],
+            createTime:mydate1,
+            updateTime:mydate2,
+            viewCount:Utils.GetRandomNum(0,9999),
+            likeCount:Utils.GetRandomNum(0,9999),
+            commentCount:Utils.GetRandomNum(0,9999),
+            gender:Utils.GetRandomNum(1,3),
+            birthday:mydate4,
+            f5Time:mydate3,
+        };
+        tmparr.push(tmpobj);
+    }
+    promisemap(tmparr,function(cur,index,tmparr){
+        let tmpdoc = new Qrmodelm(cur);
+        return tmpdoc.save();
+    },1000).then(function(){
+        tmp++;
+        if(tmp < n){
+            test();
+        }
+    })
+    console.log('done');
+}
+test();
 
 /*Model.Qrmodel.aggregate([{$match:{delete:false}}]).sort('-createTime').skip(2).limit(2).exec(function(err,data){
     if(err){
@@ -19,65 +138,8 @@ Model.Qrmodel.find({delete:false,secret:false},{},{limit:2,sort:'-createTime'},f
     }
 })
 
-/**/
-let test = async()=>{
-    let groupQR = await Model.Qrmodel.distinct('groupQR',{source:{$ne:3}}).exec();
-    let masterQR = await Model.Qrmodel.distinct('masterQR',{source:{$ne:3}}).exec();
-    let groupavatar = await Model.Qrmodel.distinct('groupavatar',{source:{$ne:3}}).exec();
-    let masterqr = await Model.Qrmodel.distinct('masterQR',{source:{$ne:3}}).exec();
-    let grouptag = await Model.Qrmodel.distinct('grouptag',{source:{$ne:3}}).exec();
-    let abstract = await Model.Qrmodel.distinct('abstract',{source:{$ne:3}}).exec();
-    let groupname = await Model.Qrmodel.distinct('groupname',{source:{$ne:3}}).exec();
-    let location = await Model.Qrmodel.distinct('location',{source:{$ne:3}}).exec();
-    let industry = await Model.Qrmodel.distinct('industry',{source:{$ne:3}}).exec();
-    let masterwx = await Model.Qrmodel.distinct('masterwx',{source:{$ne:3}}).exec();
-    let userids = await Model.UserModel.distinct('_id').exec();
-    let tmparr = [];
-    let limit = 10000;
-    let asn = async(doc)=>{
-        await doc.save();
-    }
-    for(let i = 0; i < 1000000; i++){
-        let mydate1 = new Date();
-        mydate1.setHours(mydate1.getHours()-Utils.GetRandomNum(0,2000));
-        let mydate2 = new Date();
-        mydate2.setHours(mydate2.getHours()-Utils.GetRandomNum(0,2000));
-        let mydate3 = new Date();
-        mydate3.setHours(mydate3.getHours()-Utils.GetRandomNum(0,2000));
-        let mydate4 = new Date();
-        mydate4.setDate(mydate4.getDate()-Utils.GetRandomNum(0,10000));
-        let tmpdoc = new Model.Qrmodel({
-            uploader:userids[Utils.GetRandomNum(0,userids.length-1)],
-            type:Utils.GetRandomNum(1,3),
-            source:3,
-            industry:industry[Utils.GetRandomNum(0,industry.length-1)],
-            location:location[Utils.GetRandomNum(0,location.length-1)],
-            groupname:'测试'+i,
-            abstract:abstract[Utils.GetRandomNum(0,abstract.length-1)]+i,
-            grouptag:[grouptag[Utils.GetRandomNum(0,grouptag.length-1)]],
-            masterwx:masterwx[Utils.GetRandomNum(0,masterwx.length-1)]+i,
-            groupavatar:groupavatar[Utils.GetRandomNum(0,groupavatar.length-1)],
-            groupQR:groupQR[Utils.GetRandomNum(0,groupQR.length-1)],
-            masterQR:masterQR[Utils.GetRandomNum(0,masterQR.length-1)],
-            createTime:mydate1,
-            updateTime:mydate2,
-            viewCount:Utils.GetRandomNum(0,9999),
-            likeCount:Utils.GetRandomNum(0,9999),
-            commentCount:Utils.GetRandomNum(0,9999),
-            gender:Utils.GetRandomNum(1,3),
-            birthday:mydate4,
-            f5Time:mydate3,
-        });
-        if(tmparr.length < limit){
-            tmparr.push(asn(tmpdoc));
-        }else{
-            await Promise.all(tmparr);
-            tmparr = [];
-        }
-        console.log(i);
-    }
-}
-test();
+*/
+
 /*
 let date1 = new Date();
 let date2 = new Date();
