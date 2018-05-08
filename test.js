@@ -2,8 +2,74 @@ const Model = require('./models/model');
 const Utils = require('./utils/common');
 const mongoose = require('mongoose');
 const moment = require('moment');
+Model.Qrmodel.find({delete:false,secret:false},{},{limit:20,sort:'-createTime'},function(err,data){
+    if(err){
+        console.log(err);
+    }else{
+        console.log(data);
+    }
+})
 
-
+/*
+let test = async()=>{
+    let groupQR = await Model.Qrmodel.distinct('groupQR',{source:{$ne:3}}).exec();
+    let masterQR = await Model.Qrmodel.distinct('masterQR',{source:{$ne:3}}).exec();
+    let groupavatar = await Model.Qrmodel.distinct('groupavatar',{source:{$ne:3}}).exec();
+    let masterqr = await Model.Qrmodel.distinct('masterQR',{source:{$ne:3}}).exec();
+    let grouptag = await Model.Qrmodel.distinct('grouptag',{source:{$ne:3}}).exec();
+    let abstract = await Model.Qrmodel.distinct('abstract',{source:{$ne:3}}).exec();
+    let groupname = await Model.Qrmodel.distinct('groupname',{source:{$ne:3}}).exec();
+    let location = await Model.Qrmodel.distinct('location',{source:{$ne:3}}).exec();
+    let industry = await Model.Qrmodel.distinct('industry',{source:{$ne:3}}).exec();
+    let masterwx = await Model.Qrmodel.distinct('masterwx',{source:{$ne:3}}).exec();
+    let userids = await Model.UserModel.distinct('_id').exec();
+    let tmparr = [];
+    let limit = 200;
+    let asn = async(doc)=>{
+        await doc.save();
+    }
+    for(let i = 0; i < 100000; i++){
+        let mydate1 = new Date();
+        mydate1.setHours(mydate1.getHours()-Utils.GetRandomNum(0,2000));
+        let mydate2 = new Date();
+        mydate2.setHours(mydate2.getHours()-Utils.GetRandomNum(0,2000));
+        let mydate3 = new Date();
+        mydate3.setHours(mydate3.getHours()-Utils.GetRandomNum(0,2000));
+        let mydate4 = new Date();
+        mydate4.setDate(mydate4.getDate()-Utils.GetRandomNum(0,10000));
+        let tmpdoc = new Model.Qrmodel({
+            uploader:userids[Utils.GetRandomNum(0,userids.length-1)],
+            type:Utils.GetRandomNum(1,3),
+            source:3,
+            industry:industry[Utils.GetRandomNum(0,industry.length-1)],
+            location:location[Utils.GetRandomNum(0,location.length-1)],
+            groupname:groupname[Utils.GetRandomNum(0,groupname.length-1)],
+            abstract:abstract[Utils.GetRandomNum(0,abstract.length-1)],
+            grouptag:[grouptag[Utils.GetRandomNum(0,grouptag.length-1)]],
+            masterwx:masterwx[Utils.GetRandomNum(0,masterwx.length-1)],
+            groupavatar:groupavatar[Utils.GetRandomNum(0,groupavatar.length-1)],
+            groupQR:groupQR[Utils.GetRandomNum(0,groupQR.length-1)],
+            masterQR:masterQR[Utils.GetRandomNum(0,masterQR.length-1)],
+            createTime:mydate1,
+            updateTime:mydate2,
+            viewCount:Utils.GetRandomNum(0,9999),
+            likeCount:Utils.GetRandomNum(0,9999),
+            commentCount:Utils.GetRandomNum(0,9999),
+            gender:Utils.GetRandomNum(1,3),
+            birthday:mydate4,
+            f5Time:mydate3,
+        });
+        if(tmparr.length < limit){
+            tmparr.push(asn(tmpdoc));
+        }else{
+            await Promise.all(tmparr);
+            tmparr = [];
+        }
+        console.log(i);
+    }
+}
+test();
+/*
 let date1 = new Date();
 let date2 = new Date();
 date2 = date2.setHours(date2.getHours()-2);

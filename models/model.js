@@ -61,7 +61,7 @@ let VipModel = mongoose.model('VipModel',vipmodel);
 let qrmodel = new mongoose.Schema({
     uploader:ObjectId,//上传者ID
     type:Number,//类型，1群，2个人，3公众号
-    source:Number,//来源：1用户上传，2爬虫
+    source:Number,//来源：1用户上传，2爬虫,3测试数据
     industry:String,
     location:String,
     groupname:String,

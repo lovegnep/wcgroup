@@ -69,7 +69,14 @@ let getQRListofUser = async(query,options) => {
 
 //
 let getAllQRList = async(query,option) => {
-    let qrlist = await Model.Qrmodel.find(query,{},option).exec();
+    let qrlist = null;
+    try{
+        qrlist = await Model.Qrmodel.find(query,{},option).exec();
+    }catch(err){
+        Logger.error('getAllQRList:query(%s),options(%s),err:',JSON.stringify(query),JSON.stringify(option),err);
+        return null;
+    }
+
     return qrlist;
 }
 //new comment
