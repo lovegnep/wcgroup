@@ -3,13 +3,13 @@ const Utils = require('./utils/common');
 const mongoose = require('mongoose');
 const moment = require('moment');
 
-Model.Qrmodel.aggregate([{$match:{delete:false}}]).sort('-createTime').skip(2).limit(2).exec(function(err,data){
+/*Model.Qrmodel.aggregate([{$match:{delete:false}}]).sort('-createTime').skip(2).limit(2).exec(function(err,data){
     if(err){
         console.log(err);
     }else{
         console.log(data);
     }
-})
+})*/
 /*
 Model.Qrmodel.find({delete:false,secret:false},{},{limit:2,sort:'-createTime'},function(err,data){
     if(err){
@@ -19,7 +19,7 @@ Model.Qrmodel.find({delete:false,secret:false},{},{limit:2,sort:'-createTime'},f
     }
 })
 
-/*
+/**/
 let test = async()=>{
     let groupQR = await Model.Qrmodel.distinct('groupQR',{source:{$ne:3}}).exec();
     let masterQR = await Model.Qrmodel.distinct('masterQR',{source:{$ne:3}}).exec();
@@ -33,11 +33,11 @@ let test = async()=>{
     let masterwx = await Model.Qrmodel.distinct('masterwx',{source:{$ne:3}}).exec();
     let userids = await Model.UserModel.distinct('_id').exec();
     let tmparr = [];
-    let limit = 200;
+    let limit = 10000;
     let asn = async(doc)=>{
         await doc.save();
     }
-    for(let i = 0; i < 100000; i++){
+    for(let i = 0; i < 1000000; i++){
         let mydate1 = new Date();
         mydate1.setHours(mydate1.getHours()-Utils.GetRandomNum(0,2000));
         let mydate2 = new Date();
@@ -52,10 +52,10 @@ let test = async()=>{
             source:3,
             industry:industry[Utils.GetRandomNum(0,industry.length-1)],
             location:location[Utils.GetRandomNum(0,location.length-1)],
-            groupname:groupname[Utils.GetRandomNum(0,groupname.length-1)],
-            abstract:abstract[Utils.GetRandomNum(0,abstract.length-1)],
+            groupname:'测试'+i,
+            abstract:abstract[Utils.GetRandomNum(0,abstract.length-1)]+i,
             grouptag:[grouptag[Utils.GetRandomNum(0,grouptag.length-1)]],
-            masterwx:masterwx[Utils.GetRandomNum(0,masterwx.length-1)],
+            masterwx:masterwx[Utils.GetRandomNum(0,masterwx.length-1)]+i,
             groupavatar:groupavatar[Utils.GetRandomNum(0,groupavatar.length-1)],
             groupQR:groupQR[Utils.GetRandomNum(0,groupQR.length-1)],
             masterQR:masterQR[Utils.GetRandomNum(0,masterQR.length-1)],

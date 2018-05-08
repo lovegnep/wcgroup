@@ -53,9 +53,9 @@ module.exports = {
             return ctx.rest({status:0,message:'unknown err'});
         }
         let userdoc = await DataInterface.getAccountById(user._id);
-        let limit = ctx.query.limit || 20;
-        let skip = ctx.query.skip || 0;
-        let type = ctx.query.type || 1;
+        let limit = parseInt(ctx.query.limit || 20);
+        let skip = parseInt(ctx.query.skip || 0);
+        let type = parseInt(ctx.query.type || 1);
         //let sorttype = ctx.query.sorttype;
         //let basedon = parseInt(ctx.query.basedon);
         //let baseparam = ctx.query.baseparam;
