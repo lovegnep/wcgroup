@@ -436,20 +436,39 @@ module.exports = {
         }
         //query.userid = user._id;
         //query.groupname = new RegExp(content,'i');
-        let docspromise = UserInterface.search(query,options);
-        let countpromise = UserInterface.getQRCount(query);
-        let locationpromise = UserInterface.getDisting('location',query);
-        let industrypromise = UserInterface.getDisting('industry',query);
-        let tagpromise = UserInterface.getDisting('grouptag',query);
-        let recordpromise = UserInterface.newRecord({userid:user._id,record:content});
+        let stime = Date.now();
+        if(Utils.GetRandomNum(1,2) === 1){
+            let docspromise = UserInterface.search(query,options);
+            let countpromise = UserInterface.getQRCount(query);
+            let locationpromise = UserInterface.getDisting('location',query);
+            let industrypromise = UserInterface.getDisting('industry',query);
+            let tagpromise = UserInterface.getDisting('grouptag',query);
+            let recordpromise = UserInterface.newRecord({userid:user._id,record:content});
 
-        let docs = await docspromise;
-        let count = await countpromise;
-        let locationsdis = await locationpromise;
-        let industrydis = await industrypromise;
-        let tagsdis = await tagpromise;
-        await recordpromise;
-        return ctx.rest({count:count,status:MsgType.EErrorType.EOK,data:docs||[],locations:locationsdis||[],industrys:industrydis||[],tags:tagsdis||[]});
+            let docs = await docspromise;
+            let count = await countpromise;
+            let locationsdis = await locationpromise;
+            let industrydis = await industrypromise;
+            let tagsdis = await tagpromise;
+            await recordpromise;
+            let etime = Date.now();
+            Logger.debug('并行 时间 毫秒:',etime-stime);
+            return ctx.rest({count:count,status:MsgType.EErrorType.EOK,data:docs||[],locations:locationsdis||[],industrys:industrydis||[],tags:tagsdis||[]});
+        }else{
+
+
+            let docs = await UserInterface.search(query,options);
+            let count = await UserInterface.getQRCount(query);
+            let locationsdis = await UserInterface.getDisting('location',query);
+            let industrydis = await UserInterface.getDisting('industry',query);
+            let tagsdis = await UserInterface.getDisting('grouptag',query);
+            UserInterface.newRecord({userid:user._id,record:content});
+            let etime = Date.now();
+            Logger.debug('串行 时间 毫秒:',etime-stime);
+
+            return ctx.rest({count:count,status:MsgType.EErrorType.EOK,data:docs||[],locations:locationsdis||[],industrys:industrydis||[],tags:tagsdis||[]});
+        }
+
     },
     'POST /api/groupnamesearch': async (ctx,next) => {
         let islogin = await isLogin(ctx);
