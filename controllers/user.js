@@ -367,7 +367,8 @@ module.exports = {
         let agestart = parseInt(ctx.request.body.agestart);
         let ageend = parseInt(ctx.request.body.ageend);
         let query = {
-            '$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
+            //'$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
+            groupname: new RegExp(content,'i')
         };
 
         if(location){
