@@ -299,7 +299,7 @@ module.exports = {
             Logger.debug('POST /api/viewqr:已经浏览过， 不收费,qrid:',qrid);
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }else{
-            Logger.debug('POST /api/viewqr:未浏览过， 收费,qrid:',qrid, userdoc.views);
+            Logger.debug('POST /api/viewqr:未浏览过， 收费,qrid:',qrid);
         }
         if(userdoc.vipid.monthstart && parseInt(Date.now()/1000) - userdoc.vipid.monthstart <= 30*24*3600){//月卡用户
             await UserInterface.updateViewsAndWeibi(qrid,user._id,true);//将qr放入用户已浏览列表中
