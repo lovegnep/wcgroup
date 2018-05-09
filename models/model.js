@@ -84,7 +84,6 @@ let qrmodel = new mongoose.Schema({
     secret:{type: Boolean, default: false},//是否下架
     f5Time:Date//刷新时间
 });
-qrmodel.index({updateTime:-1,f5Time:-1});
 let Qrmodel = mongoose.model('Qrmodel', qrmodel);
 
 //评论表
