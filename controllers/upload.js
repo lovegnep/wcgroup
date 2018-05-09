@@ -49,12 +49,12 @@ module.exports = {
         let abstract = ctx.request.body.abstract;
         let grouptag = ctx.request.body.grouptag;
         let masterwx = ctx.request.body.masterwx;
-        let type = ctx.request.body.type;
+        let type = parseInt(ctx.request.body.type);
         let source = MsgType.QRSource.EUpload;
         let groupavatar = ctx.request.body.groupavatar;
         let groupQR = ctx.request.body.groupQR;
         let masterQR = ctx.request.body.masterQR;
-        let gender = ctx.request.body.gender;
+        let gender = parseInt(ctx.request.body.gender);
         let birthday = ctx.request.body.birthday;
         let islogin = await isLogin(ctx);
         if(!islogin){
