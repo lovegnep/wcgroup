@@ -72,7 +72,10 @@ let getAllQRList = async(query,option) => {
     Logger.debug('getAllQRList:query(%s),options(%s),:',JSON.stringify(query),JSON.stringify(option));
     let qrlist = null;
     try{
+        let s = Date.now();
         qrlist = await Model.Qrmodel.find(query,{},option).exec();
+        let e = Date.now();
+        console.log('用时毫秒：',e-s);
     }catch(err){
         Logger.error('getAllQRList:query(%s),options(%s),err:',JSON.stringify(query),JSON.stringify(option),err);
         return [];

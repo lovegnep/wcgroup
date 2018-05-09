@@ -9,9 +9,9 @@ module.exports = {
     },
     restify: (pathPrefix) => {
         return async (ctx, next) => {
-            Logger.debug('rest midwarre.');
+            //Logger.debug('rest midwarre.');
             ctx.rest = (data, httpCode) => {
-                Logger.debug('send json:',JSON.stringify(data));
+                //Logger.debug('send json:',JSON.stringify(data));
                 ctx.response.type = 'application/json';
                 ctx.response.body = data;
                 if (httpCode) {
