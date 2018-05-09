@@ -6,18 +6,28 @@ const Province = require('./utils/province');
 let ObjectID = mongoose.Schema.ObjectId;
 let ObjectId = mongoose.Schema.ObjectId;
 
-let masterdb = mongoose.createConnection('mongodb://47.98.136.138:20005/wcgroup',{	user : "lovegnep",
-    pass : "liuyang15",
+let masterdb = mongoose.createConnection('mongodb://47.98.136.138:20005/wcgroup',{	user : "ddddd",
+    pass : "ddddddd",
     auth : {authMechanism: 'MONGODB-CR'}},function(err){
     if(err){
         console.log(err);
         process.exit(1);
     }else{
         console.log('mongodb connect success：mongodb://47.98.136.138:20005/wcgroup');
+        let s = Date.now();
+        Qrmodelm.find({delete:false,secret:false,type:1},{},{sort:'-updateTime',limit:20}).exec(function(err,res){
+            if(err){
+                console.log(err);
+            }else{
+                console.log(res);
+            }
+            let e = Date.now();
+            console.log('用时：',e-s);
+        })
     }
 });
-let slavedb = mongoose.createConnection('mongodb://47.105.36.1:20005/wcgroup',{	user : "lovegnep",
-    pass : "liuyang15",
+let slavedb = mongoose.createConnection('mongodb://47.105.36.1:20005/wcgroup',{	user : "dddd",
+    pass : "ddddd",
     auth : {authMechanism: 'MONGODB-CR'}},function(err){
     if(err){
         console.log(err);
@@ -41,7 +51,7 @@ let qrmodel = new mongoose.Schema({
     groupQR:String,//微信群二维码，个人二维码，公众号二维码
     masterQR:String,//上传者二维码
     createTime:{type: Date, default: Date.now},
-    updateTime:{type: Date, default: Date.now},
+    updateTime:{type: Date, default: Date.now,},
     viewCount:{type:Number, default:0},
     likeCount:{type:Number, default:0},
     commentCount:{type:Number, default:0},
@@ -53,22 +63,13 @@ let qrmodel = new mongoose.Schema({
     secret:{type: Boolean, default: false},//是否下架
     f5Time:Date//刷新时间
 });
+qrmodel.index({updateTime:-1});
 let Qrmodelm = masterdb.model('Qrmodel', qrmodel);
 let Qrmodels = slavedb.model('Qrmodel', qrmodel);
-let n = 6;
+
+/*let n = 6;
 let tmp = 0;
 let test = async()=>{
-    /*let groupQR = await Qrmodelo.distinct('groupQR',{source:{$ne:3}}).exec();
-    let masterQR = await Qrmodelo.distinct('masterQR',{source:{$ne:3}}).exec();
-    let groupavatar = await Qrmodelo.distinct('groupavatar',{source:{$ne:3}}).exec();
-    let masterqr = await Qrmodelo.distinct('masterQR',{source:{$ne:3}}).exec();
-    let grouptag = await Qrmodelo.distinct('grouptag',{source:{$ne:3}}).exec();
-    let abstract = await Qrmodelo.distinct('abstract',{source:{$ne:3}}).exec();
-    let groupname = await Qrmodelo.distinct('groupname',{source:{$ne:3}}).exec();
-    let location = await Qrmodelo.distinct('location',{source:{$ne:3}}).exec();
-    let industry = await Qrmodelo.distinct('industry',{source:{$ne:3}}).exec();
-    let masterwx = await Qrmodelo.distinct('masterwx',{source:{$ne:3}}).exec();
-    let userids = await UserModelo.distinct('_id').exec();*/
     let tmparr = [];
     let limit = 10000;
     let asn = async(doc)=>{
