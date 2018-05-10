@@ -7,7 +7,7 @@ const Config = require('../config');
 const ObjectId  = mongoose.Schema.ObjectId;
 const ObjectIdFun = mongoose.Types.ObjectId;
 
-mongoose.connect(Config.db, Config.dboptions, function(err){
+let db = mongoose.createConnection(Config.db, Config.dboptions, function(err){
     if(err){
         Logger.error('mongoose connect failed.');
         process.exit(1);//进程退出
@@ -43,7 +43,7 @@ let usermodal = new mongoose.Schema({
     shareIndex:String,//如果用户第一次进来是通过分享进来的则有此字段，
 });
 
-let UserModel = mongoose.model('UserModel', usermodal);
+let UserModel = db.model('UserModel', usermodal);
 
 let vipmodel = mongoose.Schema({
     userid:{type:ObjectId, ref: 'UserModel'},
@@ -84,7 +84,7 @@ let qrmodel = new mongoose.Schema({
     secret:{type: Boolean, default: false},//是否下架
     f5Time:Date//刷新时间
 });
-let Qrmodel = mongoose.model('Qrmodel', qrmodel);
+let Qrmodel = db.model('Qrmodel', qrmodel);
 
 //评论表
 let comment = new mongoose.Schema({
@@ -99,7 +99,7 @@ let comment = new mongoose.Schema({
     createTime:{type: Date, default: Date.now},
     updateTime:{type: Date, default: Date.now},
 });
-let Comment = mongoose.model('Comment', comment);
+let Comment = db.model('Comment', comment);
 
 //消息表
 let message = new mongoose.Schema({
@@ -111,7 +111,7 @@ let message = new mongoose.Schema({
     status:{type:Number,default:1},
     delete:{type:Boolean, default:false}
 });
-let Message = mongoose.model('Message', message);
+let Message = db.model('Message', message);
 
 let shareModel = mongoose.Schema({
     index:String,//由前端生成的本次分享唯一标识符
@@ -123,20 +123,20 @@ let shareModel = mongoose.Schema({
     path:String,//用户分享的页面路径
     son:[{type:ObjectId,ref:'UserModel'}]//通过此次分享进来的人
 });
-let Share = mongoose.model('Share',shareModel);
+let Share = db.model('Share',shareModel);
 
 let record = mongoose.Schema({
     userid:{type:ObjectId,ref:'UserModel'},
     record:String,
     createTime:{type: Date, default: Date.now},
 });
-let Record = mongoose.model('Record',record);
+let Record = db.model('Record',record);
 
 let recordRank = mongoose.Schema({
     record:String,
     num:Number
 });
-let RecordRank = mongoose.model('RecordRank',recordRank);
+let RecordRank = db.model('RecordRank',recordRank);
 
 let weibiLog = mongoose.Schema({
     userid:{type:ObjectId,ref:'UserModel'},
@@ -146,7 +146,7 @@ let weibiLog = mongoose.Schema({
     name:String,//如果是浏览的话，则为二维码标题
     createTime:{type: Date, default: Date.now}
 });
-let WeibiLog = mongoose.model('WeibiLog',weibiLog);
+let WeibiLog = db.model('WeibiLog',weibiLog);
 
 exports = {
     ObjectIdFun:ObjectIdFun,
