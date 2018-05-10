@@ -55,7 +55,7 @@ let vipmodel = mongoose.Schema({
     publicqr:Number,
     lastReward:Date//上次领取会员专属的每天50个微币的时间
 });
-let VipModel = mongoose.model('VipModel',vipmodel);
+let VipModel = db.model('VipModel',vipmodel);
 
 //群二维码表,个人微信，公众号
 let qrmodel = new mongoose.Schema({
