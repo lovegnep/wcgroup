@@ -103,8 +103,8 @@ module.exports = {
         }
         let type = parseInt(ctx.query.type) || MsgType.QRType.EGroup;
         let userid = user._id;
-        let limit = ctx.query.limit || 20;
-        let skip = ctx.query.skip || 0;
+        let limit = parseInt(ctx.query.limit || 20);
+        let skip = parseInt(ctx.query.skip || 0);
         Logger.debug('GET /api/getqrlist:',type,userid);
         let qrlist = await DataInterface.getQRListofUser({type,uploader:userid},{skip,limit});
         ctx.rest({data:qrlist, status:MsgType.EErrorType.EOK});
