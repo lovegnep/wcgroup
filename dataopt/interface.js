@@ -65,7 +65,9 @@ let getQRList = async (uploader_id) => {
 }
 
 let getQRListofUser = async(query,options) => {
+    let s = Date.now();
     let qrlist = await Model.Qrmodel.find(query,{},options).exec();
+    Logger.debug('取用户上传用时:',Date.now()-s);
     return qrlist;
 }
 
