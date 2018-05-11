@@ -83,7 +83,7 @@ let getAllQRList = async(query,option) => {
         let s = Date.now();
         qrlist = await Model.Qrmodel.find(query,{},option).exec();
         let e = Date.now();
-        Logger.debug('用时毫秒：',e-s,JSON.stringify(query),JSON.stringify(option));
+        Logger.debug('用时毫秒：',e-s);
     }catch(err){
         Logger.error('getAllQRList:query(%s),options(%s),err:',JSON.stringify(query),JSON.stringify(option),err);
         return [];
