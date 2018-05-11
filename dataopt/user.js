@@ -199,6 +199,7 @@ let newRecord = async (data) => {
 }
 let search = async (query,options) => {
     let docs = null;
+    let s = Date.now();
     if(options.sort&&options.sort === '-multiply'){
         docs = await Model.Qrmodel.aggregate([
             {
@@ -234,24 +235,32 @@ let search = async (query,options) => {
                     }
                 }}
         ]).sort('-multiplyCount -updateTime').skip(options.skip).limit(options.limit).exec();
+        Logger.debug('聚合查询用时:',Date.now()-s);
     }else{
         docs = await Model.Qrmodel.find(query,{},options).exec();
+        Logger.debug('查询用时:',Date.now()-s);
     }
 
-    Logger.debug('searchex:',query,options,docs);
+    Logger.debug('searchex:',query,options);
     return docs;
 }
 let getQRCount = async(query)=>{
+    let s = Date.now();
     let res = await Model.Qrmodel.count(query).exec();
+    Logger.debug('查询数量用时：',Date.now()-s, query);
     return res;
 }
 let getDisting = async(field,query) =>{
+    let s = Date.now();
     let res = await Model.Qrmodel.distinct(field,query).exec();
+    Logger.debug('distinct用时：',Date.now()-s, field,query);
     return res;
 }
 let searchex = async (query,options) => {
+    let s = Date.now();
     let docs = await Model.Qrmodel.find(query,'groupname',options).exec();
-    Logger.debug('searchex:',query,options,docs);
+    Logger.debug('查询groupname用时：',Date.now()-s);
+    Logger.debug('searchex:',query,options);
     return docs;
 }
 let newWeibiLog = async(data) => {

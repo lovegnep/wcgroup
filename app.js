@@ -30,7 +30,7 @@ app.use(Cors());
 app.use(async (ctx, next) => {
     console.log = Logger.info.bind(Logger);
     ctx.logger = Logger;
-    Logger.debug('req in: head:',ctx.req.headers);
+    //Logger.debug('req in: head:',ctx.req.headers);
     Logger.info(`Process ${ctx.request.method} ${ctx.request.url}...`);
     var
         start = new Date().getTime(),
