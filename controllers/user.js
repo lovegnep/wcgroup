@@ -368,7 +368,7 @@ module.exports = {
         let ageend = parseInt(ctx.request.body.ageend);
         let query = {
             //'$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
-            groupname: new RegExp('^'+content,'i')
+            groupname: new RegExp(content,'i')
         };
 
         if(location){
@@ -437,7 +437,7 @@ module.exports = {
         //query.userid = user._id;
         //query.groupname = new RegExp(content,'i');
         let stime = Date.now();
-        if(Utils.GetRandomNum(1,2) === 1){
+        if(/*Utils.GetRandomNum(1,2) === */1){
             let docspromise = UserInterface.search(query,options);
             let countpromise = UserInterface.getQRCount(query);
             let locationpromise = UserInterface.getDisting('location',query);
