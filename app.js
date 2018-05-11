@@ -18,8 +18,8 @@ const enforceHttps = require('koa-sslify');
 let testappid = require('./utils/common').testappid;
 
 let httpsoptions = {
-	    key: fs.readFileSync('/home/https/www.5min8.com/Nginx/2_www.5min8.com.key'),  //ssl文件路径
-	        cert: fs.readFileSync('/home/https/www.5min8.com/Nginx/1_www.5min8.com_bundle.crt')  //ssl文件路径
+	    key: fs.readFileSync('/home/Nginx/2_www.5min8.com.key'),  //ssl文件路径
+	        cert: fs.readFileSync('/home/Nginx/1_www.5min8.com_bundle.crt')  //ssl文件路径
 };
 
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
