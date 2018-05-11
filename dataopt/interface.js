@@ -58,6 +58,10 @@ let updateQR = async (query,updatestr)=>{
     let res = await Model.Qrmodel.update(query,updatestr).exec();
     return res;
 }
+let findAndUpdateQR = async (query,updatestr)=>{
+    let doc = await Model.Qrmodel.findOneAndUpdate(query,updatestr).exec();
+    return doc;
+}
 //
 let getQRList = async (uploader_id) => {
     let qrlist = await Model.Qrmodel.find({uploader:uploader_id}).exec();
@@ -260,6 +264,7 @@ exports = {
     newQR:newQR,
     getQR:getQR,
     deleterQR:deleterQR,
+    findAndUpdateQR:findAndUpdateQR,
     updateQR:updateQR,
     getQRList:getQRList,
     getAllQRList:getAllQRList,

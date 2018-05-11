@@ -196,9 +196,9 @@ module.exports = {
         if(!qrdoc.secret){
             return ctx.rest({status:MsgType.EErrorType.EUnDown});
         }
-        let res = await DataInterface.deleterQR({uploader:user._id,secret:true},{secret:false});
+        let res = await DataInterface.findAndUpdateQR({uploader:user._id,secret:true},{secret:false});
         Logger.debug('qrup:',res);
-        if(res.nModified){
+        if(res){
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }else{
             return ctx.rest({status:MsgType.EErrorType.EQrUpFail});
@@ -227,9 +227,9 @@ module.exports = {
         if(qrdoc.secret){
             return ctx.rest({status:MsgType.EErrorType.EUnUp});
         }
-        let res = await DataInterface.deleterQR({uploader:user._id,secret:false},{secret:true});
+        let res = await DataInterface.findAndUpdateQR({uploader:user._id,secret:false},{secret:true});
         Logger.debug('qrdown:',res);
-        if(res.nModified){
+        if(res){
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }else{
             return ctx.rest({status:MsgType.EErrorType.EQrDownFail});
