@@ -58,7 +58,7 @@ module.exports = {
         if(!user){
             return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
         }
-        let session_key = sessionmap.get(user._id);
+        let session_key = user.session_key;
         if(!session_key || session_key.length < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoSessionKey,message:'no session key'});
         }
@@ -99,7 +99,7 @@ module.exports = {
                 Logger.debug('share 2 group : new wblog success.');
             }
         }
-        await UserInterface.newShare(data);
+        UserInterface.newShare(data);
 
         return ctx.rest({status:MsgType.EErrorType.EOK,data:decodedata});
     },
@@ -167,7 +167,7 @@ module.exports = {
                     father:fatherid
                 });
                 if(fatherid&&fatherid.length > 0){
-                    let addres = await UserInterface.addSon(fatherid,userdoc._id,userInfo.nickName);
+                    UserInterface.addSon(fatherid,userdoc._id,userInfo.nickName);//更新父亲儿子信息，以及增加父亲微币
                 }
 
             }else{
@@ -187,7 +187,7 @@ module.exports = {
                 });
             }
             userId = userdoc._id;
-            await UserInterface.newWeibiLog({userid:userId,source:MsgType.WeiBiSource.EInit,change:GmConfig.weibi.init,after:userdoc.weibi});
+            UserInterface.newWeibiLog({userid:userId,source:MsgType.WeiBiSource.EInit,change:GmConfig.weibi.init,after:userdoc.weibi});
             Logger.debug('auth : new wb log success.');
         }
         userId = userdoc._id; 
@@ -204,10 +204,11 @@ module.exports = {
         if (_.isEmpty(newUserInfo)) {
             return ctx.rest({status:0,message:"查询用户信息失败"});
         }
-        sessionmap.set(newUserInfo._id.toString(),sessionData.session_key);
+        //sessionmap.set(newUserInfo._id.toString(),sessionData.session_key);
         //ctx.session.user = newUserInfo;
         let tmpnewUserInfo = newUserInfo.toObject();
-        await usermap.newuser(tmpnewUserInfo.weixin_openid, tmpnewUserInfo);
+        tmpnewUserInfo.session_key = sessionData.session_key;
+        usermap.newuser(tmpnewUserInfo.weixin_openid, tmpnewUserInfo);
         Logger.debug('add user to map:',tmpnewUserInfo);
         return ctx.rest({userInfo: tmpnewUserInfo, sessionkey:tmpnewUserInfo.weixin_openid});
    },
