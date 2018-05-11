@@ -197,6 +197,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EUnDown});
         }
         let res = await DataInterface.deleterQR({uploader:user._id,secret:true},{secret:false});
+        Logger.debug('qrup:',res);
         if(res.nModified){
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }else{
@@ -227,6 +228,7 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EUnUp});
         }
         let res = await DataInterface.deleterQR({uploader:user._id,secret:false},{secret:true});
+        Logger.debug('qrdown:',res);
         if(res.nModified){
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }else{
