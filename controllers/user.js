@@ -356,14 +356,14 @@ module.exports = {
         }
 
         //let query = {};
-        let limit = ctx.request.body.limit || 20;
-        let skip = ctx.request.body.skip || 0;
+        let limit = parseInt(ctx.request.body.limit || 20);
+        let skip = parseInt(ctx.request.body.skip || 0);
         let content = ctx.request.body.content;
         let sort = ctx.request.body.sort;
         let tab = parseInt(ctx.request.body.tab);
         let location = ctx.request.body.location;
         let industry = ctx.request.body.industry;
-        let gender = ctx.request.body.gender;
+        let gender = parseInt(ctx.request.body.gender);
         let agestart = parseInt(ctx.request.body.agestart);
         let ageend = parseInt(ctx.request.body.ageend);
         let query = {

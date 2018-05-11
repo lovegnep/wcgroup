@@ -302,20 +302,21 @@ module.exports = {
             Logger.debug('POST /api/viewqr:未浏览过， 收费,qrid:',qrid);
         }
         if(userdoc.vipid.monthstart && parseInt(Date.now()/1000) - userdoc.vipid.monthstart <= 30*24*3600){//月卡用户
-            await UserInterface.updateViewsAndWeibi(qrid,user._id,true);//将qr放入用户已浏览列表中
-            await DataInterface.updateQR({_id:qrid},{$inc:{viewCount:1}});//更新QR浏览量
+            UserInterface.updateViewsAndWeibi(qrid,user._id,true);//将qr放入用户已浏览列表中
+            DataInterface.updateQR({_id:qrid},{$inc:{viewCount:1}});//更新QR浏览量
             return ctx.rest({status:MsgType.EErrorType.EOK});
         }else if(userdoc.weibi < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoWeibi,message:'not enough weibi'});
         }
+        ctx.rest({status:MsgType.EErrorType.EOK});
         let res = await UserInterface.updateViewsAndWeibi(qrid,user._id,false);
-        await DataInterface.updateQR({_id:qrid},{$inc:{viewCount:1}});
+        DataInterface.updateQR({_id:qrid},{$inc:{viewCount:1}});
         if(res && res._id){
             let qrdoc = await DataInterface.getQR(qrid);
             await UserInterface.newWeibiLog({userid:user._id,source:MsgType.WeiBiSource.EView,change:GmConfig.weibi.view,name:qrdoc.groupname,after:res.weibi});
             Logger.debug('viewqr : new wb log success:');
         }
-        return ctx.rest({status:MsgType.EErrorType.EOK});
+
     },
 
     'POST /api/upqr': async (ctx,next) => {

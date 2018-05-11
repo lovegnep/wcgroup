@@ -45,7 +45,9 @@ let newQR = async (data) => {
     return doc;
 }
 let getQR = async(_id) => {
+    let s = Date.now();
     let qrdoc = await Model.Qrmodel.findById(_id).exec();
+    Logger.debug('getqr用时',Date.now()-s);
     return qrdoc;
 }
 let deleterQR = async (query,updatestr)=>{
