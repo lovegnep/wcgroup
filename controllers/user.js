@@ -370,7 +370,7 @@ module.exports = {
         let ageend = parseInt(ctx.request.body.ageend);
         let query = {
             //'$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
-            groupname: {$in:Utils.jieba(content)}
+            tags: {$in:Utils.jieba(content)}
         };
 
         if(location){
