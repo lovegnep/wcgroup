@@ -3,9 +3,19 @@ const md5 = require('md5');
 const Config = require('../config');
 const Logger = require('./logger');
 const MsgType = require('../common/msgtype');
+const Jieba = require('nodejieba');
 
 //refer格式
 //https://servicewechat.com/{appid}/{version}/page-frame.html
+
+function jieba(str){
+    let res = [];
+    let tmparr = Jieba.extract(str,str.length);
+    tmparr.forEach(function(item){
+        res.push(item.word);
+    });
+    return res;
+}
 
 function validGender(a){
     if(!a || (a!==1 && a !==2 && a!==3)){
@@ -147,4 +157,5 @@ module.exports = {
     validLocationId:validLocationId,
     validGender:validGender,
     validBirthday:validBirthday,
+    jieba:jieba,
 };

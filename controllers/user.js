@@ -9,6 +9,7 @@ const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 const MsgType = require('../common/msgtype');
 const GmConfig = require('../common/gm');
+const Jieba = require('nodejieba');
 
 let UserInterface = require('../dataopt/user');
 
@@ -369,7 +370,7 @@ module.exports = {
         let ageend = parseInt(ctx.request.body.ageend);
         let query = {
             //'$or':[{groupname: new RegExp(content,'i')},{abstract:new RegExp(content,'i')}]
-            groupname: new RegExp(content,'i')
+            groupname: {$in:Utils.jieba(content)}
         };
 
         if(location){
