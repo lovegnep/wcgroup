@@ -65,10 +65,17 @@ module.exports = {
             return ctx.rest({status:0,message:'Please login first1.'});
         }
         let uploader = user._id;
-        let query = {uploader,abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx,type,source};
+        if(!uploader||uploader.length < 5){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidUploader});
+        }
+        let query = {uploader,abstract,industry,groupavatar,groupname,groupQR,masterQR,masterwx,type,source};
         if(grouptag&&grouptag!==''){
             query.grouptag = grouptag.split(',');
         }
+        if(!groupname||groupname.length < 2){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidGroupname});
+        }
+        query.tags = Utils.getTagsByJieBa(groupname,abstract,grouptag);
         if(location){
             if(!Utils.validLocationId(location)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});
@@ -136,6 +143,13 @@ module.exports = {
         }
         let uploader = user._id;
         let updatestr = {abstract,industry,location,groupavatar,groupname,groupQR,grouptag,masterQR,masterwx};
+        if(grouptag&&grouptag!==''){
+            updatestr.grouptag = grouptag.split(',');
+        }
+        if(!groupname||groupname.length < 2){
+            return ctx.rest({status:MsgType.EErrorType.EInvalidGroupname});
+        }
+        updatestr.tags = Utils.getTagsByJieBa(groupname,abstract,grouptag);
         if(location){
             if(!Utils.validLocationId(location)){
                 return ctx.rest({status:MsgType.EErrorType.EInvalidLocation});

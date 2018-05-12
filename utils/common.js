@@ -16,7 +16,22 @@ function jieba(str){
     });
     return res;
 }
-
+function getTagsByJieBa(groupname,abstract,grouptag){
+    let res = '';
+    if(groupname&&groupname.length > 0){
+        res += groupname;
+    }
+    if(abstract&&abstract.length > 0){
+        res+=','+abstract;
+    }
+    if(grouptag&&grouptag.length > 0){
+        res += ','+grouptag;
+    }
+    if(res === ''){
+        return [];
+    }
+    return jieba(res);
+}
 function validGender(a){
     if(!a || (a!==1 && a !==2 && a!==3)){
         return false;
@@ -158,4 +173,5 @@ module.exports = {
     validGender:validGender,
     validBirthday:validBirthday,
     jieba:jieba,
+    getTagsByJieBa:getTagsByJieBa
 };

@@ -49,6 +49,10 @@ const EErrorType = {
     EInvalidGender:11024,
     EInvalidAge:11025,
     EStartGTEnd:11026,//开始时间大于结束时间
+
+    //上传错误码
+    EInvalidUploader:11100,
+    EInvalidGroupname:11101,
 };
 
 const ImgType = {
