@@ -37,6 +37,7 @@
         "mongoose": "^5.0.14",
         "mz": "2.4.0",
         "node-uuid": "^1.4.8",
+        "nodejieba": "^2.2.6",
         "nunjucks": "2.4.2",
         "request-promise": "^4.2.2",
         "uuid": "^3.2.1"
