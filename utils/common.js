@@ -14,6 +14,7 @@ function jieba(str){
     tmparr.forEach(function(item){
         res.push(item.word);
     });
+    Logger.debug('jieba:',res,str);
     return res;
 }
 function getTagsByJieBa(groupname,abstract,grouptag){
@@ -30,6 +31,7 @@ function getTagsByJieBa(groupname,abstract,grouptag){
     if(res === ''){
         return [];
     }
+    Logger.debug('getTagsByJieBa:',res,groupname,abstract,grouptag);
     return jieba(res);
 }
 function validGender(a){
