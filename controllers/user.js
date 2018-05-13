@@ -151,6 +151,7 @@ module.exports = {
         if (_.isEmpty(userdoc) || _.isEmpty(userdoc._id)) {
           // 注册
             if(shareIndex&&shareIndex.length > 0){//通过分享进入
+                Logger.debug('post auth:能过分享进入，',fatherid,userInfo.nickName)
                 userdoc = await DataInterface.newAccount({
                     account: '微信用户' + Uuidv1(),
                     passwd: sessionData.openid,
@@ -498,7 +499,7 @@ module.exports = {
             query.type = tab;
         }
         //query.userid = user._id;
-        query.groupname = new RegExp(content,'i');
+        query.groupname = new RegExp('^'+content,'i');
         let docs = await UserInterface.searchex(query,{limit,skip});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
