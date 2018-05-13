@@ -509,7 +509,7 @@ module.exports = {
             query.type = tab;
         }
         //query.userid = user._id;
-        query.groupname = new RegExp('^'+content,'i');
+        //query.groupname = new RegExp('^'+content,'i');
         let docs = await UserInterface.searchex(query,{limit,skip});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
