@@ -496,10 +496,13 @@ module.exports = {
         }
         let query = {groupname: new RegExp(content,'i')};
         let reg = /^[\u4E00-\u9FFF]+$/;
+        Logger.debug('gnsearch:',reg,content);
         if(reg.test(content)){
+            Logger.debug('here');
             //如果全是中文则不必忽略大小写，这样可以加快查询速度
             query.groupname = new RegExp('^'+content);
         }else{
+            Logger.debug('there');
             query.groupname = new RegExp('^'+content,i);
         }
         if(tab !== 0){
