@@ -81,7 +81,9 @@ let getcollections = async(query,options) => {
     return res;
 }
 let getUploadCount = async(_id) => {
+    let s = Date.now();
     let count = await Model.Qrmodel.count({uploader:_id}).exec();
+    Logger.debug('getUploadCount:用时',Date.now()-s);
     return count;
 }
 

@@ -495,6 +495,13 @@ module.exports = {
             return ctx.rest({status:MsgType.EErrorType.EInvalidTab});
         }
         let query = {groupname: new RegExp(content,'i')};
+        let reg = /^[\u4E00-\u9FFF]+$/;
+        if(reg.test(content)){
+            //如果全是中文则不必忽略大小写，这样可以加快查询速度
+            query.groupname = new RegExp('^'+content);
+        }else{
+            query.groupname = new RegExp('^'+content,i);
+        }
         if(tab !== 0){
             query.type = tab;
         }
