@@ -16,6 +16,7 @@ const https = require('https');
 
 let testappid = require('./utils/common').testappid;
 const params = process.argv.splice(2);
+Logger.debug('params input:',params);
 if(!params||params.length !== 1){
     Logger.error('param invalid, please input one param as the port.');
     return process.exit(1);
@@ -78,5 +79,5 @@ app.use(bodyParser());
 
 // add controller:
 app.use(controller());
-app.listen(  Config.port); 
-console.log('app started at port ', Config.port);
+app.listen(  params[0]);
+console.log('app started at port ', params[0]);
