@@ -16,7 +16,7 @@ const https = require('https');
 
 let testappid = require('./utils/common').testappid;
 const params = process.argv.splice(2);
-Logger.debug('params input:',params);
+Logger.debug('params input:',process.argv);
 if(!params||params.length !== 1){
     Logger.error('param invalid, please input one param as the port.');
     return process.exit(1);
