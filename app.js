@@ -15,7 +15,11 @@ const  serve = require("koa-static");
 const https = require('https');
 
 let testappid = require('./utils/common').testappid;
-
+const params = process.argv.splice(2);
+if(!params||params.length !== 1){
+    Logger.error('param invalid, please input one param as the port.');
+    return process.exit(1);
+}
 
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
