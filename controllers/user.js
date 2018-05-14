@@ -109,6 +109,7 @@ module.exports = {
         const fullUserInfo = ctx.request.body.userInfo;
         const userInfo = fullUserInfo.userInfo;
         const clientIp = ctx.req.headers['X-Real-IP']||ctx.req.headers['x-real-ip']||''; //  ip
+        Logger.debug('POST /api/auth: ip:',clientIp);
         let shareIndex = ctx.request.body.shareIndex;
         let fatherid = ctx.request.body.fatherid;
         // 获取openid
