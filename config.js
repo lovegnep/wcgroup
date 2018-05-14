@@ -3,8 +3,8 @@ module.exports = {
     //db: 'mongodb://39.108.56.116:27017/wcgroup',
     db: 'mongodb://47.98.136.138:20005,47.105.36.1:20005,39.108.56.116:20005/wcgroup',
     dboptions:{
-        user : "lovegnep_wcgroup",
-        pass : "liuyang15",
+        user : "dddd",
+        pass : "ddd",
         auth : {authMechanism: 'SCRAM-SHA-1'},
         replicaSet:'wcgroup',
         readPreference: "secondaryPreferred"
@@ -25,7 +25,7 @@ module.exports = {
         expire: 10*3600//过期时间10小时
     },
     uploadimg:{
-        dir:'public/uploads/'
+        dir:'/var/www/uploads/'
     }
 }
 

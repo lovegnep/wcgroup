@@ -66,14 +66,14 @@ function addUploadFile(router) {
         },  
         filename:function (req,file,cb){  
             var fileFormat = (file.originalname).split(".");  
-            cb(null,Uuidv1() + "." + fileFormat[fileFormat.length - 1]);
+            cb(null,Uuidv1() +process.pid+ "." + fileFormat[fileFormat.length - 1]);
         }  
     })  
     var upload = multer({storage:storage});  
     //upload.single('file')这里面的file是上传空间的name<input type="file" name="file"/>    
     router.post('/api/uploadImg',upload.single('imgFile'),async (ctx,next) => {  
         let filename = ctx.req.file.filename;
-        let absolutePath = path.join(__dirname,'../',ctx.req.file.path);
+        let absolutePath = path.join(Config.uploadimg.dir, filename);
         Logger.debug('test: absolutePath:',absolutePath);
         Logger.debug('test:head:',ctx.req.headers);
         let type = parseInt(ctx.req.body.type);
