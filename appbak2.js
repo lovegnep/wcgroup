@@ -13,9 +13,14 @@ const Config = require('./config');
 const Cors = require('koa-cors');
 const  serve = require("koa-static");
 const https = require('https');
+const enforceHttps = require('koa-sslify');
 
 let testappid = require('./utils/common').testappid;
 
+let httpsoptions = {
+	    key: fs.readFileSync('/home/Nginx/2_www.5min8.com.key'),  //ssl文件路径
+	        cert: fs.readFileSync('/home/Nginx/1_www.5min8.com_bundle.crt')  //ssl文件路径
+};
 
 console.log(`process.env.NODE_ENV = [${process.env.NODE_ENV}]`);
 const isProduction = process.env.NODE_ENV === 'production';
@@ -74,5 +79,5 @@ app.use(bodyParser());
 
 // add controller:
 app.use(controller());
-app.listen(  Config.port); 
+https.createServer(httpsoptions, app.callback()).listen(Config.port);
 console.log('app started at port ', Config.port);
