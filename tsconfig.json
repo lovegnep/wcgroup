@@ -1,0 +1,46 @@
+{
+  "apps": [{
+    "name": "wcgroup",
+    "script": "app.js",
+    "cwd": "/home/wcgroup",
+    "exec_mode": "fork",
+    "max_memory_restart": "2G",
+    "autorestart": true,
+    "args": "11122",
+    "log_file": "/home/wcgroup/logs/11122.outerr.log",
+    "out_file": "/home/wcgroup/logs/11122.out.log",
+    "error_file": "/home/wcgroup/logs/11122.err.log",
+    "env": {
+
+    }
+  },{
+    "name": "wcgroup",
+    "script": "app.js",
+    "cwd": "/home/wcgroup",
+    "exec_mode": "fork",
+    "max_memory_restart": "2G",
+    "autorestart": true,
+    "log_file": "/home/wcgroup/logs/11123.outerr.log",
+    "out_file": "/home/wcgroup/logs/11123.out.log",
+    "error_file": "/home/wcgroup/logs/11123.err.log",
+    "args": "11123",
+    "env": {
+
+    }
+  },{
+    "name": "wcgroup",
+    "script": "app.js",
+    "cwd": "/home/wcgroup",
+    "exec_mode": "fork",
+    "max_memory_restart": "2G",
+    "autorestart": true,
+    "log_file": "/home/wcgroup/logs/11124.outerr.log",
+    "out_file": "/home/wcgroup/logs/11124.out.log",
+    "error_file": "/home/wcgroup/logs/11124.err.log",
+    "args": "11124",
+    "env": {
+
+    }
+  }
+  ]
+}
