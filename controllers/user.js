@@ -504,7 +504,7 @@ module.exports = {
             query.groupname = new RegExp('^'+content);
         }else{
             Logger.debug('there');
-            query.groupname = new RegExp('^'+content,i);
+            query.groupname = new RegExp('^'+content,'i');
         }
         if(tab !== 0){
             query.type = tab;
