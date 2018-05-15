@@ -32,7 +32,7 @@ app.use(async (ctx, next) => {
     ctx.logger = Logger;
     //Logger.debug('req in: head:',ctx.req.headers);
     Logger.info(`Process ${ctx.request.method} ${ctx.request.url}...`);
-    var
+    let
         start = new Date().getTime(),
         execTime;
         
@@ -45,7 +45,7 @@ app.use(async (ctx, next) => {
 
     execTime = new Date().getTime() - start;
     ctx.response.set('X-Response-Time', `${execTime}ms`);
-    Logger.debug('${ctx.request.method} ${ctx.request.url} spend %s ms:',execTime);
+    Logger.debug(`${ctx.request.method} ${ctx.request.url} spend %s ms:`,execTime);
 });
 
 app.use(compress({
