@@ -167,8 +167,10 @@ let getHotRecord = async (options) =>{
 let getHotQr = async (query,options) =>{
     let tmpdoc = await Usercache.getHotQRList(query.tab);
     if(tmpdoc && tmpdoc.time >= Utils.getDay00()){
+        Logger.debug('getHotQr: hit cache...');
         return tmpdoc.data;
     }
+    Logger.debug('getHotQr: not hit cache...');
     let docs = await Model.Qrmodel.aggregate([
         {
             $match: {

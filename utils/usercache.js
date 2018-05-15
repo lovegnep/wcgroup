@@ -87,15 +87,16 @@ let setHotQRList = async (type,obj) => {
         return;
     }
     let tmpobj = {};
-    tmpobj.data = {...obj.toObject()};
+    tmpobj.data = obj;
     tmpobj.time = Date.now();
     await setAsync(MsgType.CacheKey+type, JSON.stringify(tmpobj));
+    Logger.debug('setHotQRList: update cache success: key with ',MsgType.CacheKey+type );
 }
 
 let getHotQRList = async (type) => {
     type = parseInt(type);
     if(type !== MsgType.QRType.EPublic && type !== MsgType.QRType.EPerson && type !== MsgType.QRType.EGroup){
-        Logger.error('setHotQRList: type invalid.');
+        Logger.error('getHotQRList: type invalid.');
         return;
     }
     let res = await getAsync(MsgType.CacheKey+type);
