@@ -90,7 +90,7 @@ function addUploadFile(router) {
             }
         }
         Logger.info('POST /api/uploadImg: filename:', filename);
-	ctx.rest({filename: '/uploads/'+filename, status:1});
+	    ctx.rest({filename: '/uploads/'+filename, status:MsgType.EErrorType.EOK});
     });  
     console.log(`register URL mapping: POST /uploadFile`);  
 }
