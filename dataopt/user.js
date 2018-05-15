@@ -175,18 +175,11 @@ let getHotQr = async (query,options) =>{
         },
         {
             $project: {
-                viewCount:1,
                 groupname:1,
-                likeCount:{
-                    "$multiply": [2, "$likeCount"]
-                }
-            }
-        },
-        {
-            $project: {
-                groupname:1,
-                count: {
-                    "$add":["$viewCount","$likeCount"]
+                count:{
+                    "$add": ["$viewCount", {
+                        "$multiply":[2, "$likeCount"]
+                    }]
                 }
             }
         }
