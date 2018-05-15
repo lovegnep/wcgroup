@@ -44,14 +44,7 @@ let getUser = async(ctx) => {
 }
 module.exports = {
     'GET /api/getallqrlist': async (ctx, next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         let limit = parseInt(ctx.query.limit || 20);
         let skip = parseInt(ctx.query.skip || 0);
@@ -93,14 +86,7 @@ module.exports = {
         ctx.rest({data:[...f5qrlist,...qrlist], status:MsgType.EErrorType.EOK});
     },
     'GET /api/getqrlist': async (ctx, next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let type = parseInt(ctx.query.type) || MsgType.QRType.EGroup;
         let userid = user._id;
         let limit = parseInt(ctx.query.limit || 20);
@@ -114,14 +100,7 @@ module.exports = {
         ctx.rest({data:qr, status:MsgType.EErrorType.EOK});
     },
     'POST /api/deleteqr': async (ctx, next) => {//删除
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -144,14 +123,7 @@ module.exports = {
         }
     },
     'POST /api/cdeleteqr': async (ctx, next) => {//取消删除
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -174,14 +146,7 @@ module.exports = {
         }
     },
     'POST /api/qrup': async (ctx, next) => {//上架
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -205,14 +170,7 @@ module.exports = {
         }
     },
     'POST /api/qrdown': async (ctx, next) => {//下架
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -236,14 +194,7 @@ module.exports = {
         }
     },
     'POST /api/f5qr': async (ctx, next) => {//刷新
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -284,14 +235,7 @@ module.exports = {
     },
 
     'POST /api/viewqr': async (ctx, next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2 || typeof qrid !== "string"){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -322,14 +266,7 @@ module.exports = {
     },
 
     'POST /api/upqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -349,14 +286,7 @@ module.exports = {
         ctx.rest({status:1,message:'up success.'});
     },
     'POST /api/cupqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -373,14 +303,7 @@ module.exports = {
         ctx.rest({status:1,message:'cup success.'});
     },
     'POST /api/downqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -400,14 +323,7 @@ module.exports = {
         ctx.rest({status:1,message:'down success.'});
     },
     'POST /api/cdownqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -424,14 +340,7 @@ module.exports = {
         ctx.rest({status:1,message:'cdown success.'});
     },
     'POST /api/collectqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         if(!userdoc){
             return ctx.rest({status:0,message:'unknown err'});
@@ -453,14 +362,7 @@ module.exports = {
         ctx.rest({status:1,message:'collect success.'});
     },
     'POST /api/ccollectqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         if(!userdoc){
             return ctx.rest({status:0,message:'unknown err'});
@@ -483,14 +385,7 @@ module.exports = {
     },
 
     'POST /api/getqrcommentnum': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2){
             return ctx.rest({status:0,message:'invalid id.'});
@@ -501,14 +396,7 @@ module.exports = {
         ctx.rest({status:1,message:' success.',data:num});
     },
     'POST /api/getqrcomment': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:0,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:0,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let qrid = ctx.request.body._id;
         if(!qrid || qrid.length < 2){
             return ctx.rest({status:0,message:'invalid id.'});

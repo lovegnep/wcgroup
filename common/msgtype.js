@@ -53,6 +53,8 @@ const EErrorType = {
     //上传错误码
     EInvalidUploader:11100,
     EInvalidGroupname:11101,
+
+    ENeedReLogin:11200,//需要重新登陆
 };
 
 const ImgType = {
@@ -97,6 +99,10 @@ const WBChinese = {
     '10':'分享进入'
 }
 
+const CacheKey = {
+    HotQRList:'HOTQRLIST',
+};
+
 exports = {
     EMessageStatus:EMessageStatus,
     EMessageType:EMessageType,
@@ -106,5 +112,6 @@ exports = {
     QRSource:QRSource,
     WeiBiSource:WeiBiSource,
     WBChinese:WBChinese,
+    CacheKey:CacheKey,
 };
 Object.assign(module.exports, exports);

@@ -4,6 +4,7 @@ const Model = require('../models/model');
 const Utils = require('../utils/common');
 const GmConfig = require('../common/gm');
 const MsgType = require('../common/msgtype');
+const Usercache = require('../utils/usercache');
 
 let updateViewsAndWeibi = async(qrid, userid,ismonth) =>{
     let wherestr = {_id:userid};
@@ -164,6 +165,10 @@ let getHotRecord = async (options) =>{
     return docs;
 }
 let getHotQr = async (query,options) =>{
+    let tmpdoc = await Usercache.getHotQRList(query.tab);
+    if(tmpdoc && tmpdoc.time >= Utils.getDay00()){
+        return tmpdoc.data;
+    }
     let docs = await Model.Qrmodel.aggregate([
         {
             $match: {
@@ -184,6 +189,9 @@ let getHotQr = async (query,options) =>{
             }
         }
     ]).sort('-count').limit(options.limit).exec();
+    if(docs){
+        Usercache.setHotQRList(query.tab,docs);
+    }
     return docs;
 }
 let newRecord = async (data) => {

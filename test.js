@@ -6,8 +6,8 @@ const Province = require('./utils/province');
 let ObjectID = mongoose.Schema.ObjectId;
 let ObjectId = mongoose.Schema.ObjectId;
 
-let masterdb = mongoose.createConnection('mongodb://47.98.136.138:20005/wcgroup',{	user : "ddddd",
-    pass : "ddddddd",
+let masterdb = mongoose.createConnection('mongodb://47.98.136.138:20005/wcgroup',{	user : "lovegnep",
+    pass : "liuyang15",
     auth : {authMechanism: 'MONGODB-CR'}},function(err){
     if(err){
         console.log(err);
@@ -15,19 +15,21 @@ let masterdb = mongoose.createConnection('mongodb://47.98.136.138:20005/wcgroup'
     }else{
         console.log('mongodb connect success：mongodb://47.98.136.138:20005/wcgroup');
         let s = Date.now();
-        Qrmodelm.find({delete:false,secret:false,type:1},{},{sort:'-updateTime',limit:20}).exec(function(err,res){
+        //"$or":[{"f5Time":{"$exists":false}},{"f5Time":{"$lt":new Date("2018-05-09T00:34:13.795Z")}}]
+        Qrmodelm.find({"f5Time":{"$gte":new Date()}},{},{limit:5,sort:'-updateTime'},function(err,res){
             if(err){
                 console.log(err);
             }else{
-                console.log(res);
+                console.log(res.length);
             }
             let e = Date.now();
             console.log('用时：',e-s);
         })
+
     }
 });
-let slavedb = mongoose.createConnection('mongodb://47.105.36.1:20005/wcgroup',{	user : "dddd",
-    pass : "ddddd",
+let slavedb = mongoose.createConnection('mongodb://47.105.36.1:20005/wcgroup',{	user : "lovegnep",
+    pass : "liuyang15",
     auth : {authMechanism: 'MONGODB-CR'}},function(err){
     if(err){
         console.log(err);
@@ -63,7 +65,7 @@ let qrmodel = new mongoose.Schema({
     secret:{type: Boolean, default: false},//是否下架
     f5Time:Date//刷新时间
 });
-qrmodel.index({updateTime:-1});
+//qrmodel.index({updateTime:-1,f5Time:1});
 let Qrmodelm = masterdb.model('Qrmodel', qrmodel);
 let Qrmodels = slavedb.model('Qrmodel', qrmodel);
 

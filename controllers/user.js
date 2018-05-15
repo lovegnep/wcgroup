@@ -9,56 +9,19 @@ const Province = require('../utils/province');
 const Uuidv1 = require('uuid/v1')
 const MsgType = require('../common/msgtype');
 const GmConfig = require('../common/gm');
-const Jieba = require('nodejieba');
+
 
 let UserInterface = require('../dataopt/user');
 
 let usermap = require('../utils/usercache');
-let sessionmap = new Map();
 
-
-let isLogin = async(ctx) => {
-    let _id = ctx.req.headers['sessionkey'];
-    //Logger.debug('isLogin:head:',ctx.req.headers);
-    //Logger.debug('isLogin:sessionkey:',_id);
-    if(!_id){
-        return false;
-    }
-    let user = await usermap.getuser(_id);
-    if(user){
-        //Logger.debug("isLogin: true.",user);
-        return true;
-    }else{
-        //Logger.debug("isLogin: false.",user);
-        return false;
-    }
-}
-let getUser = async(ctx) => {
-    let _id = ctx.req.headers['sessionkey'];
-    if(!_id){
-        return null;
-    }
-    let user = await usermap.getuser(_id);
-    if(user){
-        return user;
-    }else{
-        return null;
-    }
-}
 module.exports = {
     'GET /api/getTypes': async (ctx, next) => {
         let types = Province.getTypes();
         ctx.rest({data:types, status:1});
     },
     'POST /api/decode' :async (ctx,next) => {//解密分享数据
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let session_key = user.session_key;
         if(!session_key || session_key.length < 1){
             return ctx.rest({status:MsgType.EErrorType.ENoSessionKey,message:'no session key'});
@@ -216,14 +179,7 @@ module.exports = {
         return ctx.rest({userInfo: tmpnewUserInfo, sessionkey:tmpnewUserInfo.weixin_openid});
    },
     'GET /api/sign': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let res = await UserInterface.sign(user._id);
         if(res.err){
             return ctx.rest({status:MsgType.EErrorType.EInterError});
@@ -236,14 +192,7 @@ module.exports = {
         }
     },
     'POST /api/sharein':async (ctx,next)=>{
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let index = ctx.request.body.index;
         if(!index || index.length < 1){
             return ctx.rest({status:MsgType.EErrorType.EShareIndexInvalid});
@@ -256,38 +205,17 @@ module.exports = {
         }
     },
     'GET /api/getweibi': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         return ctx.rest({status:MsgType.EErrorType.EOK,data:userdoc.weibi});
     },
     'GET /api/getuserinfo': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         return ctx.rest({status:MsgType.EErrorType.EOK,data:userdoc});
     },
     'POST /api/getviews': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         if(!userdoc.views || userdoc.views.length < 1){
             return ctx.rest({status:MsgType.EErrorType.EOK,data:[]});
@@ -302,15 +230,7 @@ module.exports = {
         return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
     },
     'POST /api/getsearchrecords': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
-
+        let user = ctx.userobj;
         let query = {};
         let limit = ctx.request.body.limit || 20;
         let skip = ctx.request.body.skip||0;
@@ -320,29 +240,13 @@ module.exports = {
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
     'POST /api/gethotrecords': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
-
+        let user = ctx.userobj;
         let limit = ctx.request.body.limit || 10;
         let docs = await UserInterface.getHotRecord({limit});
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
     'POST /api/gethotqr': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
-
+        let user = ctx.userobj;
         let limit = ctx.request.body.limit || 10;
         let tab = parseInt(ctx.request.body.tab) || 1;
         let time = Utils.getDate7days();
@@ -350,15 +254,7 @@ module.exports = {
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
     'POST /api/search': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
-
+        let user = ctx.userobj;
         //let query = {};
         let limit = parseInt(ctx.request.body.limit || 20);
         let skip = parseInt(ctx.request.body.skip || 0);
@@ -475,15 +371,7 @@ module.exports = {
 
     },
     'POST /api/groupnamesearch': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
-
+        let user = ctx.userobj;
         //let query = {};
         let limit = ctx.request.body.limit || 20;
         let skip = ctx.request.body.skip || 0;
@@ -515,14 +403,7 @@ module.exports = {
         return ctx.rest({status:MsgType.EErrorType.EOK,data:docs||[]});
     },
     'POST /api/getcollections': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let userdoc = await DataInterface.getAccountById(user._id);
         if(!userdoc.collections || userdoc.collections.length < 1){
             return ctx.rest({status:MsgType.EErrorType.EOK,data:[]});
@@ -537,26 +418,12 @@ module.exports = {
         return ctx.rest({status:MsgType.EErrorType.EOK,data:qrdoc||[]});
     },
     'GET /api/getuploadcount': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let count = await UserInterface.getUploadCount(user._id);
         return ctx.rest({status:MsgType.EErrorType.EOK,data:count||0});
     },
     'POST /api/getweibilog': async (ctx,next) => {
-        let islogin = await isLogin(ctx);
-        if(!islogin){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'please login first.'});
-        }
-        let user = await getUser(ctx);
-        if(!user){
-            return ctx.rest({status:MsgType.EErrorType.ENotLogin,message:'unknown err'});
-        }
+        let user = ctx.userobj;
         let query = {};
         let skip = ctx.request.body.skip || 0;
         let limit = ctx.request.body.limit || 20;

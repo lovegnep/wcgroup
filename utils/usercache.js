@@ -3,11 +3,14 @@
  *   */
 const Logger = require('./logger');
 const Redis = require('redis');
-
+const MsgType = require('../common/msgtype');
 const config = require('../config');
+const {promisify} = require('util');
 
 let cache = new Map();
 let client = Redis.createClient(config.redis.port, config.redis.host);
+const getAsync = promisify(client.get).bind(client);
+const setAsync = promisify(client.set).bind(client);
 client.on('ready', function(){
     Logger.info('redis client connect to server success.');
 });
@@ -73,7 +76,35 @@ let getuser = async (_id) => {
     return user;
 }
 
+let setHotQRList = async (type,obj) => {
+    type = parseInt(type);
+    if(type !== MsgType.QRType.EPublic && type !== MsgType.QRType.EPerson && type !== MsgType.QRType.EGroup){
+        Logger.error('setHotQRList: type invalid.');
+        return;
+    }
+    if(!obj || typeof obj !== 'object'){
+        Logger.error('setHotQRList: invalid obj.');
+        return;
+    }
+    let tmpobj = {};
+    tmpobj.data = {...obj.toObject()};
+    tmpobj.time = Date.now();
+    await setAsync(MsgType.CacheKey+type, JSON.stringify(tmpobj));
+}
 
+let getHotQRList = async (type) => {
+    type = parseInt(type);
+    if(type !== MsgType.QRType.EPublic && type !== MsgType.QRType.EPerson && type !== MsgType.QRType.EGroup){
+        Logger.error('setHotQRList: type invalid.');
+        return;
+    }
+    let res = await getAsync(MsgType.CacheKey+type);
+    if(res){
+        return JSON.parse(res);
+    }else{
+        null;
+    }
+}
 function newuserold(_id, user) {
     Logger.debug('newuser:', [...cache.keys()]);
     Logger.debug('newuser:', [...cache.values()]);
@@ -89,6 +120,8 @@ function getuserold(_id) {
 
 exports = {
     newuser: newuser,
-    getuser: getuser
+    getuser: getuser,
+    setHotQRList:setHotQRList,
+    getHotQRList:getHotQRList,
 };
 Object.assign(module.exports, exports);

@@ -4,7 +4,7 @@ const fs = require('fs');
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const controller = require('./middleware/controller');
-
+const UserAuth = require('./middleware/userauth');
 const compress = require('koa-compress');
 const rest = require('./middleware/rest');
 const app = new Koa();
@@ -77,6 +77,8 @@ if(isProduction){
 // parse request body:
 app.use(bodyParser());
 
+//登陆认证
+app.use(UserAuth.auth);
 // add controller:
 app.use(controller());
 app.listen(  params[0]);
