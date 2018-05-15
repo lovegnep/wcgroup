@@ -1,6 +1,6 @@
 //登录ctrl
 const MsgType = require('../common/msgtype');
-
+const Logger = require('../utils/logger');
 let usermap = require('../utils/usercache');
 
 let getUser = async(ctx) => {
@@ -17,6 +17,7 @@ let getUser = async(ctx) => {
 }
 let auth = async(ctx, next) => {
     let path = ctx.request.path;
+    Logger.debug("path: %s, url: %s", path, ctx.request.url);
     let _id = ctx.req.headers['sessionkey'];
     if(!_id && path !== '/api/auth'){
         return ctx.rest({status:MsgType.EErrorType.ENotLogin,err:"please login first."});
@@ -28,7 +29,7 @@ let auth = async(ctx, next) => {
         }
         ctx.userobj = userobj;
     }
-    next();
+    await next();
 }
 exports = {
     auth:auth,

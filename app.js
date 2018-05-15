@@ -44,7 +44,8 @@ app.use(async (ctx, next) => {
     }
 
     execTime = new Date().getTime() - start;
-    ctx.response.set('X-Response-Time', `${execTime}ms`); 
+    ctx.response.set('X-Response-Time', `${execTime}ms`);
+    Logger.debug('${ctx.request.method} ${ctx.request.url} spend %s ms:',execTime);
 });
 
 app.use(compress({
