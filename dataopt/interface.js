@@ -1,6 +1,7 @@
 const Config = require('../config');
 const Logger = require('../utils/logger');
 const Model = require('../models/model');
+const Cache = require('../utils/usercache');
 
 //注册帐号
 let newAccount = async (data) => {
@@ -74,8 +75,8 @@ let getQRListofUser = async(query,options) => {
     Logger.debug('取用户上传用时:',Date.now()-s);
     return qrlist;
 }
-
 //
+
 let getAllQRList = async(query,option) => {
     //Logger.debug('getAllQRList:query(%s),options(%s),:',JSON.stringify(query),JSON.stringify(option));
     let qrlist = null;

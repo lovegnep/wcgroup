@@ -22,7 +22,8 @@ module.exports = {
     },
     user_cache:{
         userprefix: 'USER_CACHE_',//前缀
-        expire: 10*3600//过期时间10小时
+        expire: 10*3600,//过期时间10小时
+        f5key: 'F5_CACHE_',
     },
     uploadimg:{
         dir:'/var/www/uploads/'

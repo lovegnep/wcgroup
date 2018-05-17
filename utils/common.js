@@ -4,7 +4,7 @@ const Config = require('../config');
 const Logger = require('./logger');
 const MsgType = require('../common/msgtype');
 const Jieba = require('nodejieba');
-
+const GmConfig = require('../common/gm');
 //refer格式
 //https://servicewechat.com/{appid}/{version}/page-frame.html
 
@@ -78,7 +78,14 @@ function testappid(ctx,next){
     Logger.warn('testappid: can not find refer or refer2 invalid.');
     return ctx.rest({status:MsgType.EErrorType.EInvalidReq});
 }
-
+let getExpireTime = function(){
+    let date = Date.now();
+    return date.getTime()+GmConfig.comconfig.f5time*3600*1000;
+}
+let getTime = function(){
+    let date = Date.now();
+    return date.getTime();
+}
 let getDay00 = function(){//返回当天0点豪秒
     let today = new Date();
     today.setHours(0);
@@ -175,5 +182,7 @@ module.exports = {
     validGender:validGender,
     validBirthday:validBirthday,
     jieba:jieba,
-    getTagsByJieBa:getTagsByJieBa
+    getTagsByJieBa:getTagsByJieBa,
+    getExpireTime:getExpireTime,
+    getTime:getTime,
 };
