@@ -16,7 +16,7 @@ function decodepro(path){
         fs.readFile(path, function(err, squid){
             if (err) reject(err);
             Qrdecoder.callback = function(data){
-                Logger.info('getdata:', data);
+                //Logger.info('getdata:', data);
                 resolve(data);
             }
             Qrdecoder.decode(squid);
