@@ -79,6 +79,11 @@ function addUploadFile(router) {
         let type = parseInt(ctx.req.body.type);
         let res = null;
         if(type === MsgType.ImgType.EGQR || type === MsgType.ImgType.EUploaderQR){//是二维码，则要判断是否是二维码
+            let filestates = fs.statSync(absolutePath);
+            if(filename.size < 5*1024){
+                fs.unlinkSync(absolutePath);
+                return ctx.rest({status:MsgType.EErrorType.EQRTooSmall}); 
+            }
             try{
                 res = await Utils.execpromise('zbarimg '+absolutePath);
                 if(res&&res.length > 20&&res.indexOf(':') > -1){

@@ -53,8 +53,10 @@ const EErrorType = {
     //上传错误码
     EInvalidUploader:11100,
     EInvalidGroupname:11101,
+    EQRTooSmall:11102,
 
     ENeedReLogin:11200,//需要重新登陆
+
 };
 
 const ImgType = {
