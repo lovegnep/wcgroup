@@ -8745,6 +8745,15 @@ function getLocation(id){
     }
   }
 }
+function getLocationByName(name){
+    let len = cityJson.length;
+    let re = new RegExp(name,'i');
+    for(let i = 0; i < len; i++){
+        if(re.test(cityJson[i].item_name)){
+            return cityJson[i];
+        }
+    }
+}
 function validLocationId(id){
   if(!id||id.length !== 6){
     return false;
@@ -8833,5 +8842,6 @@ exports = {
     getRandomStr:getRandomStr,
     getRandomGN:getRandomGN,
     getRandomAB:getRandomAB,
+    getLocationByName:getLocationByName,
 };
 Object.assign(module.exports, exports);
