@@ -5,9 +5,21 @@ const Logger = require('./logger');
 const MsgType = require('../common/msgtype');
 const Jieba = require('nodejieba');
 const GmConfig = require('../common/gm');
+const exec = require(  'child_process').exec;
+
 //refer格式
 //https://servicewechat.com/{appid}/{version}/page-frame.html
-
+function execpromise(cmd){
+    return new Promise(function(resolve,reject){
+        exec(cmd, function(err, stdout, stderr){
+            if(err){
+                reject(err);
+            }else{
+                resolve(stdout);
+            }
+        })
+    })
+}
 function jieba(str){
     let res = [];
     let tmparr = Jieba.extract(str,str.length);
@@ -125,8 +137,7 @@ function getnBefore(n){//获取n小时之前的date
     mydate.setHours(mydate.getHours () - n);
     return mydate;
 }
-function GetRandomNum(Min,Max)
-{
+function GetRandomNum(Min,Max) {
     var Range = Max - Min;
     var Rand = Math.random();
     return(Min + Math.round(Rand * Range));
@@ -137,6 +148,7 @@ function stringToDate (fDate){
     return new Date(fullDate[0], fullDate[1]-1, fullDate[2], 0, 0, 0);
 }
 module.exports = {
+    execpromise:execpromise,
     sleep: function (time) {
         return new Promise(function (resolve, reject) {
             setTimeout(function () {

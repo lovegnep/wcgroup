@@ -5,7 +5,7 @@ const Uuidv1 = require('uuid/v1');
 const Config = require('../config');
 const MsgType = require('../common/msgtype');
 const Qrdecode = require('../utils/qrdecode');
-
+const Utils = require('../utils/common');
 let config = {
     rootpath:''
 };
@@ -80,14 +80,32 @@ function addUploadFile(router) {
         let res = null;
         if(type === MsgType.ImgType.EGQR || type === MsgType.ImgType.EUploaderQR){//是二维码，则要判断是否是二维码
             try{
-                res = await Qrdecode.decode(absolutePath);
+                res = await Utils.execpromise('zbarimg '+absolutePath);
+                if(res&&res.length > 20&&res.indexOf(':') > -1){
+                    res = res.substr(res.indexOf(':')+1);
+                    let in1 = res.indexOf('weixin.qq.com');
+                    let in2 = res.indexOf('u.wechat.com');
+                    if(in1 === -1 && in2 === -1){
+                        res = null;
+                    }
+                }else{
+                    res = null;
+                }
             }catch(err){
-                Logger.warn('post /api/uploadImg: invalid qr img.');
+                Logger.error('post /api/uploadImg: zbarimg err:',err);
             }
             if(!res){
-                fs.unlinkSync(absolutePath);
-                return ctx.rest({status:MsgType.EErrorType.EInvalidQR});
+                try{
+                    res = await Qrdecode.decode(absolutePath);
+                }catch(err){
+                    Logger.error('post /api/uploadImg: qrdecode err:',err);
+                }
+                if(!res){
+                    fs.unlinkSync(absolutePath);
+                    return ctx.rest({status:MsgType.EErrorType.EInvalidQR});
+                }
             }
+
         }
         Logger.info('POST /api/uploadImg: filename:', filename);
 	    ctx.rest({filename: '/uploads/'+filename, status:MsgType.EErrorType.EOK});
