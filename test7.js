@@ -38,7 +38,7 @@ let f1 = async()=>{
             fail++;
             outerr+=garr[i]+'\n'
         }else{
-            out+=res;
+            out+=res+'\n';
             success++;
         }
 
@@ -65,7 +65,7 @@ let f2 = async()=>{
             fail++;
             outerr+=parr[i]+'\n'
         }else{
-            out+=res;
+            out+=res+'\n';
             success++;
         }
     }
@@ -91,7 +91,7 @@ let f3 = async()=>{
             fail++;
             outerr+=oarr[i]+'\n'
         }else{
-            out+=res;
+            out+=res+'\n';
             success++;
         }
     }
