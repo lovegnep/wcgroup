@@ -8,7 +8,7 @@ let parr = Fs.readdirSync('./images/person');
 let oarr = Fs.readdirSync('./images/public');
 
 process.on(  'uncaughtException'  , function (  err)   {
-    console.log(  '  uncaughtException');
+    console.log(  'uncaughtException:',err);
 })
 
 for(let i = 0; i < garr.length; i++){
@@ -27,6 +27,7 @@ let f1 = async()=>{
     for(let i = 0; i < garr.length; i++){
         let res = '';
         try{
+            console.log(garr[i]);
             res = await Qrdecode.decode(garr[i]);
         }catch(err){
             console.log(err,garr[i]);
@@ -50,6 +51,7 @@ let f2 = async()=>{
     for(let i = 0; i < parr.length; i++){
         let res = '';
         try{
+            console.log(parr[i]);
             res = await Qrdecode.decode(parr[i]);
         }catch(err){
             console.log(err,parr[i]);
@@ -72,9 +74,10 @@ let f3 = async()=>{
     for(let i = 0; i < oarr.length; i++){
         let res = '';
         try{
-            res = await Qrdecode.decode(parr[i]);
+            console.log(oarr[i]);
+            res = await Qrdecode.decode(oarr[i]);
         }catch(err){
-            console.log(err,parr[i]);
+            console.log(err,oarr[i]);
         }
         count++;
         if(res === ''){

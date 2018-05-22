@@ -12,6 +12,15 @@ function decodepro(path){
         Logger.error('decode: the path must start with /');
         return null;
     }
+    let states = fs.statSync(path);
+    if(states.isDirectory())
+    {
+        Logger.error('the file is directory.',path);
+        return null;
+    }else if(states.size < 5*1024){
+        Logger.error('the file is too small than 5kb.',path);
+        return null;
+    }
     return new Promise(function(resolve,reject){
         fs.readFile(path, function(err, squid){
             if (err) reject(err);
